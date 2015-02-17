@@ -109,8 +109,8 @@ module.exports = function(grunt) {
                 //compilation_level: 'ADVANCED_OPTIMIZATIONS',
                 compilation_level: 'SIMPLE_OPTIMIZATIONS',
                 //language_in: 'ECMASCRIPT5_STRICT',
-                formatting: 'PRETTY_PRINT',
-                create_source_map: 'js/compiled-map',
+                //formatting: 'PRETTY_PRINT',
+                create_source_map: 'js/compiled.js.map',
                 externs: [
                     'closure-compiler/externs/jquery-1.9.js',
                     'js/externs/foundation.externs.js'

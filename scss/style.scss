@@ -322,6 +322,36 @@ footer.full-width {
 
 // Customizzazioni
 
+.tbl{
+    display: table;
+    width: 100%;
+}
+
+.tbl-row{
+    display: table-row;
+    text-align: center;
+}
+
+.tbl-inner{
+    display: table-cell;
+    text-align: center;
+    vertical-align: middle;
+}
+
+
+.bgsize-cover{
+    background-size: cover !important;
+    background-position: center center !important;
+    background-repeat: no-repeat;
+}
+
+.bgsize-contain{
+    background-size: contain !important;
+    background-position: center center !important;
+    background-repeat: no-repeat !important;
+}
+
+
 
 #main-footer {
     position: relative;
