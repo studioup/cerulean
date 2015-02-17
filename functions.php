@@ -35,7 +35,7 @@ require_once('lib/nav.php'); // filter default wordpress menu classes and clean 
 5. lib/presstrends.php
     - add PressTrends, tracks how many people are using Reverie
 */
-require_once('lib/presstrends.php'); // load PressTrends to track the usage of Reverie across the web, comment this line if you don't want to be tracked
+//require_once('lib/presstrends.php'); // load PressTrends to track the usage of Reverie across the web, comment this line if you don't want to be tracked
 
 /**********************
 Add theme supports
@@ -105,7 +105,7 @@ foreach ($sidebars as $sidebar) {
 // return entry meta information for posts, used by multiple loops, you can override this function by defining them first in your child theme's functions.php file
 if ( ! function_exists( 'reverie_entry_meta' ) ) {
     function reverie_entry_meta() {
-        echo '<span class="byline author">'. __('Written by', 'reverie') .' <a href="'. get_author_posts_url(get_the_author_meta('ID')) .'" rel="author" class="fn">'. get_the_author() .', </a></span>';
+        //echo '<span class="byline author">'. __('Written by', 'reverie') .' <a href="'. get_author_posts_url(get_the_author_meta('ID')) .'" rel="author" class="fn">'. get_the_author() .', </a></span>';
         echo '<time class="updated" datetime="'. get_the_time('c') .'" pubdate>'. get_the_time('F jS, Y') .'</time>';
     }
 };

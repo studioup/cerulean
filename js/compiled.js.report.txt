@@ -1,0 +1,25 @@
+bower_components/jquery/dist/jquery.js:724: WARNING - Suspicious code. The result of the 'getprop' operator is not being used.
+	arr[ preferredDoc.childNodes.length ].nodeType;
+	^
+
+bower_components/jquery/dist/jquery.js:1897: WARNING - Suspicious code. This code lacks side-effects. Is there a bug?
+			if ( elem.parentNode ) {
+			^
+
+bower_components/jquery/dist/jquery.js:1898: WARNING - Suspicious code. The result of the 'getprop' operator is not being used.
+				elem.parentNode.selectedIndex;
+				^
+
+bower_components/jquery/dist/jquery.js:7136: WARNING - Suspicious code. This code lacks side-effects. Is there a bug?
+			if ( parent && parent.parentNode ) {
+			^
+
+bower_components/jquery/dist/jquery.js:7137: WARNING - Suspicious code. The result of the 'getprop' operator is not being used.
+				parent.parentNode.selectedIndex;
+				^
+
+bower_components/outdated-browser/outdatedbrowser/outdatedbrowser.js:1: WARNING - Parse error. Non-JSDoc comment has annotations. Did you mean to start it with '/**'?
+/*!--------------------------------------------------------------------
+^
+
+0 error(s), 6 warning(s)

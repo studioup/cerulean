@@ -3,6 +3,12 @@
   "version": "0.0.1",
   "private": "true",
   "dependencies": {
-    "foundation": "zurb/bower-foundation"
+    "foundation": "zurb/bower-foundation",
+    "compass-mixins" : "*",
+    "wow" : "*",
+    "animate.css" : "*",
+    "outdated-browser" : "*",
+    "closure-compiler" : "*",
+    "jquery" : "2.x"
   }
 }

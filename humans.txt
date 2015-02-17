@@ -1,16 +1,22 @@
-/* Reverie is a versatile HTML5 responsive WordPress framework based on ZURB's Foundation. */
+/* Cerulean is a versatile HTML5 responsive WordPress framework based on ZURB's Foundation. */
 
 /* TEAM */
 
-Zhen Huang
-http://themefortress.com
-Twitter: @themefortress
-Reverie Framework: http://themefortress.com/reverie/
+Studio Up
+http://www.studioup.it
+Twitter: @studio_up
+Reverie Framework: https://github.com/studioup/cerulean
 
 /* THANKS */							
 
 ZURB Foundation
 http://foundation.zurb.com/
+
+Reverie Framework
+Zhen Huang
+http://themefortress.com
+Twitter: @themefortress
+Reverie Framework: http://themefortress.com/reverie/
 
 Roots
 http://www.rootstheme.com/

@@ -1,0 +1,17 @@
+{
+  "name": "foundation-libsass-template",
+  "version": "0.0.1",
+  "devDependencies": {
+    "grunt": "~0.4.1",
+    "grunt-bless": "~0.1.1",
+    "grunt-contrib-sass": "^0.8.1",
+    "grunt-contrib-watch": "~0.5.3",
+    "grunt-contrib-coffee" : "*",
+    "grunt-closure-compiler" : "*",
+    "phantomjs" :  "1.9",
+    "grunt-sass": "~0.8.0",
+    "grunt-screenshot-element": "~0.1.8",
+    "node-sass": "~0.7.0",
+    "coffee-script": "*"
+  }
+}

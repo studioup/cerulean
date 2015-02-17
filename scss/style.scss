@@ -16,9 +16,10 @@
 // @import "foundation";
 
 // Load some Compass magic, note you will need to install Compass first
-@import "compass/css3/shared";
+//@import "compass/css3/shared";
 @import "compass/css3/border-radius";
 @import "compass/css3/transition";
+@import "outdatedbrowser";
 
 /* Start to customize Reverie */
 
@@ -297,7 +298,7 @@ ol.commentlist {
 footer.full-width {
 	background-color: #fff;
 	border-top: 1px solid #ccc;
-	padding-top: rem-calc(48);
+	padding-top: rem-calc(14);
 	p {
 		font-size: rem-calc(14);
 	}
@@ -307,10 +308,6 @@ footer.full-width {
 		&:hover, &:focus {
 			color: $body-font-color;
 		}
-	}
-	.love-reverie {
-		border-top: 1px solid #ccc;
-		padding-top: rem-calc(24);
 	}
 }
 
@@ -322,6 +319,49 @@ footer.full-width {
 .f-topbar-fixed > .container {
 	margin-top: rem-calc(32);
 }
+
+// Customizzazioni
+
+
+#main-footer {
+    position: relative;
+    .credits{
+        padding-top: rem-calc(25);
+        padding-bottom: rem-calc(25);
+        #credits a {
+            //background-image: url(http://www.studioup.it/img/stup_developed.png);
+            background-image: url(http://www.studioup.it/img/stup_developed_g.png);
+            background-size: contain;
+            background-position: center;
+            background-repeat: no-repeat;
+            height: 30px;
+            display: block;
+            float: right;
+            width: 150px; 
+            strong{
+                display: none;
+            }
+        }
+        p{
+            color: #7d7d7d;
+            font-size: rem-calc(14);
+            line-height: rem-calc(30);
+            strong{
+                font-size: rem-calc(14);
+                color: #7d7d7d;
+                font-weight: bolder;
+            }
+            small{
+                font-size: rem-calc(14);
+                color: #c1c1c1;
+            }
+            
+        }
+        
+    }
+    
+}
+
 
 @media #{$small-up} {
 	.entry-author {
