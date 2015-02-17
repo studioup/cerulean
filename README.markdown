@@ -10,6 +10,12 @@ It is extremely easy to create your blog, CMS, brochure and any other kind of si
 
 
 
+### Grunt ###
+* Compile CSS:                          grunt
+* Compile JS:                           grunt js
+* Take a screenshot for WP admin:       grunt screen --url=http://mydomain.com
+
+
 ###jQuery###
 WordPress 3.6 has a built in jQuery of 1.10 which is good for Cerulean.
 
