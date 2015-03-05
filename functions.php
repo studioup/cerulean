@@ -106,7 +106,7 @@ foreach ($sidebars as $sidebar) {
 if ( ! function_exists( 'reverie_entry_meta' ) ) {
     function reverie_entry_meta() {
         //echo '<span class="byline author">'. __('Written by', 'reverie') .' <a href="'. get_author_posts_url(get_the_author_meta('ID')) .'" rel="author" class="fn">'. get_the_author() .', </a></span>';
-        echo '<time class="updated" datetime="'. get_the_time('c') .'" pubdate>'. get_the_time('F jS, Y') .'</time>';
+        echo '<time class="updated" datetime="'. get_the_time('c') .'" >'. get_the_time('F jS, Y') .'</time>';
     }
 };
 
