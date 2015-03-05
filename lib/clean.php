@@ -1,38 +1,38 @@
 <?php
 /*********************
 Start all the functions
-at once for Reverie.
+at once for cerulean.
 *********************/
 
 // start all the functions
-add_action('after_setup_theme','reverie_startup');
+add_action('after_setup_theme','cerulean_startup');
 
-if( ! function_exists( 'reverie_startup ' ) ) {
-	function reverie_startup() {
+if( ! function_exists( 'cerulean_startup ' ) ) {
+	function cerulean_startup() {
 
 	    // launching operation cleanup
-	    add_action('init', 'reverie_head_cleanup');
+	    add_action('init', 'cerulean_head_cleanup');
 	    // remove WP version from RSS
-	    add_filter('the_generator', 'reverie_rss_version');
+	    add_filter('the_generator', 'cerulean_rss_version');
 	    // remove pesky injected css for recent comments widget
-	    add_filter( 'wp_head', 'reverie_remove_wp_widget_recent_comments_style', 1 );
+	    add_filter( 'wp_head', 'cerulean_remove_wp_widget_recent_comments_style', 1 );
 	    // clean up comment styles in the head
-	    add_action('wp_head', 'reverie_remove_recent_comments_style', 1);
+	    add_action('wp_head', 'cerulean_remove_recent_comments_style', 1);
 	    // clean up gallery output in wp
-	    add_filter('gallery_style', 'reverie_gallery_style');
+	    add_filter('gallery_style', 'cerulean_gallery_style');
 
 	    // enqueue base scripts and styles
-	    add_action('wp_enqueue_scripts', 'reverie_scripts_and_styles', 999);
+	    add_action('wp_enqueue_scripts', 'cerulean_scripts_and_styles', 999);
 	    // ie conditional wrapper
-	    add_filter( 'style_loader_tag', 'reverie_ie_conditional', 10, 2 );
+	    add_filter( 'style_loader_tag', 'cerulean_ie_conditional', 10, 2 );
 	    
 	    // additional post related cleaning
-	    add_filter( 'img_caption_shortcode', 'reverie_cleaner_caption', 10, 3 );
-	    add_filter('get_image_tag_class', 'reverie_image_tag_class', 0, 4);
-	    add_filter('get_image_tag', 'reverie_image_editor', 0, 4);
-	    add_filter( 'the_content', 'reverie_img_unautop', 30 );
+	    add_filter( 'img_caption_shortcode', 'cerulean_cleaner_caption', 10, 3 );
+	    add_filter('get_image_tag_class', 'cerulean_image_tag_class', 0, 4);
+	    add_filter('get_image_tag', 'cerulean_image_editor', 0, 4);
+	    add_filter( 'the_content', 'cerulean_img_unautop', 30 );
 
-	} /* end reverie_startup */
+	} /* end cerulean_startup */
 }
 
 
@@ -45,8 +45,8 @@ Thanks for Bones
 http://themble.com/bones/
 **********************/
 
-if( ! function_exists( 'reverie_head_cleanup ' ) ) {
-	function reverie_head_cleanup() {
+if( ! function_exists( 'cerulean_head_cleanup ' ) ) {
+	function cerulean_head_cleanup() {
 		// category feeds
 		// remove_action( 'wp_head', 'feed_links_extra', 3 );
 		// post and comment feeds
@@ -66,21 +66,21 @@ if( ! function_exists( 'reverie_head_cleanup ' ) ) {
 		// WP version
 		remove_action( 'wp_head', 'wp_generator' );
 	  // remove WP version from css
-	  add_filter( 'style_loader_src', 'reverie_remove_wp_ver_css_js', 9999 );
+	  add_filter( 'style_loader_src', 'cerulean_remove_wp_ver_css_js', 9999 );
 	  // remove Wp version from scripts
-	  add_filter( 'script_loader_src', 'reverie_remove_wp_ver_css_js', 9999 );
+	  add_filter( 'script_loader_src', 'cerulean_remove_wp_ver_css_js', 9999 );
 
 	} /* end head cleanup */
 }
 
 // remove WP version from RSS
-if( ! function_exists( 'reverie_rss_version ' ) ) {
-	function reverie_rss_version() { return ''; }
+if( ! function_exists( 'cerulean_rss_version ' ) ) {
+	function cerulean_rss_version() { return ''; }
 }
 
 // remove WP version from scripts
-if( ! function_exists( 'reverie_remove_wp_ver_css_js ' ) ) {
-	function reverie_remove_wp_ver_css_js( $src ) {
+if( ! function_exists( 'cerulean_remove_wp_ver_css_js ' ) ) {
+	function cerulean_remove_wp_ver_css_js( $src ) {
 	    if ( strpos( $src, 'ver=' ) )
 	        $src = remove_query_arg( 'ver', $src );
 	    return $src;
@@ -88,8 +88,8 @@ if( ! function_exists( 'reverie_remove_wp_ver_css_js ' ) ) {
 }
 
 // remove injected CSS for recent comments widget
-if( ! function_exists( 'reverie_remove_wp_widget_recent_comments_style ' ) ) {
-	function reverie_remove_wp_widget_recent_comments_style() {
+if( ! function_exists( 'cerulean_remove_wp_widget_recent_comments_style ' ) ) {
+	function cerulean_remove_wp_widget_recent_comments_style() {
 	   if ( has_filter('wp_head', 'wp_widget_recent_comments_style') ) {
 	      remove_filter('wp_head', 'wp_widget_recent_comments_style' );
 	   }
@@ -97,8 +97,8 @@ if( ! function_exists( 'reverie_remove_wp_widget_recent_comments_style ' ) ) {
 }
 
 // remove injected CSS from recent comments widget
-if( ! function_exists( 'reverie_remove_recent_comments_style ' ) ) {
-	function reverie_remove_recent_comments_style() {
+if( ! function_exists( 'cerulean_remove_recent_comments_style ' ) ) {
+	function cerulean_remove_recent_comments_style() {
 	  global $wp_widget_factory;
 	  if (isset($wp_widget_factory->widgets['WP_Widget_Recent_Comments'])) {
 	    remove_action('wp_head', array($wp_widget_factory->widgets['WP_Widget_Recent_Comments'], 'recent_comments_style'));
@@ -107,8 +107,8 @@ if( ! function_exists( 'reverie_remove_recent_comments_style ' ) ) {
 }
 
 // remove injected CSS from gallery
-if( ! function_exists( 'reverie_gallery_style ' ) ) {
-	function reverie_gallery_style($css) {
+if( ! function_exists( 'cerulean_gallery_style ' ) ) {
+	function cerulean_gallery_style($css) {
 	  return preg_replace("!<style type='text/css'>(.*?)</style>!s", '', $css);
 	}
 }
@@ -118,8 +118,8 @@ Enqueue CSS and Scripts
 **********************/
 
 // loading modernizr and jquery, and reply script
-if( ! function_exists( 'reverie_scripts_and_styles ' ) ) {
-	function reverie_scripts_and_styles() {
+if( ! function_exists( 'cerulean_scripts_and_styles ' ) ) {
+	function cerulean_scripts_and_styles() {
 	  if (!is_admin()) {
 
 
@@ -127,19 +127,19 @@ if( ! function_exists( 'reverie_scripts_and_styles ' ) ) {
         //wp_register_script( 'jquery', ( 'http://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js' ), false, null, true );
 
 	    // modernizr (without media query polyfill)
-	    //wp_register_script( 'reverie-modernizr', get_template_directory_uri() . '/js/modernizr.js', array(), '2.6.2', false );
+	    //wp_register_script( 'cerulean-modernizr', get_template_directory_uri() . '/js/modernizr.js', array(), '2.6.2', false );
 
 	    // register Google font
 	    //wp_register_style('google-font', 'http://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700|Lora:400,700|Droid+Sans+Mono');
 
 	    // ie-only style sheet
-	    wp_register_style( 'reverie-ie-only', get_template_directory_uri() . '/css/ie.css', array(), '' );
+	    wp_register_style( 'cerulean-ie-only', get_template_directory_uri() . '/css/ie.css', array(), '' );
 
 	    // comment reply script for threaded comments
 	    if( get_option( 'thread_comments' ) )  { wp_enqueue_script( 'comment-reply' ); }
 	    
 	    // adding Foundation scripts file in the footer
-	    //wp_register_script( 'reverie-js', get_template_directory_uri() . '/js/foundation.min.js', array( 'jquery' ), '', true );
+	    //wp_register_script( 'cerulean-js', get_template_directory_uri() . '/js/foundation.min.js', array( 'jquery' ), '', true );
 	    wp_register_script( 'compiled', get_template_directory_uri() . '/js/compiled.js' , array(  ), '', true );
 	    	    
 	    global $is_IE;
@@ -148,9 +148,9 @@ if( ! function_exists( 'reverie_scripts_and_styles ' ) ) {
 	    }
 
 	    // enqueue styles and scripts
-	    //wp_enqueue_script( 'reverie-modernizr' );
+	    //wp_enqueue_script( 'cerulean-modernizr' );
 	    //wp_enqueue_style( 'google-font' );
-	    wp_enqueue_style('reverie-ie-only');
+	    wp_enqueue_style('cerulean-ie-only');
 	    /*
 	    I recommend using a plugin to call jQuery
 	    using the google cdn. That way it stays cached
@@ -158,7 +158,7 @@ if( ! function_exists( 'reverie_scripts_and_styles ' ) ) {
 	    */
 	    //wp_enqueue_script( 'jquery' );
 		
-	    //wp_enqueue_script( 'reverie-js' );
+	    //wp_enqueue_script( 'cerulean-js' );
 	    wp_enqueue_script( 'html5shiv' );
 	    wp_enqueue_script( 'compiled' );
 
@@ -168,9 +168,9 @@ if( ! function_exists( 'reverie_scripts_and_styles ' ) ) {
 
 // adding the conditional wrapper around ie stylesheet
 // source: http://code.garyjones.co.uk/ie-conditional-style-sheets-wordpress/
-if( ! function_exists( 'reverie_ie_conditional ' ) ) {
-	function reverie_ie_conditional( $tag, $handle ) {
-		if ( 'reverie-ie-only' == $handle )
+if( ! function_exists( 'cerulean_ie_conditional ' ) ) {
+	function cerulean_ie_conditional( $tag, $handle ) {
+		if ( 'cerulean-ie-only' == $handle )
 			$tag = '<!--[if lt IE 9]>' . "\n" . $tag . '<![endif]-->' . "\n";
 		return $tag;
 	}
@@ -180,8 +180,8 @@ if( ! function_exists( 'reverie_ie_conditional ' ) ) {
 Post related cleaning
 *********************/
 /* Customized the output of caption, you can remove the filter to restore back to the WP default output. Courtesy of DevPress. http://devpress.com/blog/captions-in-wordpress/ */
-if( ! function_exists( 'reverie_cleaner_caption ' ) ) {
-	function reverie_cleaner_caption( $output, $attr, $content ) {
+if( ! function_exists( 'cerulean_cleaner_caption ' ) ) {
+	function cerulean_cleaner_caption( $output, $attr, $content ) {
 
 		/* We're not worried abut captions in feeds, so just return the output here. */
 		if ( is_feed() )
@@ -220,20 +220,20 @@ if( ! function_exists( 'reverie_cleaner_caption ' ) ) {
 		/* Return the formatted, clean caption. */
 		return $output;
 		
-	} /* end reverie_cleaner_caption */
+	} /* end cerulean_cleaner_caption */
 }
 
 // Clean the output of attributes of images in editor. Courtesy of SitePoint. http://www.sitepoint.com/wordpress-change-img-tag-html/
-if( ! function_exists( 'reverie_image_tag_class ' ) ) {
-	function reverie_image_tag_class($class, $id, $align, $size) {
+if( ! function_exists( 'cerulean_image_tag_class ' ) ) {
+	function cerulean_image_tag_class($class, $id, $align, $size) {
 		$align = 'align' . esc_attr($align);
 		return $align;
-	} /* end reverie_image_tag_class */
+	} /* end cerulean_image_tag_class */
 }
 
 // Remove width and height in editor, for a better responsive world.
-if( ! function_exists( 'reverie_image_editor ' ) ) {
-	function reverie_image_editor($html, $id, $alt, $title) {
+if( ! function_exists( 'cerulean_image_editor ' ) ) {
+	function cerulean_image_editor($html, $id, $alt, $title) {
 		return preg_replace(array(
 				'/\s+width="\d+"/i',
 				'/\s+height="\d+"/i',
@@ -246,14 +246,14 @@ if( ! function_exists( 'reverie_image_editor ' ) ) {
 				'alt="' . $title . '"'
 			),
 			$html);
-	} /* end reverie_image_editor */
+	} /* end cerulean_image_editor */
 }
 
 // Wrap images with figure tag. Courtesy of Interconnectit http://interconnectit.com/2175/how-to-remove-p-tags-from-images-in-wordpress/
-if( ! function_exists( 'reverie_img_unautop ' ) ) {
-	function reverie_img_unautop($pee) {
+if( ! function_exists( 'cerulean_img_unautop ' ) ) {
+	function cerulean_img_unautop($pee) {
 	    $pee = preg_replace('/<p>\\s*?(<a .*?><img.*?><\\/a>|<img.*?>)?\\s*<\\/p>/s', '<figure>$1</figure>', $pee);
 	    return $pee;
-	} /* end reverie_img_unautop */
+	} /* end cerulean_img_unautop */
 }
 ?>

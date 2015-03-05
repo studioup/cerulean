@@ -5,18 +5,18 @@
 Studio Up
 http://www.studioup.it
 Twitter: @studio_up
-Reverie Framework: https://github.com/studioup/cerulean
+cerulean Framework: https://github.com/studioup/cerulean
 
 /* THANKS */							
 
 ZURB Foundation
 http://foundation.zurb.com/
 
-Reverie Framework
+cerulean Framework
 Zhen Huang
 http://themefortress.com
 Twitter: @themefortress
-Reverie Framework: http://themefortress.com/reverie/
+cerulean Framework: http://themefortress.com/cerulean/
 
 Roots
 http://www.rootstheme.com/

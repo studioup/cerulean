@@ -15,13 +15,13 @@
                        yoast_breadcrumb('<div id="breadcrumbs">','</div>');
                     }
                     ?>
-    				<?php reverie_entry_meta(); ?>
+    				<?php cerulean_entry_meta(); ?>
     			</header>
     			<div class="entry-content">
     				<?php the_content(); ?>
     			</div>
     			<footer>
-    				<?php wp_link_pages(array('before' => '<nav id="page-nav"><p>' . __('Pages:', 'reverie'), 'after' => '</p></nav>' )); ?>
+    				<?php wp_link_pages(array('before' => '<nav id="page-nav"><p>' . __('Pages:', 'cerulean'), 'after' => '</p></nav>' )); ?>
     				<p class="entry-tags"><?php the_tags(); ?></p>
     				<?php edit_post_link('Edit this Post'); ?>
     			</footer>

@@ -1,4 +1,11 @@
-Reverie is a versatile HTML5 responsive WordPress framework based on ZURB's Foundation, brought you by Zhen Huang from ThemeFortress. If you have any questions or suggestions, please visit the support forum.
+Cerulean Framework is an extremely versatile HTML5 WordPress framework, brought you by Studio Up is based on the work of Zhen Huang from ThemeFortress and ZURB's Foundation framework.
+
+
+Studio Up
+http://studioup.it
+
+Cerulean on Github:
+http://github.com/studioup/cerulean
 
 ThemeFortress:
 http://themefortress.com

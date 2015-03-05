@@ -12,7 +12,7 @@
                    yoast_breadcrumb('<div id="breadcrumbs">','</div>');
                 }
                 ?>
-				<?php //reverie_entry_meta(); ?>
+				<?php //cerulean_entry_meta(); ?>
 			</header>
     	<?php if ( have_posts() ) : ?>
     	
@@ -27,10 +27,10 @@
     	<?php endif; // end have_posts() check ?>
     	
     	<?php /* Display navigation to next/previous pages when applicable */ ?>
-    	<?php if ( function_exists('reverie_pagination') ) { reverie_pagination(); } else if ( is_paged() ) { ?>
+    	<?php if ( function_exists('cerulean_pagination') ) { cerulean_pagination(); } else if ( is_paged() ) { ?>
     		<nav id="post-nav">
-    			<div class="post-previous"><?php next_posts_link( __( '&larr; Older posts', 'reverie' ) ); ?></div>
-    			<div class="post-next"><?php previous_posts_link( __( 'Newer posts &rarr;', 'reverie' ) ); ?></div>
+    			<div class="post-previous"><?php next_posts_link( __( '&larr; Older posts', 'cerulean' ) ); ?></div>
+    			<div class="post-next"><?php previous_posts_link( __( 'Newer posts &rarr;', 'cerulean' ) ); ?></div>
     		</nav>
     	<?php } ?>
     
