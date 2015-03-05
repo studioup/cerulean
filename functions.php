@@ -114,4 +114,52 @@ if ( ! function_exists( 'cerulean_entry_meta' ) ) {
 
 //remove admin bar
 add_filter('show_admin_bar', '__return_false');
+
+
+function get_featured_img_src( $size = 'full' ){
+    $image = false;
+    $image = wp_get_attachment_image_src( get_post_thumbnail_id( $post->ID ), $size );
+    if(!empty($image) && !empty($image[0])){
+        return $image[0];
+    }
+}
+
+function the_featured_image_src( $size = 'full' ){
+    echo get_featured_img_src( $size );
+}
+
+
+function get_image_src_from_id( $id , $size = 'full' ){
+    $image = false;
+    $image =  wp_get_attachment_image_src( $id , $size );
+    if(!empty($image) && !empty($image[0])){
+        return $image[0];
+    }
+    return false;
+}
+
+function the_image_src_from_id( $id , $size = 'full' ){
+    echo get_image_src_from_id( $id , $size );
+}
+
+if ( function_exists( 'get_field' ) ) {
+    function get_field_img($field, $size = 'full' ){
+        return get_image_src_from_id( get_field($field) , $size );
+    }
+    
+    function the_field_img($field, $size = 'full' ){
+        echo get_field_img($field, $size );
+    }
+}
+
+if ( function_exists( 'get_sub_field' ) ) {
+    function get_sub_field_img($field, $size = 'full' ){
+        return get_image_src_from_id( get_sub_field($field) , $size );
+    }
+    
+    function the_sub_field_img($field, $size = 'full' ){
+        echo get_sub_field_img($field, $size );
+    }
+}
+
 ?>
