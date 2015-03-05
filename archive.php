@@ -5,7 +5,15 @@
 	<div class="row">
     <!-- Row for main content area -->
     	<div class="small-12 large-8 columns" id="content" role="main">
-    	
+    	    <header>
+				<h1 class="entry-title"><?php echo post_type_archive_title(); ?></h1>
+				<?php 
+                if ( function_exists('yoast_breadcrumb') && !is_front_page()) {
+                   yoast_breadcrumb('<div id="breadcrumbs">','</div>');
+                }
+                ?>
+				<?php //reverie_entry_meta(); ?>
+			</header>
     	<?php if ( have_posts() ) : ?>
     	
     		<?php /* Start the Loop */ ?>

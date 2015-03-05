@@ -1,10 +1,19 @@
 <?php get_header(); ?>
+
 <!-- Start the main container -->
 <div class="container" role="document">
 	<div class="row">
     <!-- Row for main content area -->
-    	<div class="small-12 large-12 columns" id="content" role="main">
-    	
+    	<div class="small-12 large-8 columns" id="content" role="main">
+            <header>
+				<h1 class="entry-title"><?php _e('News','reverie'); ?></h1>
+				<?php 
+                if ( function_exists('yoast_breadcrumb') && !is_front_page()) {
+                   yoast_breadcrumb('<div id="breadcrumbs">','</div>');
+                }
+                ?>
+				<?php //reverie_entry_meta(); ?>
+			</header>
     	<?php if ( have_posts() ) : ?>
     	
     		<?php /* Start the Loop */ ?>
@@ -26,6 +35,7 @@
     	<?php } ?>
     
     	</div>
+    	<?php get_sidebar(); ?>
 	</div><!-- Row End -->
 </div><!-- Container End -->
 		

@@ -6,7 +6,11 @@
     	<div class="small-12 large-8 columns" id="content" role="main">
     	
     		<h2><?php _e('Search Results for', 'reverie'); ?> "<?php echo get_search_query(); ?>"</h2>
-    	
+            <?php 
+            if ( function_exists('yoast_breadcrumb') && !is_front_page()) {
+               yoast_breadcrumb('<div id="breadcrumbs">','</div>');
+            }
+            ?>
     	<?php if ( have_posts() ) : ?>
     	
     		<?php /* Start the Loop */ ?>

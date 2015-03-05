@@ -16,7 +16,12 @@ get_header(); ?>
     		<article <?php post_class() ?> id="post-<?php the_ID(); ?>">
     			<header>
     				<h1 class="entry-title"><?php the_title(); ?></h1>
-    				<?php reverie_entry_meta(); ?>
+    				<?php 
+                    if ( function_exists('yoast_breadcrumb') && !is_front_page()) {
+                       yoast_breadcrumb('<div id="breadcrumbs">','</div>');
+                    }
+                    ?>
+    				<?php //reverie_entry_meta(); ?>
     			</header>
     			<div class="entry-content">
     				<?php the_content(); ?>
@@ -24,7 +29,9 @@ get_header(); ?>
     			<footer>
     				<?php wp_link_pages(array('before' => '<nav id="page-nav"><p>' . __('Pages:', 'reverie'), 'after' => '</p></nav>' )); ?>
     			</footer>
+    			<?php //comments_template(); ?>
     		</article>
+    		
     	<?php endwhile; // End the loop ?>
     
     	</div>
