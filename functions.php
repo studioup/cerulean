@@ -116,14 +116,20 @@ if ( ! function_exists( 'cerulean_entry_meta' ) ) {
 add_filter('show_admin_bar', '__return_false');
 
 
-function get_the_post_thumbnail_src( $post_id = $post->ID, $size = 'full' ){
+function get_the_post_thumbnail_src( $post_id=false , $size = 'full' ){
+    if($post_id==false && $post && is_object( $post ) && $post->ID){
+        $post_id = $post->ID;
+    }
     $image = wp_get_attachment_image_src( get_post_thumbnail_id( $post_id ), $size );
     if(!empty($image) && !empty($image[0])){
         return $image[0];
     }
 }
 
-function the_post_thumbnail_src( $post_id = $post->ID, $size = 'full' ){
+function the_post_thumbnail_src( $post_id=false, $size = 'full' ){
+    if($post_id==false && $post){
+        $post_id = $post->ID;
+    }
     echo get_the_post_thumbnail_src( $post_id, $size );
 }
 
