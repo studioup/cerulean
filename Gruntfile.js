@@ -2,9 +2,21 @@
 module.exports = function(grunt) {
 
   var url = grunt.option( "url" ) || 'http://static.studioup.it/img/logo_fb.png';
-  if(!(/^https?:\/\//.test(url)))
+  var themeUrl = grunt.option( "themeUrl" );
+  var jsMapPath = "";
+  if(grunt.option( "themeUrl" ) != undefined){
+      if(!(/^https?:\/\//.test(url)))
+      {
+        url = "http://" + url;
+      }
+      if(themeUrl.substr(-1) == '/') {
+          themeUrl = themeUrl.substr(0, themeUrl.length - 1);
+      }
+      jsMapPath = "//# sourceMappingURL="+themeUrl+"/compiled.js.map\n";
+  }
+  if(!(/^https?:\/\//.test(themeUrl)))
   {
-    url = "http://" + url;
+    url = "http://" + themeUrl;
   }
   var size = {
       width: 1280,
@@ -14,16 +26,30 @@ module.exports = function(grunt) {
       size = {
           width: 300,
           height: 300
-      }; 
+      };
   }
-  
-  
+
+
   grunt.initConfig({
     pkg: grunt.file.readJSON('package.json'),
-
+    surround: {
+        options: {
+        },
+        js_map: {
+            options: {
+                append: jsMapPath,
+                //ignoreRepetition: true
+            },
+            files: [{
+              src: 'js/compiled.js',
+              dest: 'js/compiled.js'
+            }]
+        },
+      },
     sass: {
       options: {
         //includePaths: ['bower_components/foundation/scss','bower_components/compass-mixins/lib/'],
+        loadPath: ['bower_components/font-awesome/scss/'],
         sourcemap: 'auto',
         compass: true
       },
@@ -35,7 +61,7 @@ module.exports = function(grunt) {
         files: {
           'css/app.css': 'scss/app.scss',
           'css/style.css': 'scss/style.scss'
-        }        
+        }
       }
     },
     bless: {
@@ -55,8 +81,13 @@ module.exports = function(grunt) {
       grunt: { files: ['Gruntfile.js'] },
 
       sass: {
-        files: 'scss/**/*.scss',
+        files: 'scss/*.scss',
         tasks: ['sass']
+        //tasks: ['sass','bless']
+      },
+      closurecompiler: {
+        files: ['js/app.js','js/include.*.js'],
+        tasks: ['js']
         //tasks: ['sass','bless']
       }
     },
@@ -81,6 +112,7 @@ module.exports = function(grunt) {
                 'bower_components/jquery/dist/jquery.js',
                 'bower_components/modernizr/modernizr.js',
                 'bower_components/foundation/js/foundation/foundation.js',
+
                 //'bower_components/foundation/js/foundation/foundation.abide.js',
                 //'bower_components/foundation/js/foundation/foundation.accordion.js',
                 //'bower_components/foundation/js/foundation/foundation.alert.js',
@@ -92,13 +124,14 @@ module.exports = function(grunt) {
                 //'bower_components/foundation/js/foundation/foundation.magellan.js',
                 //'bower_components/foundation/js/foundation/foundation.offcanvas.js',
                 //'bower_components/foundation/js/foundation/foundation.orbit.js',
-                //'bower_components/foundation/js/foundation/foundation.reveal.js',
+                'bower_components/foundation/js/foundation/foundation.reveal.js',
                 //'bower_components/foundation/js/foundation/foundation.slider.js',
                 //'bower_components/foundation/js/foundation/foundation.tab.js',
                 //'bower_components/foundation/js/foundation/foundation.tooltip.js',
                 'bower_components/foundation/js/foundation/foundation.topbar.js',
                 'js/include.*.js',
                 'bower_components/outdated-browser/outdatedbrowser/outdatedbrowser.js',
+                'bower_components/FlexSlider/jquery.flexslider.js',
                 'js/app.js',
                 // Will expand to 'static/src/debug.api.js',
                 //   'static/src/debug.console.js'...
@@ -106,23 +139,28 @@ module.exports = function(grunt) {
             jsOutputFile: 'js/compiled.js',
             options: {
                 debug: true,
+                process_jquery_primitives: undefined,
                 //compilation_level: 'ADVANCED_OPTIMIZATIONS',
                 compilation_level: 'SIMPLE_OPTIMIZATIONS',
+                //compilation_level: 'WHITESPACE_ONLY',
                 //language_in: 'ECMASCRIPT5_STRICT',
                 //formatting: 'PRETTY_PRINT',
-                create_source_map: 'js/compiled.js.map',
+                create_source_map: 'compiled.js.map',
                 externs: [
                     'closure-compiler/externs/jquery-1.9.js',
+                    'js/externs/modernizr.externs.js',
                     'js/externs/foundation.externs.js'
                 ]
             }
         },
     }
   });
+  //# sourceMappingURL=../compiled.js.map
 
   grunt.loadNpmTasks('grunt-sass');
   grunt.loadNpmTasks('grunt-contrib-sass');
   grunt.loadNpmTasks('grunt-closure-compiler');
+  grunt.loadNpmTasks('grunt-surround');
 
   grunt.loadNpmTasks('grunt-contrib-watch');
   //grunt.loadNpmTasks('grunt-bless');
@@ -130,10 +168,11 @@ module.exports = function(grunt) {
   //grunt.loadNpmTasks('grunt-closure-tools');
   require('coffee-script/register');
   grunt.loadNpmTasks('grunt-screenshot-element');
-  
+
   grunt.registerTask('screen',['screenshot-element']);
-  grunt.registerTask('js',['closure-compiler']);
-  grunt.registerTask('build', ['sass']);
+  grunt.registerTask('wrap',['surround']);
+  grunt.registerTask('js',['closure-compiler','surround']);
+  grunt.registerTask('build', ['sass','closure-compiler','surround']);
   //grunt.registerTask('build', ['sass','bless']);
-  grunt.registerTask('default', ['build','watch','closure-compiler']);
+  grunt.registerTask('default', ['build','watch']);
 }
