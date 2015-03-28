@@ -166,4 +166,48 @@ if ( function_exists( 'get_sub_field' ) ) {
     }
 }
 
+
+add_filter('query_vars', 'add_my_var');
+function add_my_var($public_query_vars) {
+    $public_query_vars[] = 'modal';
+    //$public_query_vars[] = 'subject';
+    return $public_query_vars;
+}
+
+
+if( function_exists('acf_add_options_sub_page') )
+{
+    acf_add_options_page(array(
+        //'title' => __('General options','cerulean'), // this seems to create an options page for every language
+        'title' => 'General options',
+        'menu_slug' => 'general-options',
+        'capability' => 'manage_options'
+    ));
+
+
+    function get_forms(){
+        ob_start();
+        FrmFormsHelper::forms_dropdown( 'frm_add_form_id' );
+        $forms = ob_get_contents();
+        ob_end_clean();
+        preg_match_all('/<option\svalue="([^"]*)" >([^>]*)<\/option>/', $forms, $matches);
+        $result = array_combine($matches[1], $matches[2]);
+        return $result;
+    }
+    /* auto populate acf field with form IDs */
+    function load_forms_function( $field ){
+        //exit;
+        $result = get_forms();
+        if( is_array($result) ){
+            $field['choices'] = array();
+            foreach( $result as $key=>$match ){
+                $field['choices'][ $key ] = $match;
+            }
+        }
+        return $field;
+    }
+    add_filter('acf/load_field/name=forms', 'load_forms_function');
+
+}
+
 ?>
