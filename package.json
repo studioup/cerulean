@@ -8,6 +8,7 @@
     "grunt-contrib-watch": "~0.5.3",
     "grunt-contrib-coffee" : "*",
     "grunt-closure-compiler" : "*",
+    "grunt-surround" : "*",
     "phantomjs" :  "1.9",
     "grunt-sass": "~0.8.0",
     "grunt-screenshot-element": "~0.1.8",
