@@ -1,57 +1,327 @@
-.tbl{
-    display: table;
+@media #{$small-only} {
+    .small-text-center {
+      text-align: center !important;
+    }
+    .small-text-left {
+      text-align: left !important;
+    }
+    .small-text-right {
+      text-align: right !important;
+    }
+}
+
+@media #{$medium-only} {
+    .medium-text-center {
+      text-align: center !important;
+    }
+    .medium-text-left {
+      text-align: left !important;
+    }
+    .medium-text-right {
+      text-align: right !important;
+    }
+}
+
+@media #{$large-up} {
+    .large-text-center {
+      text-align: center !important;
+    }
+    .large-text-left {
+      text-align: left !important;
+    }
+    .large-text-right {
+      text-align: right !important;
+    }
+}
+
+
+
+.o-tbl{
+    display: table !important;
     width: 100%;
+    &>.o-tbl__row{
+        display: table-row !important;
+        text-align: center;
+        .o-tbl__cell{
+            display: table-cell !important;
+            text-align: center;
+            vertical-align: middle;
+        }
+    }
 }
 
-.tbl-row{
-    display: table-row;
-    text-align: center;
+@media #{$small-only} {
+    .o-tbl > .o-tbl__row .o-tbl__cell.hide-for-small{
+        display: none !important;
+    }
 }
 
-.tbl-inner{
-    display: table-cell;
-    text-align: center;
-    vertical-align: middle;
+@media #{$medium-only} {
+    .o-tbl > .o-tbl__row .o-tbl__cell.hide-for-medium{
+        display: none !important;
+    }
+}
+
+@media #{$large-up} {
+    .o-tbl > .o-tbl__row .o-tbl__cell.hide-for-large{
+        display: none !important;
+    }
 }
 
 
-.bgsize-cover{
+
+
+.u-bgsize-cover{
     background-size: cover !important;
     background-position: center center !important;
     background-repeat: no-repeat;
+    &.u-bg-bottom{
+        background-position: bottom center !important;
+    }
+    &.u-bg-top{
+        background-position: bottom center !important;
+    }
+    &.u-bg-left{
+        background-position: center left !important;
+    }
+    &.u-bg-right{
+        background-position: center right !important;
+    }
 }
 
-.bgsize-contain{
+.u-bgsize-contain{
     background-size: contain !important;
     background-position: center center !important;
     background-repeat: no-repeat !important;
+    &.u-bg-bottom{
+        background-position: bottom center !important;
+    }
+    &.u-bg-top{
+        background-position: bottom center !important;
+    }
+    &.u-bg-left{
+        background-position: center left !important;
+    }
+    &.u-bg-right{
+        background-position: center right !important;
+    }
+}
+
+.u-relative{
+    position: relative;
+}
+
+.u-absolute{
+    position: absolute;
+}
+
+.u-full{
+    width: 100%;
+    height: 100%;
+}
+
+.u-top-0{
+    top: 0;
+}
+
+.u-top-50{
+    top: 50%;
+}
+
+.u-top-100{
+    top: 100%;
+}
+
+.u-left-0{
+    left: 0;
+}
+
+.u-left-50{
+    left: 50%;
+}
+
+.u-left-100{
+    left: 100%;
+}
+
+/*
+.u-bottom-0{
+    bottom: 0;
+}
+
+.u-bottom-50{
+    bottom: 50%;
+}
+
+.u-bottom-100{
+    bottom: 100%;
 }
 
 
+
+.u-right-0{
+    left: 0;
+}
+
+.u-right-50{
+    right: 50%;
+}
+
+.u-right-100{
+    right: 100%;
+}
+*/
+
+
+
 // fixed-ratio box, credits http://www.mademyday.de/css-height-equals-width-with-pure-css.html
-.box{
+.o-box{
+    position: relative;
     &:before{
         content: "";
         display: block;
         padding-top: 100%; 	/* initial ratio of 1:1*/
     }
-    &> .content{
+    &>.o-box__content{
         position:  absolute;
         top: 0;
         left: 0;
         bottom: 0;
         right: 0;
     }
-    &.ratio2_1:before{
+    &.o-box--2_1:before{
         padding-top: 50%;
     }
-    &.ratio1_2:before{
+    &.o-box--1_2:before{
         padding-top: 200%;
     }
-    &.ratio4_3:before{
+    &.o-box--4_3:before{
         padding-top: 75%;
     }
-    &.ratio16_9:before{
+    &.o-box--3_4:before{
+        padding-top: 133.33%;
+    }
+    &.o-box--16_9:before{
         padding-top: 56.25%;
+    }
+}
+
+@media #{$small-only} {
+    .o-box{
+        &.o-box--small-1_1:before{
+            padding-top: 100%;
+        }
+        &.o-box--small-2_1:before{
+            padding-top: 50%;
+        }
+        &.o-box--small-1_2:before{
+            padding-top: 200%;
+        }
+        &.o-box--small-4_3:before{
+            padding-top: 75%;
+        }
+        &.o-box--small-3_4:before{
+            padding-top: 133.33%;
+        }
+        &.o-box--small-16_9:before{
+            padding-top: 56.25%;
+        }
+
+    }
+}
+
+@media #{$medium-only} {
+    .o-box{
+        &.o-box--medium-1_1:before{
+            padding-top: 100%;
+        }
+        &.o-box--medium-2_1:before{
+            padding-top: 50%;
+        }
+        &.o-box--medium-1_2:before{
+            padding-top: 200%;
+        }
+        &.o-box--medium-4_3:before{
+            padding-top: 75%;
+        }
+        &.o-box--medium-3_4:before{
+            padding-top: 133.33%;
+        }
+        &.o-box--medium-16_9:before{
+            padding-top: 56.25%;
+        }
+
+    }
+}
+
+
+.o-flex-table {
+    @include flexbox((
+        display:flex,
+        flex-direction: column,
+        flex-wrap: nowrap,
+        justify-content: center,
+        align-content: center,
+        align-items: stretch,
+    ),$version: 2);
+    @include flexbox((
+        display:flex,
+        flex-direction: column,
+        flex-wrap: nowrap,
+        justify-content: center,
+        align-content: center,
+        align-items: stretch,
+    ));
+}
+
+
+
+ .o-flex-table__header {
+}
+
+.o-flex-table__content {
+    @include flexbox((
+        flex-grow: 1,
+        flex-shrink: 0,
+        flex-basis: 0,
+    ),$version: 2);
+    @include flexbox((
+        flex-grow: 1,
+        flex-shrink: 0,
+        flex-basis: 0,
+    ));
+}
+
+.o-flex-table__footer {
+}
+
+.u-flex-vertical-center{
+    @include flexbox((
+        display: flex,
+        justify-content: center,
+        align-items: center,
+    ),$version: 2);
+    @include flexbox((
+        display: flex,
+        justify-content: center,
+        align-items: center,
+    ));
+}
+
+
+.frm_blank_field input, .frm_blank_field textarea, .frm_blank_field select{
+    margin-bottom: 0;
+}
+
+.frm_blank_field label, .frm_blank_field label.error{
+    color : $alert-color;
+}
+
+.frm_forms {
+    .frm_hidden{
+        display: none;
+    }
+    fieldset{
+        border: none;
     }
 }
