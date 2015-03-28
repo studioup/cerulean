@@ -57,6 +57,8 @@
 // Allows the use of rem-calc() or lower-bound() in your settings
 @import "foundation/functions";
 
+$fa-font-path : "../bower_components/font-awesome/fonts";
+
 // The default font-size is set to 100% of the browser style sheet (usually 16px)
 // for compatibility with browser-based text zoom or user-set defaults.
 
@@ -122,6 +124,9 @@ $alert-color: #f04124;
 $success-color: #43AC6A;
 $warning-color: #f08a24;
 $info-color: #a0d3e8;
+
+$triangle-color: $primary-color;
+
 
 // We use these to control various global styles
 $body-bg: $white;
