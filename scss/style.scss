@@ -17,10 +17,17 @@
 
 // Load some Compass magic, note you will need to install Compass first
 //@import "compass/css3/shared";
+@import "app";
 @import "compass/css3/border-radius";
 @import "compass/css3/transition";
+@import "compass/css3/flexbox";
+@import "compass/css3/box-shadow";
+@import "icon-font";
 @import "outdatedbrowser";
 @import "cerulean-commons";
+@import "cerulean-triangles";
+@import "flexslider";
+//@import "font-awesome";
 
 /* Start to customize Cerulean */
 
@@ -333,8 +340,8 @@ footer.full-width {
         padding-top: rem-calc(25);
         padding-bottom: rem-calc(25);
         #credits a {
-            //background-image: url(https://www.studioup.it/img/stup_developed.png);
-            background-image: url(https://www.studioup.it/img/stup_developed_g.png);
+            //background-image: url(//static.studioup.it/img/stup_developed.png);
+            background-image: url(//static.studioup.it/img/stup_developed_g.png);
             background-size: contain;
             background-position: center;
             background-repeat: no-repeat;

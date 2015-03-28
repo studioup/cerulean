@@ -123,7 +123,10 @@ if( ! function_exists( 'cerulean_scripts_and_styles ' ) ) {
 	  if (!is_admin()) {
 
 
-        //wp_deregister_script( 'jquery' );
+        wp_deregister_script( 'jquery' );
+        wp_deregister_style( 'formidable' );
+        wp_deregister_style( 'font-awesome-css' );
+        
         //wp_register_script( 'jquery', ( 'http://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js' ), false, null, true );
 
 	    // modernizr (without media query polyfill)
@@ -135,12 +138,14 @@ if( ! function_exists( 'cerulean_scripts_and_styles ' ) ) {
 	    // ie-only style sheet
 	    wp_register_style( 'cerulean-ie-only', get_template_directory_uri() . '/css/ie.css', array(), '' );
 
+        wp_register_script( 'compiled', get_template_directory_uri() . '/js/compiled.js' , array(  ), '', true );
 	    // comment reply script for threaded comments
-	    if( get_option( 'thread_comments' ) )  { wp_enqueue_script( 'comment-reply' ); }
+        
+	    //if( is_singular() && comments_open() && get_option( 'thread_comments' ) )  { wp_enqueue_script( 'comment-reply' ); }
 	    
 	    // adding Foundation scripts file in the footer
 	    //wp_register_script( 'cerulean-js', get_template_directory_uri() . '/js/foundation.min.js', array( 'jquery' ), '', true );
-	    wp_register_script( 'compiled', get_template_directory_uri() . '/js/compiled.js' , array(  ), '', true );
+	    
 	    	    
 	    global $is_IE;
 	    if ($is_IE) {

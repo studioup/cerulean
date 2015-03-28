@@ -7,7 +7,7 @@ if( ! function_exists( 'cerulean_enqueue_style' ) ) {
 	function cerulean_enqueue_style()
 	{
 		// foundation stylesheet
-		wp_register_style( 'cerulean-foundation-stylesheet', get_stylesheet_directory_uri() . '/css/app.css', array(), '' );
+		//wp_register_style( 'cerulean-foundation-stylesheet', get_stylesheet_directory_uri() . '/css/app.css', array(), '' );
 
 		// Register the main style
 		wp_register_style( 'cerulean-stylesheet', get_stylesheet_directory_uri() . '/css/style.css', array(), '', 'all' );
