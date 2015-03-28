@@ -6,9 +6,11 @@
     "foundation": "zurb/bower-foundation",
     "compass-mixins" : "*",
     "wow" : "*",
+    "font-awesome" : "*",
     "animate.css" : "*",
     "outdated-browser" : "*",
     "closure-compiler" : "*",
-    "jquery" : "2.x"
+    "jquery" : "2.x",
+    "FlexSlider" : "woothemes/FlexSlider"
   }
 }
