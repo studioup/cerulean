@@ -1,0 +1,30 @@
+.frm_forms{
+    input[type="text"], input[type="password"], input[type="date"], input[type="datetime"], input[type="datetime-local"], input[type="month"], input[type="week"], input[type="email"], input[type="number"], input[type="search"], input[type="tel"], input[type="time"], input[type="url"], input[type="color"], textarea{
+        box-shadow: none;
+        margin-bottom: rem-calc(10);
+        margin-top: rem-calc(50);
+    }
+    input[type="text"], input[type="password"], input[type="date"], input[type="datetime"], input[type="datetime-local"], input[type="month"], input[type="week"], input[type="email"], input[type="number"], input[type="search"], input[type="tel"], input[type="time"], input[type="url"], input[type="color"]{
+        border: none;
+        box-shadow: none;
+        border-bottom: rem-calc(3) solid $primary-color;
+        background-color: $body-bg;
+        color: $body-font-color;
+    }
+    textarea{
+        border: rem-calc(3) solid $primary-color;
+        background-color: $body-bg;
+        color: $body-font-color;
+    }
+    .frm_blank_field {
+        input[type="text"], input[type="password"], input[type="date"], input[type="datetime"], input[type="datetime-local"], input[type="month"], input[type="week"], input[type="email"], input[type="number"], input[type="search"], input[type="tel"], input[type="time"], input[type="url"], input[type="color"], textarea{
+            margin-bottom: rem-calc(0);
+        }
+    }
+    .frm_error{
+        margin-bottom: rem-calc(10);
+    }
+    .frm_submit{
+        margin-top: rem-calc(50);
+    }
+}

@@ -1,7 +1,8 @@
 // Foundation JavaScript
 // Documentation can be found at: http://foundation.zurb.com/docs
 function frmThemeOverride_frmPlaceError(key,errObj){
-    jQuery('#frm_field_'+key+'_container').append('<small class="error frm_error">'+errObj[key]+'</small>');
+    //jQuery('#frm_field_'+key+'_container').append('<small class="error frm_error">'+errObj[key]+'</small>');
+    jQuery( '<small class="error frm_error">'+errObj[key]+'</small>' ).insertAfter( jQuery('#frm_field_'+key+'_container input, #frm_field_'+key+'_container textarea') );
 }
 
 (function($) {
