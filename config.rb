@@ -7,6 +7,8 @@ css_dir = "css"
 sass_dir = "scss"
 images_dir = "img"
 javascripts_dir = "js"
+sourcemap = true
+sass_path=  File.expand_path("../scss", __FILE__)
 
 # You can select your preferred output style here (can be overridden via the command line):
 # output_style = :expanded or :nested or :compact or :compressed
