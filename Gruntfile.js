@@ -49,7 +49,7 @@ module.exports = function(grunt) {
     sass: {
       options: {
         //includePaths: ['bower_components/foundation/scss','bower_components/compass-mixins/lib/'],
-        loadPath: ['bower_components/font-awesome/scss/'],
+        loadPath: ['bower_components/font-awesome/scss/', 'bower_components/animate-sass/'],
         sourcemap: 'auto',
         compass: true
       },
@@ -130,6 +130,7 @@ module.exports = function(grunt) {
                 //'bower_components/foundation/js/foundation/foundation.tab.js',
                 //'bower_components/foundation/js/foundation/foundation.tooltip.js',
                 'bower_components/foundation/js/foundation/foundation.topbar.js',
+                'bower_components/wow/dist/wow.js',
                 'js/include.*.js',
                 'bower_components/outdated-browser/outdatedbrowser/outdatedbrowser.js',
                 'bower_components/FlexSlider/jquery.flexslider.js',

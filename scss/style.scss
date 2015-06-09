@@ -9,6 +9,8 @@
 // Global Foundation Settings
 @import "settings";
 
+@import "settings-animate";
+
 // Tweak the mixin for WordPress, this might create some extra CSS in additional to app.css
 @import "foundation/components/pagination";
 
@@ -20,6 +22,7 @@
 @import "app";
 @import "compass/css3";
 @import "polyfill.object-fit";
+@import "animate";
 @import "icon-font";
 @import "outdatedbrowser";
 @import "cerulean-commons";
@@ -335,6 +338,8 @@ footer.full-width {
 
 #main-footer {
     position: relative;
+    display:inline-block;
+    width:100%;
     .credits{
         padding-top: rem-calc(25);
         padding-bottom: rem-calc(25);

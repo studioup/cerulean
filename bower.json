@@ -12,7 +12,8 @@
     "closure-compiler": "*",
     "jquery": "2.x",
     "FlexSlider": "woothemes/FlexSlider",
-    "object-fit": "anselmh/object-fit"
+    "object-fit": "anselmh/object-fit",
+    "animate-sass" : "tgdev/animate-sass"
   },
   "resolutions": {
     "jquery": "2.x"
