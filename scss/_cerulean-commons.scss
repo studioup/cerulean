@@ -68,7 +68,25 @@
     }
 }
 
+.u-objfit-cover, .u-objfit-contain, .u-objfit-none, .u-objfit-fill{
+    overflow: hidden;
+}
 
+.u-objfit-cover{
+    object-fit: cover;
+}
+
+.u-objfit-contain{
+    object-fit: contain;
+}
+
+.u-objfit-fill{
+    object-fit: fill;
+}
+
+.u-objfit-none{
+    object-fit: none;
+}
 
 
 .u-bgsize-cover{

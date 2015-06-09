@@ -4,13 +4,17 @@
   "private": "true",
   "dependencies": {
     "foundation": "zurb/bower-foundation",
-    "compass-mixins" : "*",
-    "wow" : "*",
-    "font-awesome" : "*",
-    "animate.css" : "*",
-    "outdated-browser" : "*",
-    "closure-compiler" : "*",
-    "jquery" : "2.x",
-    "FlexSlider" : "woothemes/FlexSlider"
+    "compass-mixins": "*",
+    "wow": "*",
+    "font-awesome": "*",
+    "animate.css": "*",
+    "outdated-browser": "*",
+    "closure-compiler": "*",
+    "jquery": "2.x",
+    "FlexSlider": "woothemes/FlexSlider",
+    "object-fit": "anselmh/object-fit"
+  },
+  "resolutions": {
+    "jquery": "2.x"
   }
 }

@@ -111,6 +111,7 @@ module.exports = function(grunt) {
             js: [
                 'bower_components/jquery/dist/jquery.js',
                 'bower_components/modernizr/modernizr.js',
+                'bower_components/object-fit/dist/polyfill.object-fit.js',
                 'bower_components/foundation/js/foundation/foundation.js',
 
                 //'bower_components/foundation/js/foundation/foundation.abide.js',
