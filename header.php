@@ -52,7 +52,8 @@
 	<link rel="apple-touch-startup-image" href="<?php echo get_template_directory_uri(); ?>/img/devices/cerulean-load-ipad-portrait.png" media="screen and (min-device-width: 481px) and (max-device-width: 1024px) and (orientation:portrait)" />
 	<!-- Startup Image iPhone (320x460) -->
 	<link rel="apple-touch-startup-image" href="<?php echo get_template_directory_uri(); ?>/img/devices/cerulean-load.png" media="screen and (max-device-width: 320px)" />
-
+    <script>var homeUrl = '<?php echo home_url(); ?>' </script>
+    
 <?php wp_head(); ?>
 
 </head>

@@ -13,7 +13,7 @@ COOKIES_ENABLER.init({
                             '<div class="cookie-ita">Accetto</div>'+
                             '<div class="cookie-eng" style="display:none">Enable cookies</div>'+
                         '</a>'+
-                        '<a class="ce-more" href="http://google.com" target="_self">'+
+                        '<a class="ce-more" target="_blank"  href="http://privacy.studioup.it/cookies-policy/?url='+ homeUrl + '" target="_self">'+
                             '<div class="cookie-ita">Maggiori informazioni</div>'+
                             '<div class="cookie-eng" style="display:none">Privacy policy</div>'+
                         '</a>'+
