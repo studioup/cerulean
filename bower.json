@@ -13,7 +13,8 @@
     "jquery": "2.x",
     "FlexSlider": "woothemes/FlexSlider",
     "object-fit": "anselmh/object-fit",
-    "animate-sass" : "tgdev/animate-sass"
+    "animate-sass" : "tgdev/animate-sass",
+    "cookies-enabler" : "studioup/cookies-enabler"
   },
   "resolutions": {
     "jquery": "2.x"

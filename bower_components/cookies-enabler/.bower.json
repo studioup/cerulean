@@ -1,0 +1,13 @@
+{
+  "name": "cookies-enabler",
+  "homepage": "https://github.com/studioup/cookies-enabler",
+  "_release": "686b0356b7",
+  "_resolution": {
+    "type": "branch",
+    "branch": "master",
+    "commit": "686b0356b72d49e90c6abf605b8252009d5ba3bd"
+  },
+  "_source": "git://github.com/studioup/cookies-enabler.git",
+  "_target": "*",
+  "_originalSource": "studioup/cookies-enabler"
+}

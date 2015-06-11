@@ -116,6 +116,14 @@ if ( ! function_exists( 'cerulean_entry_meta' ) ) {
 add_filter('show_admin_bar', '__return_false');
 
 
+function cookie_consent(){
+    if (isset($_COOKIE['ce-consent']) && $_COOKIE['ce-consent'] == 'Y'){
+        return true;
+    }
+    echo '<div class="ce-blocked-iframe"></div>';
+    return false;
+}
+
 function get_the_post_thumbnail_src( $post_id=false , $size = 'full' ){
     if($post_id==false && $post && is_object( $post ) && $post->ID){
         $post_id = $post->ID;
