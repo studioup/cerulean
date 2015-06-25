@@ -97,7 +97,7 @@
         background-position: bottom center !important;
     }
     &.u-bg-top{
-        background-position: bottom center !important;
+        background-position: top center !important;
     }
     &.u-bg-left{
         background-position: center left !important;
@@ -115,7 +115,7 @@
         background-position: bottom center !important;
     }
     &.u-bg-top{
-        background-position: bottom center !important;
+        background-position: top center !important;
     }
     &.u-bg-left{
         background-position: center left !important;
@@ -219,6 +219,13 @@
     &.o-box--3_4:before{
         padding-top: 133.33%;
     }
+    &.o-box--3_2:before{
+        padding-top: 66.66%;
+    }
+    &.o-box--2_3:before{
+        padding-top: 150%;
+    }
+    
     &.o-box--16_9:before{
         padding-top: 56.25%;
     }
