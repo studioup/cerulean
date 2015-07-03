@@ -155,6 +155,14 @@ function the_image_src_from_id( $id , $size = 'full' ){
 }
 
 if ( function_exists( 'get_field' ) ) {
+    function get_global_option_img($field){
+        return get_image_src_from_id( get_global_option($field) );
+    }
+    
+    function the_global_option_img($field){
+        echo get_global_option_img($field);
+    }
+    
     function get_field_img($field, $size = 'full' ){
         return get_image_src_from_id( get_field($field) , $size );
     }
@@ -187,10 +195,48 @@ if( function_exists('acf_add_options_sub_page') )
 {
     acf_add_options_page(array(
         //'title' => __('General options','cerulean'), // this seems to create an options page for every language
-        'title' => 'General options',
-        'menu_slug' => 'general-options',
+        'title' => 'Global options',
+        'menu_slug' => 'global-options',
         'capability' => 'manage_options'
     ));
+    
+    if ( function_exists('icl_object_id') ) {
+        acf_add_options_page(array(
+            //'title' => __('General options','cerulean'), // this seems to create an options page for every language
+            'title' => 'Options',
+            'menu_slug' => 'translated-options',
+            'capability' => 'manage_options'
+        ));
+    }
+    
+    
+    function cl_set_global_options_pages($current_screen) {
+        //var_dump($current_screen);
+      // IDs of admin options pages that should be "global"
+      $page_ids = array(
+        "toplevel_page_global-options"
+      );
+    
+      if (in_array($current_screen->id, $page_ids)) {
+        add_filter('acf/settings/current_language', 'cl_acf_set_language', 100);
+      }
+    }
+    add_action( 'current_screen', 'cl_set_global_options_pages' );
+    
+    function cl_acf_set_language() {
+      return acf_get_setting('default_language');
+    }
+    
+    /**
+     * Wrapper around get_field() to get the "global" option values.
+     * This is the function you'll want to use in your templates instead of get_field() for "global" options.
+     */
+    function get_global_option($name) {
+        add_filter('acf/settings/current_language', 'cl_acf_set_language', 100);
+        $option = get_field($name, 'option');
+        remove_filter('acf/settings/current_language', 'cl_acf_set_language', 100);
+        return $option;
+    }
 
 
     function get_forms(){
@@ -216,6 +262,32 @@ if( function_exists('acf_add_options_sub_page') )
     }
     add_filter('acf/load_field/name=forms', 'load_forms_function');
 
+}
+
+
+
+//allow svg upload, commented out by default
+function cc_mime_types($mimes) {
+  $mimes['svg'] = 'image/svg+xml';
+  return $mimes;
+}
+//add_filter('upload_mimes', 'cc_mime_types');
+
+
+// remove emoji js 
+remove_action( 'wp_head', 'print_emoji_detection_script', 7 );
+remove_action( 'wp_print_styles', 'print_emoji_styles' );
+
+
+//excerpt counting chars instead of words
+function get_excerpt_chars($count){
+  global $post;
+  $permalink = get_permalink($post->ID);
+  $excerpt = get_the_content();
+  $excerpt = strip_tags($excerpt);
+  $excerpt = substr($excerpt, 0, $count);
+  $excerpt = $excerpt.'...'; // <a href="'.$permalink.'">more</a>';
+  return $excerpt;
 }
 
 ?>
