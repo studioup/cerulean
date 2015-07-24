@@ -39,6 +39,7 @@
 .o-tbl{
     display: table !important;
     width: 100%;
+    table-layout: fixed;
     &>.o-tbl__row{
         display: table-row !important;
         text-align: center;
