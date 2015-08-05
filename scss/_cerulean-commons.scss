@@ -40,6 +40,9 @@
     display: table !important;
     width: 100%;
     table-layout: fixed;
+    &.o-tbl--auto{
+        table-layout: auto;
+    }
     &>.o-tbl__row{
         display: table-row !important;
         text-align: center;
@@ -191,6 +194,21 @@
 }
 */
 
+
+.u-svg {
+    display: inline-block;
+    position: relative;
+    width: 100%;
+    padding-bottom: 100%;
+    vertical-align: middle;
+    overflow: hidden;
+    .u-svg__content {
+        display: inline-block;
+        position: absolute;
+        top: 0;
+        left: 0;
+    }
+}
 
 
 // fixed-ratio box, credits http://www.mademyday.de/css-height-equals-width-with-pure-css.html
