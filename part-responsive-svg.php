@@ -8,9 +8,10 @@
 global $responsive_svg;
 ?>
 
-<?php if (!empty(get_field_img($responsive_svg['img_field']))){ ?>
+<?php if (!empty(get_field($responsive_svg['img_field'],$responsive_svg['post_id']))){ ?>
         <?php 
-        $path = get_attached_file(get_field($responsive_svg['img_field']) ); 
+            
+        $path = get_attached_file(get_field($responsive_svg['img_field'],$responsive_svg['post_id']) ); 
         $file = file_get_contents($path); 
         preg_match('/viewBox="[0-9\s]+"/i', $file, $viewbox);
         $viewbox = explode(' ', $viewbox[0]) ;
