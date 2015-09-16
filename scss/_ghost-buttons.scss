@@ -1,0 +1,103 @@
+$button-font-color-hover: $button-bg-color;
+$secondary-button-font-color-hover: $secondary-color;
+$success-button-font-color-hover: $success-color;
+$alert-button-font-color-hover: $alert-color;
+$warning-button-font-color-hover: $warning-color;
+$info-button-font-color-hover: $info-color;
+
+.button, button{
+    text-transform: uppercase;
+}
+
+.button, button{
+    &:hover, &:focus{
+        color: $button-font-color-hover;
+        border-color:  $button-font-color-hover;
+    }
+    &.secondary{
+        &:hover, &:focus{
+            color: $secondary-button-font-color-hover;
+            border-color:  $secondary-button-font-color-hover;
+        }
+    }
+    &.success{
+        &:hover, &:focus{
+            color: $success-button-font-color-hover;
+            border-color:  $success-button-font-color-hover;
+        }
+    }
+    &.alert{
+        &:hover, &:focus{
+            color: $alert-button-font-color-hover;
+            border-color:  $alert-button-font-color-hover;
+        }
+    }
+    &.warning{
+        &:hover, &:focus{
+            color: $warning-button-font-color-hover;
+            border-color:  $warning-button-font-color-hover;
+        }
+    }
+    &.info{
+        &:hover, &:focus{
+            color: $info-button-font-color-hover;
+            border-color:  $info-button-font-color-hover;
+        }
+    }
+    &.button-alt{
+        background: transparent;
+        color: $button-font-color-hover;
+        border:  $button-border-width $button-border-style $button-font-color-hover;
+        &:hover, &:focus{
+            background: $button-font-color-hover;
+            color: if(lightness($button-bg-color) > 70%, $button-font-color-alt, $button-font-color); 
+            
+        }
+        &.secondary{
+            background: transparent;
+            color: $secondary-button-font-color-hover;
+            border:  $button-border-width $button-border-style $secondary-button-font-color-hover;
+            &:hover, &:focus{
+                background: $secondary-button-font-color-hover;
+                color: if(lightness($secondary-color) > 70%, $button-font-color-alt, $button-font-color); 
+            }
+        }
+        &.success{
+            background: transparent;
+            color: $success-button-font-color-hover;
+            border:  $button-border-width $button-border-style $success-button-font-color-hover;
+            &:hover, &:focus{
+                background: $success-button-font-color-hover;
+                color: if(lightness($success-color) > 70%, $button-font-color-alt, $button-font-color); 
+            }
+        }
+        &.alert{
+            background: transparent;
+            color: $alert-button-font-color-hover;
+            border:  $button-border-width $button-border-style $alert-button-font-color-hover;
+            &:hover, &:focus{
+                background: $alert-button-font-color-hover;
+                color: if(lightness($alert-color) > 70%, $button-font-color-alt, $button-font-color); 
+            }
+        }
+        &.warning{
+            background: transparent;
+            color: $warning-button-font-color-hover;
+            border:  $button-border-width $button-border-style $warning-button-font-color-hover;
+            &:hover, &:focus{
+                background: $warning-button-font-color-hover;
+                color: if(lightness($warning-color) > 70%, $button-font-color-alt, $button-font-color); 
+            }
+        }
+        &.info{
+            background: transparent;
+            color: $info-button-font-color-hover;
+            border:  $button-border-width $button-border-style $info-button-font-color-hover;
+            &:hover, &:focus{
+                background: $info-button-font-color-hover;
+                color: if(lightness($info-color) > 70%, $button-font-color-alt, $button-font-color); 
+            }
+        }
+        
+    }
+}
