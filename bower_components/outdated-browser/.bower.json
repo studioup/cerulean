@@ -1,6 +1,5 @@
 {
   "name": "outdated-browser",
-  "version": "1.1.0",
   "homepage": "https://github.com/burocratik/outdated-browser",
   "authors": [
     "Bürocratik <hello@burocratik.com>"
@@ -16,15 +15,17 @@
     "outdatedbrowser/lang"
   ],
   "ignore": [
-    "**/.*",
+    "CHANGELOG.md",
+    "demo",
     "bower_components"
   ],
   "dependencies": {},
-  "_release": "1.1.0",
+  "version": "1.1.2",
+  "_release": "1.1.2",
   "_resolution": {
     "type": "version",
-    "tag": "1.1.0",
-    "commit": "9f97dc0db1a49e542ec0a69fc041e85145559753"
+    "tag": "1.1.2",
+    "commit": "b89c97392ec600d18a1515403716bc011f601c9c"
   },
   "_source": "git://github.com/burocratik/outdated-browser.git",
   "_target": "*",

@@ -113,6 +113,7 @@ module.exports = function(grunt) {
                 'bower_components/modernizr/modernizr.js',
                 'bower_components/object-fit/dist/polyfill.object-fit.js',
                 'bower_components/cookies-enabler/cookies-enabler.js',
+                'bower_components/animsition/dist/js/jquery.animsition.js',
                 'bower_components/foundation/js/foundation/foundation.js',
 
                 //'bower_components/foundation/js/foundation/foundation.abide.js',

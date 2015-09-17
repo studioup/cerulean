@@ -1,0 +1,25 @@
+bower_components/jquery/dist/jquery.js:729: WARNING - Suspicious code. The result of the 'getprop' operator is not being used.
+	arr[ preferredDoc.childNodes.length ].nodeType;
+	^
+
+bower_components/jquery/dist/jquery.js:1902: WARNING - Suspicious code. This code lacks side-effects. Is there a bug?
+			if ( elem.parentNode ) {
+			^
+
+bower_components/jquery/dist/jquery.js:1903: WARNING - Suspicious code. The result of the 'getprop' operator is not being used.
+				elem.parentNode.selectedIndex;
+				^
+
+bower_components/jquery/dist/jquery.js:7141: WARNING - Suspicious code. This code lacks side-effects. Is there a bug?
+			if ( parent && parent.parentNode ) {
+			^
+
+bower_components/jquery/dist/jquery.js:7142: WARNING - Suspicious code. The result of the 'getprop' operator is not being used.
+				parent.parentNode.selectedIndex;
+				^
+
+bower_components/object-fit/dist/polyfill.object-fit.js:40: WARNING - Suspicious code. Is there a missing '+' on the previous line?
+'use strict';
+^
+
+0 error(s), 6 warning(s)

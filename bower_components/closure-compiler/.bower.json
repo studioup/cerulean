@@ -1,12 +1,12 @@
 {
   "name": "closure-compiler",
   "homepage": "https://github.com/tim-smart/node-closure",
-  "version": "0.2.6",
-  "_release": "0.2.6",
+  "version": "0.2.9",
+  "_release": "0.2.9",
   "_resolution": {
     "type": "version",
-    "tag": "v0.2.6",
-    "commit": "8131ef79b19370dc305398cc0f34fcb301c2670e"
+    "tag": "v0.2.9",
+    "commit": "3d23a91117c5ceebcc4bbbde15f96ebefa0cc564"
   },
   "_source": "git://github.com/tim-smart/node-closure.git",
   "_target": "*",

@@ -14,7 +14,8 @@
     "FlexSlider": "woothemes/FlexSlider",
     "object-fit": "anselmh/object-fit",
     "animate-sass" : "tgdev/animate-sass",
-    "cookies-enabler" : "studioup/cookies-enabler"
+    "cookies-enabler" : "studioup/cookies-enabler",
+    "animsition" : "blivesta/animsition"
   },
   "resolutions": {
     "jquery": "2.x"
