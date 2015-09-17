@@ -4,6 +4,7 @@
 (function($) {
     
     if($(".animsition").length){
+        $('.wow').css('visibility', 'hidden').css('animation-name', 'none');
         $(".animsition").animsition({
             inClass: 'fade-in',
             outClass: 'fade-out',
@@ -25,17 +26,15 @@
             overlayClass : 'animsition-overlay-slide',
             overlayParentElement : 'body'
         }).one('animsition.start', function(){
-            $('.wow').css('visibility', 'hidden').css('animation-name', 'none');
-        }).one('animsition.end', function(){
-            if( typeof(wow) !== "undefined"){
+            setTimeout(function(){ 
                 wow.init();
-            }
+            }, 500);
+        }).one('animsition.end', function(){
+            //wow.init();
     
         });
     }else{
-        if( typeof(wow) !== "undefined" ){
-            wow.init();
-        }
+        wow.init();
     }
     
     
