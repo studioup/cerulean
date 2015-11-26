@@ -10,7 +10,7 @@
             outClass: 'fade-out',
             inDuration: 1500,
             outDuration: 800,
-            linkElement: 'a:not([target="_blank"]):not([href^=#])',
+            linkElement: ':not(.flex-control-nav li) > a:not([target="_blank"]):not([href^=#]):not(.no-animation):not([data-scroll-target])',
             // e.g. linkElement: 'a:not([target="_blank"]):not([href^=#])'
             loading: true,
             loadingParentElement: 'body', //animsition wrapper element
