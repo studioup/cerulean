@@ -32,6 +32,26 @@ module.exports = function(grunt) {
 
   grunt.initConfig({
     pkg: grunt.file.readJSON('package.json'),
+    exec: {
+          get_grunt_sitemap: {
+            command: 'curl --silent --output sitemap.json '+url+'?show_sitemap'
+          }
+        },
+    uncss: {
+          dist: {
+            options: {
+              ignore       : [ new RegExp('^meta\..*'),
+      new RegExp('^\.is-.*'), new RegExp('^\.has-.*'), new RegExp('^\.menu-.*'), new RegExp(/\.flex\-.+/), new RegExp(/\.show\-.+/) , new RegExp(/\.hide\-.+/) , new RegExp(/\.large\-.+/) , new RegExp(/\.medium\-.+/) , new RegExp(/\.small\-.+/) , new RegExp('^\.text-.*'), new RegExp(/\.animsition\-.+/), new RegExp(/\.fade\-.+/), new RegExp(/\.img\-.+/), new RegExp(/\.pagination\-.+/), new RegExp(/\.page\-.+/), '.animsition','.fade-in','data-topbar','.top-bar.expanded', '.top-bar-section ul li.active>a', 'a, a:visited, a:hover, a:visited:hover' ,'ul.block-list', 'ul.block-list>li'],
+              stylesheets  : ['css/style.css'],
+              ignoreSheets : [/fonts.googleapis/],
+              urls         : [], //Overwritten in load_sitemap_and_uncss task
+              report       : true,
+            },
+            files: {
+              'css/style.clean.css': ['**/*.php']
+            }
+          }
+        },
     surround: {
         options: {
         },
@@ -165,6 +185,8 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-contrib-sass');
   grunt.loadNpmTasks('grunt-closure-compiler');
   grunt.loadNpmTasks('grunt-surround');
+  grunt.loadNpmTasks('grunt-exec');
+  grunt.loadNpmTasks('grunt-uncss');
 
   grunt.loadNpmTasks('grunt-contrib-watch');
   //grunt.loadNpmTasks('grunt-bless');
@@ -177,6 +199,15 @@ module.exports = function(grunt) {
   grunt.registerTask('wrap',['surround']);
   grunt.registerTask('js',['closure-compiler','surround']);
   grunt.registerTask('build', ['sass','closure-compiler','surround']);
+  grunt.registerTask('load_sitemap_json', function() {
+  var sitemap_urls = grunt.file.readJSON('./sitemap.json');
+      grunt.config.set('uncss.dist.options.urls', sitemap_urls);
+      sitemap_urls.push('**/*.php');
+      //console.log(sitemap_urls);
+      grunt.config.set('uncss.dist.files', {'css/style.clean.css': sitemap_urls });
+      //console.log(grunt.config.get('uncss.dist'));
+  });
+  grunt.registerTask('diet', ['exec:get_grunt_sitemap','load_sitemap_json','uncss:dist']);  
   //grunt.registerTask('build', ['sass','bless']);
   grunt.registerTask('default', ['build','watch']);
 }
