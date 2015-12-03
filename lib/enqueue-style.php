@@ -10,7 +10,7 @@ if( ! function_exists( 'cerulean_enqueue_style' ) ) {
 		//wp_register_style( 'cerulean-foundation-stylesheet', get_stylesheet_directory_uri() . '/css/app.css', array(), '' );
 
 		// Register the main style
-		if (defined('UNCSS') && UNCSS == true) {
+		if (defined('PRODUCTION') && PRODUCTION == true && defined('UNCSS') && UNCSS == true) {
 			wp_register_style( 'cerulean-stylesheet', get_stylesheet_directory_uri() . '/css/style.clean.css', array(), '', 'all' );
 		}else{
 			wp_register_style( 'cerulean-stylesheet', get_stylesheet_directory_uri() . '/css/style.css', array(), '', 'all' );
