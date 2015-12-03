@@ -37,6 +37,27 @@ require_once('lib/nav.php'); // filter default wordpress menu classes and clean 
 */
 //require_once('lib/presstrends.php'); // load PressTrends to track the usage of cerulean across the web, comment this line if you don't want to be tracked
 
+/*
+6. lib/img.php
+	- custom walker for top-bar and related
+*/
+require_once('lib/img.php'); // filter default wordpress menu classes and clean wp_nav_menu markup
+
+//remove wpml language selector css
+define('ICL_DONT_LOAD_LANGUAGE_SELECTOR_CSS', true);
+
+//disabilitare dimensioni di default di wordpress
+function sgr_filter_image_sizes( $sizes) {
+		
+	unset( $sizes['thumbnail']);
+	//unset( $sizes['medium']);
+	//unset( $sizes['large']);
+	
+	return $sizes;
+}
+add_filter('intermediate_image_sizes_advanced', 'sgr_filter_image_sizes');
+
+
 /**********************
 Add theme supports
  **********************/
@@ -46,11 +67,16 @@ if( ! function_exists( 'cerulean_theme_support' ) ) {
         load_theme_textdomain('cerulean', get_template_directory() . '/lang');
 
         // Add post thumbnail supports. http://codex.wordpress.org/Post_Thumbnails
-        add_theme_support('post-thumbnails');
-        // set_post_thumbnail_size(150, 150, false);
-        add_image_size('fd-lrg', 1024, 99999);
-        add_image_size('fd-med', 768, 99999);
-        add_image_size('fd-sm', 320, 9999);
+        //add_theme_support('post-thumbnails');
+        set_post_thumbnail_size(300, 999);
+        //add_image_size('fd-xsm', 256, 9999);
+        add_image_size('fd-sm', 512, 9999);
+        add_image_size('fd-sm2', 768, 9999);
+        add_image_size('fd-md', 1024, 99999);
+        add_image_size('fd-lg', 1200, 99999);
+        add_image_size('fd-xl', 1440, 99999);
+        add_image_size('fd-xxl', 2048, 99999);
+        
 
         // rss thingy
         add_theme_support('automatic-feed-links');
@@ -124,63 +150,6 @@ function cookie_consent(){
     return false;
 }
 
-function get_the_post_thumbnail_src( $post_id=false , $size = 'full' ){
-    if($post_id==false && $post && is_object( $post ) && $post->ID){
-        $post_id = $post->ID;
-    }
-    $image = wp_get_attachment_image_src( get_post_thumbnail_id( $post_id ), $size );
-    if(!empty($image) && !empty($image[0])){
-        return $image[0];
-    }
-}
-
-function the_post_thumbnail_src( $post_id=false, $size = 'full' ){
-    if($post_id==false && $post){
-        $post_id = $post->ID;
-    }
-    echo get_the_post_thumbnail_src( $post_id, $size );
-}
-
-
-function get_image_src_from_id( $id , $size = 'full' ){
-    $image =  wp_get_attachment_image_src( $id , $size );
-    if(!empty($image) && !empty($image[0])){
-        return $image[0];
-    }
-    return false;
-}
-
-function the_image_src_from_id( $id , $size = 'full' ){
-    echo get_image_src_from_id( $id , $size );
-}
-
-if ( function_exists( 'get_field' ) ) {
-    function get_global_option_img($field){
-        return get_image_src_from_id( get_global_option($field) );
-    }
-    
-    function the_global_option_img($field){
-        echo get_global_option_img($field);
-    }
-    
-    function get_field_img($field, $size = 'full' ){
-        return get_image_src_from_id( get_field($field) , $size );
-    }
-    
-    function the_field_img($field, $size = 'full' ){
-        echo get_field_img($field, $size );
-    }
-}
-
-if ( function_exists( 'get_sub_field' ) ) {
-    function get_sub_field_img($field, $size = 'full' ){
-        return get_image_src_from_id( get_sub_field($field) , $size );
-    }
-    
-    function the_sub_field_img($field, $size = 'full' ){
-        echo get_sub_field_img($field, $size );
-    }
-}
 
 
 add_filter('query_vars', 'add_my_var');

@@ -7,12 +7,12 @@
 // @import "normalize";
 
 // Global Foundation Settings
-@import "settings";
+//@import "settings";
 
-@import "settings-animate";
+//@import "settings-animate";
 
 // Tweak the mixin for WordPress, this might create some extra CSS in additional to app.css
-@import "foundation/components/pagination";
+//@import 'components/pagination';
 
 // Cerulean comes with a standalone Foundation stylesheet already
 // @import "foundation";
@@ -20,16 +20,17 @@
 // Load some Compass magic, note you will need to install Compass first
 //@import "compass/css3/shared";
 @import "app";
-@import "compass/css3";
 @import "polyfill.object-fit";
-@import "animate";
+//@import "animate";
 @import "icon-font";
 @import "outdatedbrowser";
 @import "cerulean-commons";
 @import "cerulean-triangles";
-@import "flexslider";
+@import "slick.scss";
+@import "custom_slick_theme";
 @import "forms";
 @import "cookies-enabler";
+
 @import "animsition";
 //@import "ghost-buttons";
 //@import "font-awesome";
@@ -39,17 +40,19 @@
 
 // add transition effect
 a, a:visited, a:hover, a:visited:hover {
-    @include transition(all 100ms linear);
+    transition: all 100ms linear;
+    //@include transition(all 100ms linear);
 }
 
 // add some margin for embeds in post
 figure {
-    margin: 0 auto $panel-margin-bottom;
+    margin: 0 auto $global-margin;
 }
 
 // Add class for images
 figure img {
-    @include border-radius(5px);
+    border-radius: 5px;
+    //@include border-radius(5px);
 }
 
 img.alignright {
@@ -88,7 +91,7 @@ figure.figure {
         font-style: italic;
         padding: 8px 10px;
         color: #999;
-        margin-bottom: $panel-margin-bottom;
+        margin-bottom: $global-margin;
         display: table-caption;
         caption-side: bottom;
     }
@@ -114,9 +117,16 @@ body > header.contain-to-grid {
     padding-bottom: 0;
 }
 
+// define content padding for later use
+$content-padding: rem-calc(50);
+
 #content {
     background-color: #fff;
     border: 1px solid #ddd;
+    @include breakpoint(medium up) {
+        padding: $content-padding;
+    }
+    
 }
 
 .index-card {
@@ -138,14 +148,16 @@ time {
     }
 }
 
-// define content padding for later use
-$content-padding: rem-calc(50);
+
 
 .entry-author {
     background-color: #fbfbfb;
     border: none;
     padding: rem-calc(50) rem-calc(80);
-    margin: rem-calc(50) (-($column-gutter/2));
+    margin: rem-calc(50) (-($grid-column-gutter/2));
+    @include breakpoint(medium up) {
+        margin: rem-calc(50) (-$content-padding);
+    }
     .avatar {
         margin-right: rem-calc(40);
         margin-bottom: rem-calc(24);
@@ -183,7 +195,7 @@ $content-padding: rem-calc(50);
 // add new pagination class for WordPress, Sass is amazingly fast
 .page-numbers {
     color: #999;
-    @include pagination;
+      @include foundation-pagination;
 }
 
 .pagination-centered ul.page-numbers li {
@@ -192,7 +204,8 @@ $content-padding: rem-calc(50);
 }
 
 .page-numbers li span.current {
-  @include border-radius(3px);
+  border-radius: 3px;
+  //@include border-radius(3px);
 }
 
 .page-numbers li {
@@ -203,19 +216,20 @@ $content-padding: rem-calc(50);
 .page-numbers li {
     span:hover a,
     span a:focus {
-        background: $pagination-link-active-bg;
+        background: $pagination-item-background-hover;
     }
     span.current {
-        background: $pagination-link-current-background;
-        padding: $pagination-link-pad;
-        color: $pagination-link-current-font-color;
-        font-weight: $pagination-link-current-font-weight;
-        cursor: $pagination-link-current-cursor;
+        background: $pagination-item-background-current;
+        padding: $pagination-item-padding;
+        color: $pagination-item-color;
+        //font-weight: $pagination-link-current-font-weight;
+        //cursor: $pagination-link-current-cursor;
     }
 }
 
 .avatar {
-    @include border-radius(50%);
+    border-radius: 50%;
+    //@include border-radius(50%);
     float: left;
 }
 
@@ -334,6 +348,32 @@ footer.full-width {
     margin-top: rem-calc(32);
 }
 
+
+//old styles ported to foundation 6
+
+.entry-author {
+    .avatar {
+        @include breakpoint(small up) { 
+            margin-bottom: rem-calc(20);
+        }
+    }
+}
+
+
+#sidebar {
+    @include breakpoint(large up) { 
+        padding-left: $grid-column-gutter;
+        padding-right: 0;
+        margin-top: rem-calc(0);
+    }
+}
+.footer-widget {
+    @include breakpoint(large up) { 
+        margin-top: rem-calc(48);
+        padding-top: rem-calc(32);
+    }
+}
+
 // Customizzazioni
 
 
@@ -382,31 +422,17 @@ footer.full-width {
 }
 
 
-@media #{$small-up} {
-    .entry-author {
-        .avatar {
-            margin-bottom: rem-calc(20);
+// hack per foundation 6
+#main-menu{
+    .top-bar-left, .top-bar-right{
+        >ul.menu >li{
+            @include breakpoint(large up) {
+                height: $topbar-height;
+            }
         }
     }
 }
 
-@media #{$medium-up} {
-    #content {
-        padding: $content-padding;
-    }
-    .entry-author {
-        margin: rem-calc(50) (-$content-padding);
-    }
-}
-
-@media #{$large-up} {
-    #sidebar {
-        padding-left: $column-gutter;
-        padding-right: 0;
-        margin-top: rem-calc(0);
-    }
-    .footer-widget {
-        margin-top: rem-calc(48);
-        padding-top: rem-calc(32);
-    }
+.is-drilldown {
+    //height: auto !important;
 }

@@ -1,0 +1,37 @@
+{
+	"mediaqueries": {
+		"landscape":"'screen and (orientation: landscape)'",
+		"portrait":"'screen and (orientation: portrait)'",
+		"retina":"'only screen and (-webkit-min-device-pixel-ratio: 2), only screen and (min--moz-device-pixel-ratio: 2), only screen and (-o-min-device-pixel-ratio: 2/1), only screen and (min-device-pixel-ratio: 2), only screen and (min-resolution: 192dpi), only screen and (min-resolution: 2dppx)'",
+		"small":"'only screen and (min-width: 0em)'"
+	},
+	"global-width": "rem-calc(1200)",
+	"color":{
+		"primary" : "#2199e8",
+		"secondary": "#777",
+		"success": "#3adb76",
+		"warning": "#ffae00",
+		"alert": "#ec5840",
+		"light-gray": "#e6e6e6",
+		"medium-gray": "#cacaca",
+		"dark-gray": "#8a8a8a",
+		"black": "#0a0a0a",
+		"white": "#fefefe",
+		"triangles": "$color-primary"
+	},
+	"body" : {
+		"background": "$color-white",
+		"font-color": "$color-black",
+		"family": "\"Helvetica Neue\", Helvetica, Roboto, Arial, sans-serif",
+		"antialiased": "true"
+	},
+	"breakpoints": "( small: 0, medium: 512px, large: 1024px, xlarge: 1200px, xxlarge: 1440px, xxxlarge: 2048px)",
+	"topbar":{ 
+		"padding": "0.5rem",
+		"background": "#eee",
+		"link-color": "$color-primary",
+		"input-width": "200px",
+		"height": "rem-calc(100)"
+	}
+	
+}

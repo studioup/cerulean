@@ -8,12 +8,12 @@
         border: none;
         box-shadow: none;
         border-bottom: rem-calc(3) solid $primary-color;
-        background-color: $body-bg;
+        background-color: $body-background;
         color: $body-font-color;
     }
     textarea{
         border: rem-calc(3) solid $primary-color;
-        background-color: $body-bg;
+        background-color: $body-background;
         color: $body-font-color;
     }
     .frm_blank_field {

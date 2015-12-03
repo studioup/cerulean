@@ -3,19 +3,19 @@
   "version": "0.0.1",
   "private": "true",
   "dependencies": {
-    "foundation": "zurb/bower-foundation",
+    "foundation-sites": "*",
+    "motion-ui": "~1.1.0",
     "compass-mixins": "*",
     "wow": "*",
     "font-awesome": "*",
     "animate.css": "*",
     "outdated-browser": "*",
-    "closure-compiler": "*",
     "jquery": "2.x",
-    "FlexSlider": "woothemes/FlexSlider",
     "object-fit": "anselmh/object-fit",
-    "animate-sass" : "tgdev/animate-sass",
-    "cookies-enabler" : "studioup/cookies-enabler",
-    "animsition" : "blivesta/animsition"
+    "animate-sass": "tgdev/animate-sass",
+    "cookies-enabler": "studioup/cookies-enabler",
+    "animsition": "blivesta/animsition",
+    "slick-carousel": "~1.5.9"
   },
   "resolutions": {
     "jquery": "2.x"

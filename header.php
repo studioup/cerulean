@@ -60,50 +60,101 @@
 
 <body <?php body_class('antialiased'); ?>>
     <div class="animsition">
-        <header class="contain-to-grid">
-            <!-- Starting the Top-Bar -->
-            <nav class="top-bar" data-topbar>
-                <ul class="title-area">
-                    <li class="name">
-                        <h1><a href="<?php echo esc_url( home_url( '/' ) ); ?>" title="<?php echo esc_attr( get_bloginfo( 'name', 'display' ) ); ?>" rel="home"><?php bloginfo( 'name' ); ?></a></h1>
-                    </li>
-                    <!-- Remove the class "menu-icon" to get rid of menu icon. Take out "Menu" to just have icon alone -->
-                    <li class="toggle-topbar menu-icon"><a href="#"><span>Menu</span></a></li>
-                </ul>
-                <section class="top-bar-section">
-                <?php
-                    wp_nav_menu( array(
-                        'theme_location' => 'primary',
-                        'container' => false,
-                        'depth' => 0,
-                        'items_wrap' => '<ul class="left">%3$s</ul>',
-                        'fallback_cb' => 'cerulean_menu_fallback', // workaround to show a message to set up a menu
-                        'walker' => new cerulean_walker( array(
-                            'in_top_bar' => true,
-                            'item_type' => 'li',
-                            'menu_type' => 'main-menu'
-                        ) ),
-                    ) );
-                ?>
-                <?php
-                    // Uncomment the following to enable the right menu (additional menu)
+        <header>
+            <div class="title-bar" id="main-menu-mobile-bar" data-responsive-toggle="main-menu" data-hide-for="large">
+                <div class="title-bar-right">
+                    <button class="menu-icon" type="button" data-toggle></button>
+                </div>
+                <div class="title-bar-left">
+                    <div class="title-bar-title"><a href="<?php echo esc_url( home_url( '/' ) ); ?>" title="<?php echo esc_attr( get_bloginfo( 'name', 'display' ) ); ?>" rel="home"><?php bloginfo( 'name' ); ?></a></div>
+                </div>
+            </div>
+            
+            <div class="top-bar" id="main-menu">
+                <div class="column row" >
+                    <div class="top-bar-left" >
+                        <ul class="menu">
+                            <li class="menu-text name show-for-large" >
+                                <h2><a href="<?php echo esc_url( home_url( '/' ) ); ?>" title="<?php echo esc_attr( get_bloginfo( 'name', 'display' ) ); ?>" rel="home"><?php bloginfo( 'name' ); ?></a></h2>
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="top-bar-left" >
+                        <ul class="menu vertical large-horizontal" data-dropdown-menu>
+                            
+                            <?php
+                                wp_nav_menu( array(
+                                    'theme_location' => 'primary',
+                                    'container' => false,
+                                    'depth' => 0,
+                                    'items_wrap' => '%3$s',
+                                    'fallback_cb' => 'cerulean_menu_fallback', // workaround to show a message to set up a menu
+                                    'walker' => new cerulean_walker( array(
+                                        'in_top_bar' => true,
+                                        'item_type' => 'li',
+                                        'menu_type' => 'main-menu'
+                                    ) ),
+                                ) );
+                            ?>
+                        </ul>
+                    </div>
+                    <div class="top-bar-right"  >
+                        <ul class="menu vertical large-horizontal" data-responsive-menu="accordion large-dropdown">
+                        <?php 
+                            if( function_exists('icl_get_languages') ){
+                                $languages = icl_get_languages('skip_missing=0&orderby=custom');
+                                if(count($languages) == 2 ){ 
+                                    ?>
+                                    
+                                    <?php 
+                                    foreach($languages as $language){
+                                        if($language['active'] != 1){ ?>
+                                            <li>
+                                                <a href="<?php echo $language['url'];?>">
+                                                
+                                                    <span class="hide-for-large" ><?php echo $language['native_name']; ?></span>
+                                                    <span class="show-for-large uppercase" ><?php echo $language['language_code']; ?></span>
+                                                </a>
+                                            </li>
+                                        <?php } 
+                                    } 
 
-                    /*
-                    wp_nav_menu( array(
-                        'theme_location' => 'additional',
-                        'container' => false,
-                        'depth' => 0,
-                        'items_wrap' => '<ul class="right">%3$s</ul>',
-                        'walker' => new cerulean_walker( array(
-                            'in_top_bar' => true,
-                            'item_type' => 'li',
-                            'menu_type' => 'main-menu'
-                        ) ),
-                    ) );
-                    */
-                ?>
-                </section>
-            </nav>
+                                } else {
+                                    
+                                    foreach($languages as $language){ 
+                                        if($language['active'] == 1){
+                                            //if($i != 0) echo ' | ';
+                                            //var_dump($language);
+                                            ?>
+                                            <li class="has-submenu" >
+                                                <a href="#">
+                                                    
+                                                    <?php echo $language['native_name']; ?>
+                                                    <!--
+                                                    <span class="hide-for-large" ><?php echo $language['native_name']; ?></span>
+                                                    <span class="show-for-large uppercase" ><?php echo $language['language_code']; ?></span>
+                                                    -->
+                                                </a>
+                                                <ul class="vertical submenu menu" data-submenu>
+                                                    <?php 
+                                                    foreach($languages as $language2){
+                                                        if($language2['active'] != 1){ ?>
+                                                            <li><a href="<?php echo $language2['url'];?>"><?php echo $language2['native_name']; ?></a></li>
+                                                        <?php } ?>
+                                                    <?php } ?>
+                                                </ul>
+                                            </li>
+                                            <?php 
+                                        }
+                                    }
+                                }
+                            } ?>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            
+           
             <!-- End of Top-Bar -->
         </header>
 

@@ -14,17 +14,37 @@ if( ! function_exists( 'cerulean_pagination' ) ) {
 			'total' => $wp_query->max_num_pages,
 			'mid_size' => 5,
 			'prev_next' => True,
-		    'prev_text' => __('&laquo;'),
-		    'next_text' => __('&raquo;'),
-			'type' => 'list'
+		    'prev_text' => __('« Previous'),
+			'next_text' => __('Next »'),
+			'type' => 'array'
 		) );
 	 
 		// Display the pagination if more than one page is found
 		if ( $paginate_links ) {
-			echo '<div class="pagination-centered">';
-			echo $paginate_links;
-			echo '</div><!--// end .pagination -->';
+			//var_dump($paginate_links);
+			echo '<ul class="pagination text-center" role="navigation" aria-label="Pagination">';
+			foreach($paginate_links as $link){
+				$link = str_ireplace('<span ','<a href="#" ', $link);
+				$link = str_ireplace('span> ','a>" ', $link);
+				echo '<li>';			
+				echo $link;
+				echo '</li>';
+			}
+			echo '</ul><!--// end .pagination -->';
 		}
+		/*
+		<ul class="pagination" role="navigation" aria-label="Pagination">
+		<li class="pagination-previous disabled">Previous <span class="show-for-sr">page</span></li>
+		<li class="current"><span class="show-for-sr">You're on page</span> 1</li>
+		<li><a href="#" aria-label="Page 2">2</a></li>
+		<li><a href="#" aria-label="Page 3">3</a></li>
+		<li><a href="#" aria-label="Page 4">4</a></li>
+		<li class="ellipsis" aria-hidden="true"></li>
+		<li><a href="#" aria-label="Page 12">12</a></li>
+		<li><a href="#" aria-label="Page 13">13</a></li>
+		<li class="pagination-next"><a href="#" aria-label="Next page">Next <span class="show-for-sr">page</span></a></li>
+		</ul>
+		*/
 	}
 }
 
