@@ -1,5 +1,5 @@
 {
-	"url": "http://ceruleandev.studioup.it",
+	"url": "http://cerulean.studioup.it",
 	"scssPaths" : [
 		"./bower_components/foundation-sites/scss/", 
                 "./bower_components/motion-ui/src/",
