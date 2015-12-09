@@ -190,6 +190,22 @@ if ( function_exists( 'get_field' ) ) {
     function the_field_img($field, $size = 'full' ){
         echo get_field_img($field, $size );
     }
+}else{
+    function get_global_option_img($field){
+        return false;
+    }
+    
+    function the_global_option_img($field){
+        return false;
+    }
+    
+    function get_field_img($field, $size = 'full' ){
+        return false;
+    }
+    
+    function the_field_img($field, $size = 'full' ){
+        return false;
+    }
 }
 
 if ( function_exists( 'get_sub_field' ) ) {
@@ -199,5 +215,13 @@ if ( function_exists( 'get_sub_field' ) ) {
     
     function the_sub_field_img($field, $size = 'full' ){
         echo get_sub_field_img($field, $size );
+    }
+}else{
+    function get_sub_field_img($field, $size = 'full' ){
+        return false;
+    }
+    
+    function the_sub_field_img($field, $size = 'full' ){
+        return false;
     }
 }

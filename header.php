@@ -66,7 +66,17 @@
                     <button class="menu-icon" type="button" data-toggle></button>
                 </div>
                 <div class="title-bar-left">
-                    <div class="title-bar-title"><a href="<?php echo esc_url( home_url( '/' ) ); ?>" title="<?php echo esc_attr( get_bloginfo( 'name', 'display' ) ); ?>" rel="home"><?php bloginfo( 'name' ); ?></a></div>
+                    <div class="title-bar-title"><a href="<?php echo esc_url( home_url( '/' ) ); ?>" title="<?php echo esc_attr( get_bloginfo( 'name', 'display' ) ); ?>" rel="home">
+                        <?php if(get_global_option_img('logo')){ ?>
+                            <img src="<?php the_global_option_img('logo'); ?>">
+                            <span><?php bloginfo( 'name' ); ?></span>
+                        <?php } else if (get_global_option_img('logo_mobile')) { ?>
+                            <img src="<?php the_global_option_img('logo_mobile'); ?>">
+                            <span><?php bloginfo( 'name' ); ?></span>
+                        <?php }else{
+                            bloginfo( 'name' );
+                        } ?>
+                    </a></div>
                 </div>
             </div>
             
@@ -75,7 +85,15 @@
                     <div class="top-bar-left" >
                         <ul class="menu">
                             <li class="menu-text name show-for-large" >
-                                <h2><a href="<?php echo esc_url( home_url( '/' ) ); ?>" title="<?php echo esc_attr( get_bloginfo( 'name', 'display' ) ); ?>" rel="home"><?php bloginfo( 'name' ); ?></a></h2>
+                                <h2><a href="<?php echo esc_url( home_url( '/' ) ); ?>" title="<?php echo esc_attr( get_bloginfo( 'name', 'display' ) ); ?>" rel="home" >
+                                    <?php if(get_global_option_img('logo')){ ?>
+                                        <img src="<?php the_global_option_img('logo'); ?>">
+                                        <span><?php bloginfo( 'name' ); ?></span>
+                                    <?php } else {
+                                        bloginfo( 'name' );
+                                    } ?>
+                                    </a>
+                                </h2>
                             </li>
                         </ul>
                     </div>

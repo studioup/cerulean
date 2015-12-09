@@ -33,7 +33,19 @@ gulp.task('scss-settings', function() {
 });
 
 
-gulp.task('styles',['scss-settings'], function() {
+gulp.task('minify-styles',['generate-styles'], function() {
+ 
+    return gulp.src(['./css/style.css'])
+        //.pipe($.sourcemaps.init({}))
+        .pipe($.minifyCss( {keepSpecialComments:0 }))
+        .pipe(rename({suffix: '.min'}))
+        //.pipe( $.sourcemaps.write('./maps/'))
+        .pipe(gulp.dest('./css/'));
+        
+});
+
+
+gulp.task('generate-styles',['scss-settings'], function() {
     var sitemap = []
     if(isProduction){
         remoteSrc('', {
@@ -62,10 +74,12 @@ gulp.task('styles',['scss-settings'], function() {
         .on('error', $.sass.logError))
         .pipe($.autoprefixer(config.autoPrefixer))     
         .pipe(uncss)
-        .pipe($.minifyCss())
-        .pipe($.if(!isProduction, $.sourcemaps.write('./maps/')))
+        //.pipe($.minifyCss())
+        .pipe($.if(!isProduction, $.sourcemaps.write()))
         .pipe($.if(isProduction, rename({suffix: '.clean'})))
         .pipe(gulp.dest('./css/'));
+                
+    
 });
 
   
@@ -125,7 +139,7 @@ gulp.task('app-js', function() {
 });
 
 gulp.task('app-js-sync', ['foundation-js','site-js'], function() {
-    gulp.start('styles', 'app-js');
+    gulp.start('minify-styles', 'app-js');
 });
 
 
@@ -137,11 +151,11 @@ gulp.task('bower', function() {
 
 // Create a default task 
 gulp.task('default', function() {
-  gulp.start('styles', 'app-js-sync');
+  gulp.start('minify-styles', 'app-js-sync');
 });
 
 gulp.task('diet', ['set-production'] ,function() {
-  gulp.start('styles', 'app-js-sync');
+  gulp.start('minify-styles', 'app-js-sync');
 });
 
 gulp.task('update-config',function() {
@@ -154,7 +168,7 @@ gulp.task('watch', function() {
     
   gulp.start('default');
   // Watch .scss files
-  gulp.watch(['./scss/**/*.scss','./config_sass.json'], ['styles']);
+  gulp.watch(['./scss/**/*.scss','./config_sass.json'], ['minify-styles']);
 
   // Watch site-js files
   gulp.watch('./js/sources/*.js', ['site-js']);
