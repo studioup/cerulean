@@ -60,7 +60,7 @@
 
 <body <?php body_class('antialiased'); ?>>
     <div class="animsition">
-        <header>
+        <header id="main-header">
             <div class="title-bar" id="main-menu-mobile-bar" data-responsive-toggle="main-menu" data-hide-for="large">
                 <div class="title-bar-right">
                     <button class="menu-icon" type="button" data-toggle></button>
@@ -175,4 +175,4 @@
            
             <!-- End of Top-Bar -->
         </header>
-
+        <div class="page-wrapper">

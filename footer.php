@@ -1,12 +1,16 @@
-
-
-        <div class="full-width footer-widget">
-            <div class="row">
-                <?php dynamic_sidebar("Footer"); ?>
-            </div>
-        </div>
+        </div><!-- end .page-wrapper -->
+        
+        
+        
 
         <footer id="main-footer" class="full-width" role="contentinfo">
+            <!--
+            <div class="full-width footer-widget">
+                <div class="row">
+                    <?php dynamic_sidebar("Footer"); ?>
+                </div>
+            </div>
+            -->
             <!--
             <div class="row">
                 <div class="large-12 columns">

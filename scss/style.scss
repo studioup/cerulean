@@ -377,6 +377,19 @@ footer.full-width {
 
 // Customizzazioni
 
+body, html{
+    height: auto !important;
+    min-height: 100%;
+}
+
+#main-header{
+    width: 100%;
+}
+
+.page-wrapper{
+    min-height: 80vh;
+}
+
 
 //header menu
 #main-menu ul.menu>li.menu-text.name {
@@ -393,7 +406,7 @@ footer.full-width {
 
 #main-footer {
     position: relative;
-    display:inline-block;
+    display: block;
     width:100%;
     .credits{
         padding-top: rem-calc(25);

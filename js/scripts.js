@@ -3517,6 +3517,26 @@ var wow = new WOW(
     
     $(document).foundation();
 
+    // sticky footer and padding for sticky header
+    function stickyFooter(){
+        var topOffset = $('#main-header').outerHeight(true);
+        var bottomOffset = $('#main-footer').outerHeight(true);
+        var bodyOffset = $('body').outerHeight(true) - $('body').innerHeight();
+        if($('#main-header').hasClass('sticky')){
+            //topOffset = $('#main-header').outerHeight(true);
+            $('.page-wrapper').css('margin-top',topOffset);
+        }
+        
+        
+        $('.page-wrapper').css('min-height',$(window).innerHeight() - topOffset - bottomOffset - bodyOffset);
+        
+    }
+    stickyFooter();
+    
+    $( window ).resize(function() {
+        stickyFooter();
+    });
+
 
     $('[data-slick]').slick();
     
