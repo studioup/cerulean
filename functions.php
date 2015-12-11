@@ -273,4 +273,14 @@ function show_sitemap() {
 }
 
 
+function grid_queries( $query ) {
+    if ( is_admin() || ! $query->is_main_query() ) return;
+    
+    if ( ! is_admin() && in_array ( $query->get('post_type'), array('place-here-an-array-of-grid-post-type-slugs') ) ) {
+        $query->set('posts_per_page', 9);
+    }
+  }
+add_action( 'pre_get_posts', 'grid_queries' );
+
+
 ?>

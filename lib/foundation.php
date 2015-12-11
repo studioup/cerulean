@@ -25,7 +25,7 @@ if( ! function_exists( 'cerulean_pagination' ) ) {
 			echo '<ul class="pagination text-center" role="navigation" aria-label="Pagination">';
 			foreach($paginate_links as $link){
 				$link = str_ireplace('<span ','<a href="#" ', $link);
-				$link = str_ireplace('span> ','a>" ', $link);
+				$link = str_ireplace('span>','a>', $link);
 				echo '<li>';			
 				echo $link;
 				echo '</li>';

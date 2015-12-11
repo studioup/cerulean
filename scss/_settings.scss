@@ -39,6 +39,14 @@
 //  34. Top Bar
 //  35. Slick Slider
 
+
+
+$global-font-size: 100% !default;
+$rem-base: 16px !default;
+// per cambiare le dimensioni del font utilizzare le seguenti impostazioni
+//$global-font-size: 20px !default;
+//$rem-base: $global-font-size !default;
+
 @import 'util/util';
 @import 'json_generated_config';
 
@@ -46,7 +54,6 @@
 // ---------
 
 $global-width: rem-calc(1200) !default;
-$global-font-size: 100% !default;
 $global-lineheight: 1.5 !default;
 $primary-color: $color-primary;
 $secondary-color: $color-secondary;
@@ -71,7 +78,7 @@ $global-weight-bold: bold !default;
 $global-radius: 0 !default;
 $global-namespace: false !default;
 $global-text-direction: ltr !default;
-$rem-base: 16px !default;
+
 
 
 // 2. Breakpoints

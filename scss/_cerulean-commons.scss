@@ -335,6 +335,40 @@
 }
 */
 
+.like-h1,.like-h2,.like-h3,.like-h4,.like-h5,.like-h6{
+    @extend h1,h2,h3,h4,h5,h6;
+}
+
+@each $size, $headers in $header-sizes {
+    @include breakpoint($size) {
+        @each $header, $font-size in $headers {
+            .like-#{$header} { font-size: rem-calc($font-size); }
+        }
+    }
+}
+
+.uppercase{
+    text-transform: uppercase;
+}
+
+.color-white{
+    color: $color-white;
+}
+
+.color-black{
+    color: $color-black;
+}
+
+.color-primary{
+    color: $color-primary;
+}
+
+.color-text{
+    color: $body-font-color;
+}
+
+
+
 
 .frm_blank_field input, .frm_blank_field textarea, .frm_blank_field select{
     margin-bottom: 0;
