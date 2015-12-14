@@ -191,6 +191,16 @@ time {
     }
 }
 
+.archive-grid .panel{
+    a{
+        display: block;
+        transition: all 100ms linear;
+        &:hover{
+            background: $white;
+        }
+    }
+}
+
 
 // add new pagination class for WordPress, Sass is amazingly fast
 .page-numbers {
@@ -373,6 +383,8 @@ footer.full-width {
         padding-top: rem-calc(32);
     }
 }
+
+
 
 
 // Customizzazioni

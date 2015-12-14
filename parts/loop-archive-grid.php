@@ -10,9 +10,9 @@ $grid_columns = 3; ?>
 <?php endif; ?> 
 
 		<!--Item: -->
-		<article class="large-4 medium-6 small-12 columns panel" data-equalizer-watch="article-grid"  role="article">
+		<article class="large-4 medium-6 small-12 columns panel xxlittle-vertical-margin" data-equalizer-watch="article-grid"  role="article">
 		
-			<a id="post-<?php the_ID(); ?>" <?php post_class('text-center'); ?> href="<?php the_permalink() ?>">
+			<a id="post-<?php the_ID(); ?>" <?php post_class('text-center little-vertical-padding xxlittle-horizontal-padding'); ?> href="<?php the_permalink() ?>">
 			
 				<section class="featured-image" itemprop="articleBody">
     				
