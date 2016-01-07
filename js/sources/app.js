@@ -7,21 +7,28 @@
     var retinaQueries = configShared.mediaqueries.retina.replace("'","").split(",");
     configShared.breakpoints = JSON.parse( configShared.breakpoints.replace(/\s?\(\s?/i, '{"').replace(/\s?\)\s?/i, '"}').replace(/\s?(\,|\:)\s?/ig,'"$1"'));
     
-    var sizes = ['medium','large','xlarge','xxlarge','xxxlarge'];
+    var sizes = ['smallplus','medium','large','xlarge','xxlarge','xxxlarge'];
     for( var k in sizes ){
         var mediaQuerySize = configShared.breakpoints[sizes[k]].match(/([0-9]{1,4})([a-z]{1,3})/i);
         Foundation.Interchange.SPECIAL_QUERIES[sizes[k]+'R'] = "";//"only screen and (min-width: "+configShared.breakpoints[sizes[k]]+")";
+        var i = 0;
         for(var k2 in retinaQueries){
-            if(k2 !== 0){
+            
+            if(i !== 0){
                 Foundation.Interchange.SPECIAL_QUERIES[sizes[k]+'R'] += ', ';
             }
             Foundation.Interchange.SPECIAL_QUERIES[sizes[k]+'R'] += retinaQueries[k2] + ' and (min-width: '+ parseInt(mediaQuerySize[1])/2 + mediaQuerySize[2] +')';
+            i++;
         }
         
     }
     
     $(document).foundation();
     
+    //make interchange work with equalizer
+    $(document).on('replaced.zf.interchange', 'img', function(e) {    
+	    $(e.target).trigger( 'resizeme.zf.trigger');        
+    });
     
     // Remove empty P tags created by WP inside of Accordion and Orbit
     jQuery('.accordion p:empty, .orbit p:empty').remove();
@@ -37,14 +44,15 @@
     
 
     // sticky footer and padding for sticky header
-    function stickyFooter(){
-        var topOffset = $('#main-header').outerHeight(true);
+     function stickyFooter(){
+        var topOffset = 0;
+        if($('#main-header').css('position') != 'absolute' && $('#main-header').css('position') != 'fixed' ){
+        	topOffset = $('#main-header').outerHeight(true);
+        }else{
+	        $('.page-wrapper').css('padding-top',$('#main-header').outerHeight(true));
+        }
         var bottomOffset = $('#main-footer').outerHeight(true);
         var bodyOffset = $('body').outerHeight(true) - $('body').innerHeight();
-        if($('#main-header').hasClass('sticky')){
-            //topOffset = $('#main-header').outerHeight(true);
-            $('.page-wrapper').css('margin-top',topOffset);
-        }
         
         
         $('.page-wrapper').css('min-height',$(window).innerHeight() - topOffset - bottomOffset - bodyOffset);

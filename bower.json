@@ -15,7 +15,8 @@
     "animate-sass": "tgdev/animate-sass",
     "cookies-enabler": "studioup/cookies-enabler",
     "animsition": "blivesta/animsition",
-    "slick-carousel": "~1.5.9"
+    "slick-carousel": "~1.5.9",
+    "modernizr" : "components/modernizr"
   },
   "resolutions": {
     "jquery": "2.x"

@@ -37,6 +37,8 @@ function get_img_interchange_array_from_id($id,$size = 'large-12'){
         case "off-grid":
             $sizes = array(
                 'small' => 'fd-sm', // 0px < 511px                       512px
+                'smallplus' => 'fd-md',
+                'smallplusR' => 'fd-md',
                 'medium' => 'fd-md', // 512px < 1023px                   1024px
                 'mediumR' => 'fd-md', // retina 256px < 511px            1024px 
                 'large' => 'fd-lg', // 1024 < 1199px                     1200px
@@ -52,6 +54,8 @@ function get_img_interchange_array_from_id($id,$size = 'large-12'){
         case "large-12": 
              $sizes = array(
                 'small' => 'fd-sm', // 0px < 511px                       512px
+                'smallplus' => 'fd-md',
+                'smallplusR' => 'fd-md',
                 'medium' => 'fd-md', // 512px < 1023px                   1024px
                 'mediumR' => 'fd-md', // retina 256px < 511px            1024px 
                 'large' => 'fd-lg', // 1024 < 1199px                     1200px
@@ -66,6 +70,8 @@ function get_img_interchange_array_from_id($id,$size = 'large-12'){
         case "large-6 medium-6":
             $sizes = array(
                 'small' => 'fd-sm', // 0px < 511px                       512px
+                'smallplus' => 'fd-md',
+                'smallplusR' => 'fd-md',
                 'mediumR' => 'fd-md', // retina 256px < 511px            1024px
                 'medium' => 'fd-sm', // 512px < 1023px                   512px
                 'large' => 'fd-sm2', // 1024 < 1199px                  768px
@@ -77,6 +83,8 @@ function get_img_interchange_array_from_id($id,$size = 'large-12'){
         case "large-6 medium-12":
             $sizes = array(
                 'small' => 'fd-sm', // 0px < 511px                       512px
+                'smallplus' => 'fd-md',
+                'smallplusR' => 'fd-md',
                 'mediumR' => 'fd-md', // retina 256px < 511px            1024px
                 'medium' => 'fd-md', // 512px < 1023px                   1024px
                 'large' =>  'fd-sm2', // 1024 < 1199px                  768px
@@ -89,6 +97,8 @@ function get_img_interchange_array_from_id($id,$size = 'large-12'){
         case "large-4 medium-6":
             $sizes = array(
                 'small' => 'fd-sm', // 0px < 511px                       512px
+                'smallplus' => 'fd-md',
+                'smallplusR' => 'fd-md',
                 'medium' => 'fd-sm', // 512px < 1023px                   512px // massimo su medium sarà 1/2 invece che 1/3 e a salire diventa 1/3 per cui massimo 400px
                 'mediumR' => 'fd-md', // retina 256px < 511px            1024px
                 'largeR' => 'fd-lg', // retina 512px < 599px             512px // massimo su medium sarà 1/2 invece che 1/3 1/2 per ci massimo 600px circa
@@ -98,6 +108,8 @@ function get_img_interchange_array_from_id($id,$size = 'large-12'){
         case "large-4 medium-4": 
             $sizes = array(
                 'small' => 'fd-sm', // 0px < 511px                       512px
+                'smallplus' => 'fd-md',
+                'smallplusR' => 'fd-md',
                 'medium' => 'post-thumbnail', // 512px < 1023px               300px // 1/3 sarebbe circa 333px - margini
                 'mediumR' => 'fd-md', // retina 256px < 511px            1024px
                 'large' => 'fd-sm', // 1024 < 1199px                     512px // large è 1/3 è quindi massimo 400px circa meno margini vari
@@ -107,6 +119,8 @@ function get_img_interchange_array_from_id($id,$size = 'large-12'){
         case "large-4 medium-12": 
             $sizes = array(
                 'small' => 'fd-sm', // 0px < 511px                       512px
+                'smallplus' => 'fd-md',
+                'smallplusR' => 'fd-md',
                 'medium' => 'fd-md', // 512px < 1023px                   1024px 
                 'mediumR' => 'fd-md', // retina 256px < 511px            1024px
                 'large' => 'fd-sm', // 1024 < 1199px                     512px // large è 1/3 è quindi massimo 400px circa meno margini vari
@@ -120,6 +134,8 @@ function get_img_interchange_array_from_id($id,$size = 'large-12'){
         case "large-3 medium-3":
             $sizes = array(
                 'small' => 'fd-sm', // 0px < 511px                       512px
+                'smallplus' => 'fd-md',
+                'smallplusR' => 'fd-md',
                 'medium' => 'post-thumbnail', // 512px < 1023px               300px
                 'mediumR' => 'fd-md', // retina 256px < 511px            1024px 
                 'large' => 'post-thumbnail', // 1024 < 1199px                 300px
@@ -130,6 +146,7 @@ function get_img_interchange_array_from_id($id,$size = 'large-12'){
             break;
         
     }
+        
     
     
     $img = wp_get_attachment_metadata($id);
