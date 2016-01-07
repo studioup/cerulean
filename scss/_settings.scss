@@ -39,14 +39,8 @@
 //  34. Top Bar
 //  35. Slick Slider
 
-
-
-$global-font-size: 100% !default;
-$rem-base: 16px !default;
-// per cambiare le dimensioni del font utilizzare le seguenti impostazioni
-//$global-font-size: 20px !default;
-//$rem-base: $global-font-size !default;
-
+$global-font-size: 20px !default;
+$rem-base: $global-font-size !default;
 @import 'util/util';
 @import 'json_generated_config';
 
@@ -109,18 +103,18 @@ $header-font-style: normal !default;
 $font-family-monospace: Consolas, "Liberation Mono", Courier, monospace !default;
 $header-sizes: (
   small: (
-    'h1': 24,
-    'h2': 20,
-    'h3': 19,
-    'h4': 18,
-    'h5': 17,
+    'h1': 30,
+    'h2': 26,
+    'h3': 22,
+    'h4': 20,
+    'h5': 18,
     'h6': 16,
   ),
   medium: (
     'h1': 48,
-    'h2': 40,
-    'h3': 31,
-    'h4': 25,
+    'h2': 36,
+    'h3': 26,
+    'h4': 24,
     'h5': 20,
     'h6': 16,
   ),
@@ -579,4 +573,7 @@ $spacing-classes: (
   ),
 ) !default;
 
+// 36. FontAwesome
+// -----------
+$fa-font-path:        "../bower_components/font-awesome/fonts/";
 //@import '../config_sass.json' !default;

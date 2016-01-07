@@ -1,14 +1,47 @@
 .frm_forms{
+    
+    .error{
+        input[type="text"], input[type="password"], input[type="date"], input[type="datetime"], input[type="datetime-local"], input[type="month"], input[type="week"], input[type="email"], input[type="number"], input[type="search"], input[type="tel"], input[type="time"], input[type="url"], input[type="color"], textarea{
+            border-color: $alert-color;
+        }
+    }
+    .frm_form_field {
+        margin-top: rem-calc(10);
+        margin-bottom: rem-calc(10);
+        
+        label{
+            color: $primary-color;
+            font-size: 80%;
+            input[type="text"], input[type="password"], input[type="date"], input[type="datetime"], input[type="datetime-local"], input[type="month"], input[type="week"], input[type="email"], input[type="number"], input[type="search"], input[type="tel"], input[type="time"], input[type="url"], input[type="color"], textarea{
+    
+            }
+        }
+    }
+    .label {
+        width: 100%;
+        top: -5px;
+        position: relative;
+        font-size: 60%;
+    }
+
+    .frm_hidden{
+        display: none;
+    }
+    fieldset{
+        border: none;
+    }
+    .frm_description{
+        font-size: 60%;
+    }
+    
     input[type="text"], input[type="password"], input[type="date"], input[type="datetime"], input[type="datetime-local"], input[type="month"], input[type="week"], input[type="email"], input[type="number"], input[type="search"], input[type="tel"], input[type="time"], input[type="url"], input[type="color"], textarea{
         box-shadow: none;
-        margin-bottom: rem-calc(10);
-        margin-top: rem-calc(50);
     }
     input[type="text"], input[type="password"], input[type="date"], input[type="datetime"], input[type="datetime-local"], input[type="month"], input[type="week"], input[type="email"], input[type="number"], input[type="search"], input[type="tel"], input[type="time"], input[type="url"], input[type="color"]{
-        border: none;
+        border: 1px solid $white;
         box-shadow: none;
-        border-bottom: rem-calc(3) solid $primary-color;
-        background-color: $body-background;
+        //border-bottom: rem-calc(3) solid $primary-color;
+        background-color: $white;
         color: $body-font-color;
     }
     textarea{
@@ -27,4 +60,19 @@
     .frm_submit{
         margin-top: rem-calc(50);
     }
+    .frm_checkbox{
+        label{
+            color: $body-font-color;
+            font-size: 60%;
+        }
+    }
 }
+
+
+
+
+.frm_blank_field input, .frm_blank_field textarea, .frm_blank_field select{
+    margin-bottom: 0;
+}
+
+

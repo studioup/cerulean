@@ -9,7 +9,7 @@
 // Global Foundation Settings
 //@import "settings";
 
-//@import "settings-animate";
+@import "settings-animate";
 
 // Tweak the mixin for WordPress, this might create some extra CSS in additional to app.css
 //@import 'components/pagination';
@@ -21,7 +21,7 @@
 //@import "compass/css3/shared";
 @import "app";
 @import "polyfill.object-fit";
-//@import "animate";
+@import "animate";
 @import "icon-font";
 @import "outdatedbrowser";
 @import "cerulean-commons";
@@ -33,7 +33,7 @@
 
 @import "animsition";
 //@import "ghost-buttons";
-//@import "font-awesome";
+@import "font-awesome";
 
 
 /* Start to customize Cerulean */
@@ -41,6 +41,7 @@
 // add transition effect
 a, a:visited, a:hover, a:visited:hover {
     transition: all 100ms linear;
+    
     //@include transition(all 100ms linear);
 }
 
@@ -118,29 +119,45 @@ body > header.contain-to-grid {
 }
 
 // define content padding for later use
-$content-padding: rem-calc(50);
+//$content-padding: rem-calc(50);
 
 #content {
-    background-color: #fff;
-    border: 1px solid #ddd;
+    //background-color: #fff;
+    //border: 1px solid #ddd;
     @include breakpoint(medium up) {
-        padding: $content-padding;
+        //padding: $content-padding;
     }
     
 }
 
 .index-card {
-    border-bottom: 1px solid #ddd;
-    padding-bottom: rem-calc(32);
-    margin-bottom: rem-calc(32);
+    //border-bottom: 1px solid #ddd;
+    //padding-bottom: rem-calc(32);
+    //margin-bottom: rem-calc(32);
+    background: $white;
+	.article-card-img{
+		display: block;
+		min-height: rem-calc(250);
+		height: 100%;
+		@include breakpoint(smallplus down) {
+			min-height: rem-calc(160);
+		}
+	}
+}
+
+.large-12 > div > .index-card .article-card-img{
+	min-height: rem-calc(394);
+	@include breakpoint(smallplus down) {
+		min-height: rem-calc(160);
+	}
 }
 
 span.author,
 time {
-    font-size: rem-calc(15);
-    color: #999;
+    font-size: rem-calc(16);
+    color: $body-font-color;
     a {
-        color: #999;
+        color: $body-font-color;
         font-weight: bold;
         &:hover, &:focus {
             color: $body-font-color;
@@ -156,7 +173,7 @@ time {
     padding: rem-calc(50) rem-calc(80);
     margin: rem-calc(50) (-($grid-column-gutter/2));
     @include breakpoint(medium up) {
-        margin: rem-calc(50) (-$content-padding);
+        //margin: rem-calc(50) (-$content-padding);
     }
     .avatar {
         margin-right: rem-calc(40);
@@ -181,25 +198,19 @@ time {
 }
 
 .entry-tags {
-    color: #999;
-    font-size: rem-calc(15);
+    color: $black;
+    font-size: rem-calc(12);
+    text-transform: uppercase;
+    font-weight: $global-weight-bold;
     a {
-        color: #999;
+        color: $black;
         &:hover, &:focus {
             color: $body-font-color;
         }
     }
 }
 
-.archive-grid .panel{
-    a{
-        display: block;
-        transition: all 100ms linear;
-        &:hover{
-            background: $white;
-        }
-    }
-}
+
 
 
 // add new pagination class for WordPress, Sass is amazingly fast
@@ -298,22 +309,26 @@ ol.commentlist {
 
 // Start the sidebar
 #sidebar {
-    margin-top: rem-calc(20);
+    //margin-top: rem-calc(20);
 }
 
 #sidebar, .footer-widget {
     .panel {
         border: none;
-        background-color: #eee;
+        background-color: $white;
         padding: rem-calc(24) rem-calc(30);
         a {
-            color: #999;
-            font-size: rem-calc(15);
+            //color: #999;
+            //font-size: rem-calc(15);
             &:hover, &:focus {
-                color: $body-font-color;
+                //color: $body-font-color;
             }
         }
+        time{
+	        font-size: rem-calc(12);
+        }
     }
+    /*
     ul {
         list-style-type: none;
         margin-left: 0;
@@ -328,6 +343,7 @@ ol.commentlist {
             font-weight: 600;
         }
     }
+    */
 }
 
 
@@ -372,9 +388,9 @@ footer.full-width {
 
 #sidebar {
     @include breakpoint(large up) { 
-        padding-left: $grid-column-gutter;
-        padding-right: 0;
-        margin-top: rem-calc(0);
+        //padding-left: $grid-column-gutter;
+        //padding-right: 0;
+        //margin-top: rem-calc(0);
     }
 }
 .footer-widget {
@@ -384,35 +400,213 @@ footer.full-width {
     }
 }
 
-
-
-
 // Customizzazioni
 
 body, html{
     height: auto !important;
     min-height: 100%;
+    width: 100%;
+    overflow-x: hidden;
 }
 
-#main-header{
-    width: 100%;
-}
 
 .page-wrapper{
     min-height: 80vh;
 }
 
 
-//header menu
-#main-menu ul.menu>li.menu-text.name {
-    img{
-        height: $topbar-height - ($topbar-padding*2);
-        width: auto !important;
-    }
-    span{
-        display: none;
+h1.huge{
+    font-size: rem-calc(69);
+    font-weight: 900;
+    @include breakpoint(small only) { 
+        font-size: rem-calc(36);
     }
 }
+
+body{
+    border: rem-calc(5) solid $black;
+}
+
+
+.archive-grid .panel{
+    a{
+        display: block;
+        transition: all 100ms linear;
+        &:hover{
+            background: $white;
+            box-shadow: 1px 15px 10px 0px rgba(0,0,0,0.10);
+        }
+    }
+}
+
+.button{
+    font-weight: 700;
+    text-transform: uppercase;
+}
+
+//header menu
+
+#main-menu-mobile-bar{
+    position: relative;
+    .title-bar-title{
+        //margin-left: -15px;
+        img{
+            height: 33px;
+        }
+        span{
+            display: none;
+            
+        }
+    }
+    .menu-icon{
+        width: 29px;
+        height: 23px;
+        position: absolute;
+        top: 20px;
+        &:after{
+            height: 3px;
+            box-shadow: 0 10px 0 #0a0a0a, 0 19px 0 #0a0a0a;
+            
+        }
+        &:hover::after {
+            background: $primary-color;
+            box-shadow: 0 10px 0 $primary-color, 0 19px 0 $primary-color;
+        }
+    }
+}
+body #main-header{
+    width: 100%;
+    z-index: 1000;
+    position: absolute;
+    
+}
+
+
+
+@include breakpoint(medium down) {
+    #main-header{
+        
+        &.expanded{
+	        height: 100%;
+            position: fixed;
+            top: 0;
+            left: 0;
+            background: $body-background;
+            border: rem-calc(5) solid $black;
+            z-index: 10000;
+            //display: table !important;
+            //vertical-align: middle;
+            #main-menu{
+	            position: absolute;
+			    top: 50%;
+			    width: 100%;
+			    transform: translateY(-50%);
+			    //padding: rem-calc(100) 0;
+	            //display: table-row !important;
+	            > div{
+		            //display: table-cell !important;
+	            }
+            }
+        }
+    }
+    body.home #main-header.expanded{
+        background-image: linear-gradient(0deg, #0276F9 0%, #4DA0FF 100%);
+        //background-image: linear-gradient(0deg, #0276F9 0%, #3f9aff 100%);
+    } 
+      
+} 
+
+/*
+	"button" : {
+    	"padding": "rem-calc(16) rem-calc(45)",
+        "margin": "$global-margin/2 0",
+        "fill": "solid",
+        "background": "$color-black",
+        "background-hover": "$color-primary",
+        "color": "$color-white",
+        "color-alt": "$color-black",
+        "radius": "rem-calc(3)",
+        "sizes": "( tiny: 0.6rem, small: 0.75rem, default: 0.8rem, large: 1.25rem)",
+        "opacity-disabled": "0.25"
+    },
+	*/
+
+.private-area.button {
+    background: none;
+    > a{
+	    border: 2px solid $black;
+	    height: 50px !important;
+	    padding: 15px 25px;
+	    border-radius: $button-radius;
+	    &:hover{
+		    background: $black;
+		    //color: $white;
+	    }
+    }
+    @include breakpoint(large up) {
+	    display: block !important;
+	    position: absolute;
+	    right: 0;
+	    top: -15px;
+    }
+    
+}
+
+.menu-container {
+    position: relative;
+}
+
+#main-menu {
+    font-weight: $global-weight-bold;
+    text-transform: uppercase;
+    @include breakpoint(medium down) {
+        //background: $body-background;
+    }
+    .menu.vertical > li {
+	    text-align: center;
+	    > a{
+			display: inline-block !important;
+		}
+    }
+    a{
+        
+        font-size: rem-calc(16);
+        letter-spacing: rem-calc(3);
+        &:hover,&.active{
+            color: $primary-color;
+        }
+    }
+        
+    ul.menu>li.menu-text.name {
+        img{
+            height: $topbar-height - ($topbar-padding*2);
+            width: auto !important;
+        }
+        span{
+            display: none;
+        }
+    }
+
+}
+
+
+body.home{
+    color: $white;
+    background: $primary-color;
+}
+
+
+
+
+
+
+.social-sharer ul{
+	li{
+		display: inline-block;
+	}	
+}
+
+
 
 
 

@@ -3,9 +3,12 @@
 
 (function($) {
     
+    
+    
     //inject special media queries for interchange on retina devices
     var retinaQueries = configShared.mediaqueries.retina.replace("'","").split(",");
     configShared.breakpoints = JSON.parse( configShared.breakpoints.replace(/\s?\(\s?/i, '{"').replace(/\s?\)\s?/i, '"}').replace(/\s?(\,|\:)\s?/ig,'"$1"'));
+
     
     var sizes = ['smallplus','medium','large','xlarge','xxlarge','xxxlarge'];
     for( var k in sizes ){
@@ -42,17 +45,21 @@
 	
 	
     
-
+    
     // sticky footer and padding for sticky header
-     function stickyFooter(){
+    function stickyFooter(){
         var topOffset = 0;
         if($('#main-header').css('position') != 'absolute' && $('#main-header').css('position') != 'fixed' ){
         	topOffset = $('#main-header').outerHeight(true);
         }else{
-	        $('.page-wrapper').css('padding-top',$('#main-header').outerHeight(true));
+	        
         }
         var bottomOffset = $('#main-footer').outerHeight(true);
         var bodyOffset = $('body').outerHeight(true) - $('body').innerHeight();
+        if($('#main-header').hasClass('sticky')){
+            //topOffset = $('#main-header').outerHeight(true);
+            $('.page-wrapper').css('margin-top',topOffset);
+        }
         
         
         $('.page-wrapper').css('min-height',$(window).innerHeight() - topOffset - bottomOffset - bodyOffset);
@@ -63,6 +70,8 @@
     $( window ).resize(function() {
         stickyFooter();
     });
+    
+    
 
 
     $('[data-slick]').slick();

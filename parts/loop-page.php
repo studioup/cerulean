@@ -1,7 +1,8 @@
 <article id="post-<?php the_ID(); ?>" <?php post_class(''); ?> role="article" itemscope itemtype="http://schema.org/WebPage">
 						
-	<header class="article-header">
-		<h1 class="page-title"><?php the_title(); ?></h1>
+	<header class="article-header text-center">
+    	<div class="h5-like uppercase color-black"><strong><?php the_field('occhiello') ?></strong></div>
+		<h1 class="page-title color-primary"><strong><?php the_title(); ?></strong></h1>
 		<?php 
         if ( function_exists('yoast_breadcrumb') && !is_front_page()) {
            yoast_breadcrumb('<div id="breadcrumbs">','</div>');

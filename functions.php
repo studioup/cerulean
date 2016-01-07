@@ -67,7 +67,7 @@ if( ! function_exists( 'cerulean_theme_support' ) ) {
         load_theme_textdomain('cerulean', get_template_directory() . '/lang');
 
         // Add post thumbnail supports. http://codex.wordpress.org/Post_Thumbnails
-        //add_theme_support('post-thumbnails');
+        add_theme_support('post-thumbnails');
         set_post_thumbnail_size(300, 999);
         //add_image_size('fd-xsm', 256, 9999);
         add_image_size('fd-sm', 512, 9999);
@@ -87,7 +87,9 @@ if( ! function_exists( 'cerulean_theme_support' ) ) {
         // Add menu support. http://codex.wordpress.org/Function_Reference/register_nav_menus
         add_theme_support('menus');
         register_nav_menus(array(
-            'primary' => __('Primary Navigation', 'cerulean'),
+	        'primary' => __('Primary Navigation', 'cerulean'),
+            //'primary_left' => __('Primary Navigation Left', 'cerulean'),
+            //'primary_right' => __('Primary Navigation Right', 'cerulean'),
             'additional' => __('Additional Navigation', 'cerulean'),
             'utility' => __('Utility Navigation', 'cerulean')
         ));
@@ -132,7 +134,7 @@ foreach ($sidebars as $sidebar) {
 if ( ! function_exists( 'cerulean_entry_meta' ) ) {
     function cerulean_entry_meta() {
         //echo '<span class="byline author">'. __('Written by', 'cerulean') .' <a href="'. get_author_posts_url(get_the_author_meta('ID')) .'" rel="author" class="fn">'. get_the_author() .', </a></span>';
-        echo '<time class="updated" datetime="'. get_the_time('c') .'" >'. get_the_time('F jS, Y') .'</time>';
+        echo '<time class="updated" datetime="'. get_the_time('c') .'" >'. get_the_time('d/m/Y') .'</time>';
     }
 };
 
@@ -240,7 +242,7 @@ function cc_mime_types($mimes) {
   $mimes['svg'] = 'image/svg+xml';
   return $mimes;
 }
-//add_filter('upload_mimes', 'cc_mime_types');
+add_filter('upload_mimes', 'cc_mime_types');
 
 
 // remove emoji js 
@@ -257,6 +259,20 @@ function get_excerpt_chars($count){
   $excerpt = substr($excerpt, 0, $count);
   $excerpt = $excerpt.'...'; // <a href="'.$permalink.'">more</a>';
   return $excerpt;
+}
+
+function current_page_url($https=true) {
+	$pageURL = 'http';
+	if( isset($_SERVER["HTTPS"]) && $https) {
+		if ($_SERVER["HTTPS"] == "on") {$pageURL .= "s";}
+	}
+	$pageURL .= "://";
+	if ($_SERVER["SERVER_PORT"] != "80") {
+		$pageURL .= $_SERVER["SERVER_NAME"].":".$_SERVER["SERVER_PORT"].$_SERVER["REQUEST_URI"];
+	} else {
+		$pageURL .= $_SERVER["SERVER_NAME"].$_SERVER["REQUEST_URI"];
+	}
+	return $pageURL;
 }
 
 add_action('template_redirect','show_sitemap');
@@ -281,6 +297,28 @@ function grid_queries( $query ) {
     }
   }
 add_action( 'pre_get_posts', 'grid_queries' );
+
+
+add_filter( 'pre_get_posts', 'no_sticky_posts' );
+
+function no_sticky_posts( $query ) {
+
+	if ( is_home() && $query->is_main_query() && !is_admin() ){
+    	//$query->set('suppress_filter', true);
+		//$query->set( 'post_type', array( 'post','i-viaggi-di-roberta', 'racconti-dai-blogger', 'i-villaggi', 'island-hopping' ) );
+		$query->set('ignore_sticky_posts',true);
+    }
+		//$query->set( 'offset', array( 'post','i-viaggi-di-roberta', 'racconti-dai-blogger', 'i-villaggi', 'island-hopping' ) );
+
+	return $query;
+}
+
+function change_sticky_class($classes) {
+	$classes = array_diff($classes, array("sticky"));
+	$classes[] = 'sticky-post';
+	return $classes;
+}
+add_filter('post_class','change_sticky_class');
 
 
 ?>
