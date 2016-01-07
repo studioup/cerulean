@@ -9209,6 +9209,1413 @@ return jQuery;
 
 }));
 
+/*!
+ * Modernizr v2.8.3
+ * www.modernizr.com
+ *
+ * Copyright (c) Faruk Ates, Paul Irish, Alex Sexton
+ * Available under the BSD and MIT licenses: www.modernizr.com/license/
+ */
+
+/*
+ * Modernizr tests which native CSS3 and HTML5 features are available in
+ * the current UA and makes the results available to you in two ways:
+ * as properties on a global Modernizr object, and as classes on the
+ * <html> element. This information allows you to progressively enhance
+ * your pages with a granular level of control over the experience.
+ *
+ * Modernizr has an optional (not included) conditional resource loader
+ * called Modernizr.load(), based on Yepnope.js (yepnopejs.com).
+ * To get a build that includes Modernizr.load(), as well as choosing
+ * which tests to include, go to www.modernizr.com/download/
+ *
+ * Authors        Faruk Ates, Paul Irish, Alex Sexton
+ * Contributors   Ryan Seddon, Ben Alman
+ */
+
+window.Modernizr = (function( window, document, undefined ) {
+
+    var version = '2.8.3',
+
+    Modernizr = {},
+
+    /*>>cssclasses*/
+    // option for enabling the HTML classes to be added
+    enableClasses = true,
+    /*>>cssclasses*/
+
+    docElement = document.documentElement,
+
+    /**
+     * Create our "modernizr" element that we do most feature tests on.
+     */
+    mod = 'modernizr',
+    modElem = document.createElement(mod),
+    mStyle = modElem.style,
+
+    /**
+     * Create the input element for various Web Forms feature tests.
+     */
+    inputElem /*>>inputelem*/ = document.createElement('input') /*>>inputelem*/ ,
+
+    /*>>smile*/
+    smile = ':)',
+    /*>>smile*/
+
+    toString = {}.toString,
+
+    // TODO :: make the prefixes more granular
+    /*>>prefixes*/
+    // List of property values to set for css tests. See ticket #21
+    prefixes = ' -webkit- -moz- -o- -ms- '.split(' '),
+    /*>>prefixes*/
+
+    /*>>domprefixes*/
+    // Following spec is to expose vendor-specific style properties as:
+    //   elem.style.WebkitBorderRadius
+    // and the following would be incorrect:
+    //   elem.style.webkitBorderRadius
+
+    // Webkit ghosts their properties in lowercase but Opera & Moz do not.
+    // Microsoft uses a lowercase `ms` instead of the correct `Ms` in IE8+
+    //   erik.eae.net/archives/2008/03/10/21.48.10/
+
+    // More here: github.com/Modernizr/Modernizr/issues/issue/21
+    omPrefixes = 'Webkit Moz O ms',
+
+    cssomPrefixes = omPrefixes.split(' '),
+
+    domPrefixes = omPrefixes.toLowerCase().split(' '),
+    /*>>domprefixes*/
+
+    /*>>ns*/
+    ns = {'svg': 'http://www.w3.org/2000/svg'},
+    /*>>ns*/
+
+    tests = {},
+    inputs = {},
+    attrs = {},
+
+    classes = [],
+
+    slice = classes.slice,
+
+    featureName, // used in testing loop
+
+
+    /*>>teststyles*/
+    // Inject element with style element and some CSS rules
+    injectElementWithStyles = function( rule, callback, nodes, testnames ) {
+
+      var style, ret, node, docOverflow,
+          div = document.createElement('div'),
+          // After page load injecting a fake body doesn't work so check if body exists
+          body = document.body,
+          // IE6 and 7 won't return offsetWidth or offsetHeight unless it's in the body element, so we fake it.
+          fakeBody = body || document.createElement('body');
+
+      if ( parseInt(nodes, 10) ) {
+          // In order not to give false positives we create a node for each test
+          // This also allows the method to scale for unspecified uses
+          while ( nodes-- ) {
+              node = document.createElement('div');
+              node.id = testnames ? testnames[nodes] : mod + (nodes + 1);
+              div.appendChild(node);
+          }
+      }
+
+      // <style> elements in IE6-9 are considered 'NoScope' elements and therefore will be removed
+      // when injected with innerHTML. To get around this you need to prepend the 'NoScope' element
+      // with a 'scoped' element, in our case the soft-hyphen entity as it won't mess with our measurements.
+      // msdn.microsoft.com/en-us/library/ms533897%28VS.85%29.aspx
+      // Documents served as xml will throw if using &shy; so use xml friendly encoded version. See issue #277
+      style = ['&#173;','<style id="s', mod, '">', rule, '</style>'].join('');
+      div.id = mod;
+      // IE6 will false positive on some tests due to the style element inside the test div somehow interfering offsetHeight, so insert it into body or fakebody.
+      // Opera will act all quirky when injecting elements in documentElement when page is served as xml, needs fakebody too. #270
+      (body ? div : fakeBody).innerHTML += style;
+      fakeBody.appendChild(div);
+      if ( !body ) {
+          //avoid crashing IE8, if background image is used
+          fakeBody.style.background = '';
+          //Safari 5.13/5.1.4 OSX stops loading if ::-webkit-scrollbar is used and scrollbars are visible
+          fakeBody.style.overflow = 'hidden';
+          docOverflow = docElement.style.overflow;
+          docElement.style.overflow = 'hidden';
+          docElement.appendChild(fakeBody);
+      }
+
+      ret = callback(div, rule);
+      // If this is done after page load we don't want to remove the body so check if body exists
+      if ( !body ) {
+          fakeBody.parentNode.removeChild(fakeBody);
+          docElement.style.overflow = docOverflow;
+      } else {
+          div.parentNode.removeChild(div);
+      }
+
+      return !!ret;
+
+    },
+    /*>>teststyles*/
+
+    /*>>mq*/
+    // adapted from matchMedia polyfill
+    // by Scott Jehl and Paul Irish
+    // gist.github.com/786768
+    testMediaQuery = function( mq ) {
+
+      var matchMedia = window.matchMedia || window.msMatchMedia;
+      if ( matchMedia ) {
+        return matchMedia(mq) && matchMedia(mq).matches || false;
+      }
+
+      var bool;
+
+      injectElementWithStyles('@media ' + mq + ' { #' + mod + ' { position: absolute; } }', function( node ) {
+        bool = (window.getComputedStyle ?
+                  getComputedStyle(node, null) :
+                  node.currentStyle)['position'] == 'absolute';
+      });
+
+      return bool;
+
+     },
+     /*>>mq*/
+
+
+    /*>>hasevent*/
+    //
+    // isEventSupported determines if a given element supports the given event
+    // kangax.github.com/iseventsupported/
+    //
+    // The following results are known incorrects:
+    //   Modernizr.hasEvent("webkitTransitionEnd", elem) // false negative
+    //   Modernizr.hasEvent("textInput") // in Webkit. github.com/Modernizr/Modernizr/issues/333
+    //   ...
+    isEventSupported = (function() {
+
+      var TAGNAMES = {
+        'select': 'input', 'change': 'input',
+        'submit': 'form', 'reset': 'form',
+        'error': 'img', 'load': 'img', 'abort': 'img'
+      };
+
+      function isEventSupported( eventName, element ) {
+
+        element = element || document.createElement(TAGNAMES[eventName] || 'div');
+        eventName = 'on' + eventName;
+
+        // When using `setAttribute`, IE skips "unload", WebKit skips "unload" and "resize", whereas `in` "catches" those
+        var isSupported = eventName in element;
+
+        if ( !isSupported ) {
+          // If it has no `setAttribute` (i.e. doesn't implement Node interface), try generic element
+          if ( !element.setAttribute ) {
+            element = document.createElement('div');
+          }
+          if ( element.setAttribute && element.removeAttribute ) {
+            element.setAttribute(eventName, '');
+            isSupported = is(element[eventName], 'function');
+
+            // If property was created, "remove it" (by setting value to `undefined`)
+            if ( !is(element[eventName], 'undefined') ) {
+              element[eventName] = undefined;
+            }
+            element.removeAttribute(eventName);
+          }
+        }
+
+        element = null;
+        return isSupported;
+      }
+      return isEventSupported;
+    })(),
+    /*>>hasevent*/
+
+    // TODO :: Add flag for hasownprop ? didn't last time
+
+    // hasOwnProperty shim by kangax needed for Safari 2.0 support
+    _hasOwnProperty = ({}).hasOwnProperty, hasOwnProp;
+
+    if ( !is(_hasOwnProperty, 'undefined') && !is(_hasOwnProperty.call, 'undefined') ) {
+      hasOwnProp = function (object, property) {
+        return _hasOwnProperty.call(object, property);
+      };
+    }
+    else {
+      hasOwnProp = function (object, property) { /* yes, this can give false positives/negatives, but most of the time we don't care about those */
+        return ((property in object) && is(object.constructor.prototype[property], 'undefined'));
+      };
+    }
+
+    // Adapted from ES5-shim https://github.com/kriskowal/es5-shim/blob/master/es5-shim.js
+    // es5.github.com/#x15.3.4.5
+
+    if (!Function.prototype.bind) {
+      Function.prototype.bind = function bind(that) {
+
+        var target = this;
+
+        if (typeof target != "function") {
+            throw new TypeError();
+        }
+
+        var args = slice.call(arguments, 1),
+            bound = function () {
+
+            if (this instanceof bound) {
+
+              var F = function(){};
+              F.prototype = target.prototype;
+              var self = new F();
+
+              var result = target.apply(
+                  self,
+                  args.concat(slice.call(arguments))
+              );
+              if (Object(result) === result) {
+                  return result;
+              }
+              return self;
+
+            } else {
+
+              return target.apply(
+                  that,
+                  args.concat(slice.call(arguments))
+              );
+
+            }
+
+        };
+
+        return bound;
+      };
+    }
+
+    /**
+     * setCss applies given styles to the Modernizr DOM node.
+     */
+    function setCss( str ) {
+        mStyle.cssText = str;
+    }
+
+    /**
+     * setCssAll extrapolates all vendor-specific css strings.
+     */
+    function setCssAll( str1, str2 ) {
+        return setCss(prefixes.join(str1 + ';') + ( str2 || '' ));
+    }
+
+    /**
+     * is returns a boolean for if typeof obj is exactly type.
+     */
+    function is( obj, type ) {
+        return typeof obj === type;
+    }
+
+    /**
+     * contains returns a boolean for if substr is found within str.
+     */
+    function contains( str, substr ) {
+        return !!~('' + str).indexOf(substr);
+    }
+
+    /*>>testprop*/
+
+    // testProps is a generic CSS / DOM property test.
+
+    // In testing support for a given CSS property, it's legit to test:
+    //    `elem.style[styleName] !== undefined`
+    // If the property is supported it will return an empty string,
+    // if unsupported it will return undefined.
+
+    // We'll take advantage of this quick test and skip setting a style
+    // on our modernizr element, but instead just testing undefined vs
+    // empty string.
+
+    // Because the testing of the CSS property names (with "-", as
+    // opposed to the camelCase DOM properties) is non-portable and
+    // non-standard but works in WebKit and IE (but not Gecko or Opera),
+    // we explicitly reject properties with dashes so that authors
+    // developing in WebKit or IE first don't end up with
+    // browser-specific content by accident.
+
+    function testProps( props, prefixed ) {
+        for ( var i in props ) {
+            var prop = props[i];
+            if ( !contains(prop, "-") && mStyle[prop] !== undefined ) {
+                return prefixed == 'pfx' ? prop : true;
+            }
+        }
+        return false;
+    }
+    /*>>testprop*/
+
+    // TODO :: add testDOMProps
+    /**
+     * testDOMProps is a generic DOM property test; if a browser supports
+     *   a certain property, it won't return undefined for it.
+     */
+    function testDOMProps( props, obj, elem ) {
+        for ( var i in props ) {
+            var item = obj[props[i]];
+            if ( item !== undefined) {
+
+                // return the property name as a string
+                if (elem === false) return props[i];
+
+                // let's bind a function
+                if (is(item, 'function')){
+                  // default to autobind unless override
+                  return item.bind(elem || obj);
+                }
+
+                // return the unbound function or obj or value
+                return item;
+            }
+        }
+        return false;
+    }
+
+    /*>>testallprops*/
+    /**
+     * testPropsAll tests a list of DOM properties we want to check against.
+     *   We specify literally ALL possible (known and/or likely) properties on
+     *   the element including the non-vendor prefixed one, for forward-
+     *   compatibility.
+     */
+    function testPropsAll( prop, prefixed, elem ) {
+
+        var ucProp  = prop.charAt(0).toUpperCase() + prop.slice(1),
+            props   = (prop + ' ' + cssomPrefixes.join(ucProp + ' ') + ucProp).split(' ');
+
+        // did they call .prefixed('boxSizing') or are we just testing a prop?
+        if(is(prefixed, "string") || is(prefixed, "undefined")) {
+          return testProps(props, prefixed);
+
+        // otherwise, they called .prefixed('requestAnimationFrame', window[, elem])
+        } else {
+          props = (prop + ' ' + (domPrefixes).join(ucProp + ' ') + ucProp).split(' ');
+          return testDOMProps(props, prefixed, elem);
+        }
+    }
+    /*>>testallprops*/
+
+
+    /**
+     * Tests
+     * -----
+     */
+
+    // The *new* flexbox
+    // dev.w3.org/csswg/css3-flexbox
+
+    tests['flexbox'] = function() {
+      return testPropsAll('flexWrap');
+    };
+
+    // The *old* flexbox
+    // www.w3.org/TR/2009/WD-css3-flexbox-20090723/
+
+    tests['flexboxlegacy'] = function() {
+        return testPropsAll('boxDirection');
+    };
+
+    // On the S60 and BB Storm, getContext exists, but always returns undefined
+    // so we actually have to call getContext() to verify
+    // github.com/Modernizr/Modernizr/issues/issue/97/
+
+    tests['canvas'] = function() {
+        var elem = document.createElement('canvas');
+        return !!(elem.getContext && elem.getContext('2d'));
+    };
+
+    tests['canvastext'] = function() {
+        return !!(Modernizr['canvas'] && is(document.createElement('canvas').getContext('2d').fillText, 'function'));
+    };
+
+    // webk.it/70117 is tracking a legit WebGL feature detect proposal
+
+    // We do a soft detect which may false positive in order to avoid
+    // an expensive context creation: bugzil.la/732441
+
+    tests['webgl'] = function() {
+        return !!window.WebGLRenderingContext;
+    };
+
+    /*
+     * The Modernizr.touch test only indicates if the browser supports
+     *    touch events, which does not necessarily reflect a touchscreen
+     *    device, as evidenced by tablets running Windows 7 or, alas,
+     *    the Palm Pre / WebOS (touch) phones.
+     *
+     * Additionally, Chrome (desktop) used to lie about its support on this,
+     *    but that has since been rectified: crbug.com/36415
+     *
+     * We also test for Firefox 4 Multitouch Support.
+     *
+     * For more info, see: modernizr.github.com/Modernizr/touch.html
+     */
+
+    tests['touch'] = function() {
+        var bool;
+
+        if(('ontouchstart' in window) || window.DocumentTouch && document instanceof DocumentTouch) {
+          bool = true;
+        } else {
+          injectElementWithStyles(['@media (',prefixes.join('touch-enabled),('),mod,')','{#modernizr{top:9px;position:absolute}}'].join(''), function( node ) {
+            bool = node.offsetTop === 9;
+          });
+        }
+
+        return bool;
+    };
+
+
+    // geolocation is often considered a trivial feature detect...
+    // Turns out, it's quite tricky to get right:
+    //
+    // Using !!navigator.geolocation does two things we don't want. It:
+    //   1. Leaks memory in IE9: github.com/Modernizr/Modernizr/issues/513
+    //   2. Disables page caching in WebKit: webk.it/43956
+    //
+    // Meanwhile, in Firefox < 8, an about:config setting could expose
+    // a false positive that would throw an exception: bugzil.la/688158
+
+    tests['geolocation'] = function() {
+        return 'geolocation' in navigator;
+    };
+
+
+    tests['postmessage'] = function() {
+      return !!window.postMessage;
+    };
+
+
+    // Chrome incognito mode used to throw an exception when using openDatabase
+    // It doesn't anymore.
+    tests['websqldatabase'] = function() {
+      return !!window.openDatabase;
+    };
+
+    // Vendors had inconsistent prefixing with the experimental Indexed DB:
+    // - Webkit's implementation is accessible through webkitIndexedDB
+    // - Firefox shipped moz_indexedDB before FF4b9, but since then has been mozIndexedDB
+    // For speed, we don't test the legacy (and beta-only) indexedDB
+    tests['indexedDB'] = function() {
+      return !!testPropsAll("indexedDB", window);
+    };
+
+    // documentMode logic from YUI to filter out IE8 Compat Mode
+    //   which false positives.
+    tests['hashchange'] = function() {
+      return isEventSupported('hashchange', window) && (document.documentMode === undefined || document.documentMode > 7);
+    };
+
+    // Per 1.6:
+    // This used to be Modernizr.historymanagement but the longer
+    // name has been deprecated in favor of a shorter and property-matching one.
+    // The old API is still available in 1.6, but as of 2.0 will throw a warning,
+    // and in the first release thereafter disappear entirely.
+    tests['history'] = function() {
+      return !!(window.history && history.pushState);
+    };
+
+    tests['draganddrop'] = function() {
+        var div = document.createElement('div');
+        return ('draggable' in div) || ('ondragstart' in div && 'ondrop' in div);
+    };
+
+    // FF3.6 was EOL'ed on 4/24/12, but the ESR version of FF10
+    // will be supported until FF19 (2/12/13), at which time, ESR becomes FF17.
+    // FF10 still uses prefixes, so check for it until then.
+    // for more ESR info, see: mozilla.org/en-US/firefox/organizations/faq/
+    tests['websockets'] = function() {
+        return 'WebSocket' in window || 'MozWebSocket' in window;
+    };
+
+
+    // css-tricks.com/rgba-browser-support/
+    tests['rgba'] = function() {
+        // Set an rgba() color and check the returned value
+
+        setCss('background-color:rgba(150,255,150,.5)');
+
+        return contains(mStyle.backgroundColor, 'rgba');
+    };
+
+    tests['hsla'] = function() {
+        // Same as rgba(), in fact, browsers re-map hsla() to rgba() internally,
+        //   except IE9 who retains it as hsla
+
+        setCss('background-color:hsla(120,40%,100%,.5)');
+
+        return contains(mStyle.backgroundColor, 'rgba') || contains(mStyle.backgroundColor, 'hsla');
+    };
+
+    tests['multiplebgs'] = function() {
+        // Setting multiple images AND a color on the background shorthand property
+        //  and then querying the style.background property value for the number of
+        //  occurrences of "url(" is a reliable method for detecting ACTUAL support for this!
+
+        setCss('background:url(https://),url(https://),red url(https://)');
+
+        // If the UA supports multiple backgrounds, there should be three occurrences
+        //   of the string "url(" in the return value for elemStyle.background
+
+        return (/(url\s*\(.*?){3}/).test(mStyle.background);
+    };
+
+
+
+    // this will false positive in Opera Mini
+    //   github.com/Modernizr/Modernizr/issues/396
+
+    tests['backgroundsize'] = function() {
+        return testPropsAll('backgroundSize');
+    };
+
+    tests['borderimage'] = function() {
+        return testPropsAll('borderImage');
+    };
+
+
+    // Super comprehensive table about all the unique implementations of
+    // border-radius: muddledramblings.com/table-of-css3-border-radius-compliance
+
+    tests['borderradius'] = function() {
+        return testPropsAll('borderRadius');
+    };
+
+    // WebOS unfortunately false positives on this test.
+    tests['boxshadow'] = function() {
+        return testPropsAll('boxShadow');
+    };
+
+    // FF3.0 will false positive on this test
+    tests['textshadow'] = function() {
+        return document.createElement('div').style.textShadow === '';
+    };
+
+
+    tests['opacity'] = function() {
+        // Browsers that actually have CSS Opacity implemented have done so
+        //  according to spec, which means their return values are within the
+        //  range of [0.0,1.0] - including the leading zero.
+
+        setCssAll('opacity:.55');
+
+        // The non-literal . in this regex is intentional:
+        //   German Chrome returns this value as 0,55
+        // github.com/Modernizr/Modernizr/issues/#issue/59/comment/516632
+        return (/^0.55$/).test(mStyle.opacity);
+    };
+
+
+    // Note, Android < 4 will pass this test, but can only animate
+    //   a single property at a time
+    //   goo.gl/v3V4Gp
+    tests['cssanimations'] = function() {
+        return testPropsAll('animationName');
+    };
+
+
+    tests['csscolumns'] = function() {
+        return testPropsAll('columnCount');
+    };
+
+
+    tests['cssgradients'] = function() {
+        /**
+         * For CSS Gradients syntax, please see:
+         * webkit.org/blog/175/introducing-css-gradients/
+         * developer.mozilla.org/en/CSS/-moz-linear-gradient
+         * developer.mozilla.org/en/CSS/-moz-radial-gradient
+         * dev.w3.org/csswg/css3-images/#gradients-
+         */
+
+        var str1 = 'background-image:',
+            str2 = 'gradient(linear,left top,right bottom,from(#9f9),to(white));',
+            str3 = 'linear-gradient(left top,#9f9, white);';
+
+        setCss(
+             // legacy webkit syntax (FIXME: remove when syntax not in use anymore)
+              (str1 + '-webkit- '.split(' ').join(str2 + str1) +
+             // standard syntax             // trailing 'background-image:'
+              prefixes.join(str3 + str1)).slice(0, -str1.length)
+        );
+
+        return contains(mStyle.backgroundImage, 'gradient');
+    };
+
+
+    tests['cssreflections'] = function() {
+        return testPropsAll('boxReflect');
+    };
+
+
+    tests['csstransforms'] = function() {
+        return !!testPropsAll('transform');
+    };
+
+
+    tests['csstransforms3d'] = function() {
+
+        var ret = !!testPropsAll('perspective');
+
+        // Webkit's 3D transforms are passed off to the browser's own graphics renderer.
+        //   It works fine in Safari on Leopard and Snow Leopard, but not in Chrome in
+        //   some conditions. As a result, Webkit typically recognizes the syntax but
+        //   will sometimes throw a false positive, thus we must do a more thorough check:
+        if ( ret && 'webkitPerspective' in docElement.style ) {
+
+          // Webkit allows this media query to succeed only if the feature is enabled.
+          // `@media (transform-3d),(-webkit-transform-3d){ ... }`
+          injectElementWithStyles('@media (transform-3d),(-webkit-transform-3d){#modernizr{left:9px;position:absolute;height:3px;}}', function( node, rule ) {
+            ret = node.offsetLeft === 9 && node.offsetHeight === 3;
+          });
+        }
+        return ret;
+    };
+
+
+    tests['csstransitions'] = function() {
+        return testPropsAll('transition');
+    };
+
+
+    /*>>fontface*/
+    // @font-face detection routine by Diego Perini
+    // javascript.nwbox.com/CSSSupport/
+
+    // false positives:
+    //   WebOS github.com/Modernizr/Modernizr/issues/342
+    //   WP7   github.com/Modernizr/Modernizr/issues/538
+    tests['fontface'] = function() {
+        var bool;
+
+        injectElementWithStyles('@font-face {font-family:"font";src:url("https://")}', function( node, rule ) {
+          var style = document.getElementById('smodernizr'),
+              sheet = style.sheet || style.styleSheet,
+              cssText = sheet ? (sheet.cssRules && sheet.cssRules[0] ? sheet.cssRules[0].cssText : sheet.cssText || '') : '';
+
+          bool = /src/i.test(cssText) && cssText.indexOf(rule.split(' ')[0]) === 0;
+        });
+
+        return bool;
+    };
+    /*>>fontface*/
+
+    // CSS generated content detection
+    tests['generatedcontent'] = function() {
+        var bool;
+
+        injectElementWithStyles(['#',mod,'{font:0/0 a}#',mod,':after{content:"',smile,'";visibility:hidden;font:3px/1 a}'].join(''), function( node ) {
+          bool = node.offsetHeight >= 3;
+        });
+
+        return bool;
+    };
+
+
+
+    // These tests evaluate support of the video/audio elements, as well as
+    // testing what types of content they support.
+    //
+    // We're using the Boolean constructor here, so that we can extend the value
+    // e.g.  Modernizr.video     // true
+    //       Modernizr.video.ogg // 'probably'
+    //
+    // Codec values from : github.com/NielsLeenheer/html5test/blob/9106a8/index.html#L845
+    //                     thx to NielsLeenheer and zcorpan
+
+    // Note: in some older browsers, "no" was a return value instead of empty string.
+    //   It was live in FF3.5.0 and 3.5.1, but fixed in 3.5.2
+    //   It was also live in Safari 4.0.0 - 4.0.4, but fixed in 4.0.5
+
+    tests['video'] = function() {
+        var elem = document.createElement('video'),
+            bool = false;
+
+        // IE9 Running on Windows Server SKU can cause an exception to be thrown, bug #224
+        try {
+            if ( bool = !!elem.canPlayType ) {
+                bool      = new Boolean(bool);
+                bool.ogg  = elem.canPlayType('video/ogg; codecs="theora"')      .replace(/^no$/,'');
+
+                // Without QuickTime, this value will be `undefined`. github.com/Modernizr/Modernizr/issues/546
+                bool.h264 = elem.canPlayType('video/mp4; codecs="avc1.42E01E"') .replace(/^no$/,'');
+
+                bool.webm = elem.canPlayType('video/webm; codecs="vp8, vorbis"').replace(/^no$/,'');
+            }
+
+        } catch(e) { }
+
+        return bool;
+    };
+
+    tests['audio'] = function() {
+        var elem = document.createElement('audio'),
+            bool = false;
+
+        try {
+            if ( bool = !!elem.canPlayType ) {
+                bool      = new Boolean(bool);
+                bool.ogg  = elem.canPlayType('audio/ogg; codecs="vorbis"').replace(/^no$/,'');
+                bool.mp3  = elem.canPlayType('audio/mpeg;')               .replace(/^no$/,'');
+
+                // Mimetypes accepted:
+                //   developer.mozilla.org/En/Media_formats_supported_by_the_audio_and_video_elements
+                //   bit.ly/iphoneoscodecs
+                bool.wav  = elem.canPlayType('audio/wav; codecs="1"')     .replace(/^no$/,'');
+                bool.m4a  = ( elem.canPlayType('audio/x-m4a;')            ||
+                              elem.canPlayType('audio/aac;'))             .replace(/^no$/,'');
+            }
+        } catch(e) { }
+
+        return bool;
+    };
+
+
+    // In FF4, if disabled, window.localStorage should === null.
+
+    // Normally, we could not test that directly and need to do a
+    //   `('localStorage' in window) && ` test first because otherwise Firefox will
+    //   throw bugzil.la/365772 if cookies are disabled
+
+    // Also in iOS5 Private Browsing mode, attempting to use localStorage.setItem
+    // will throw the exception:
+    //   QUOTA_EXCEEDED_ERRROR DOM Exception 22.
+    // Peculiarly, getItem and removeItem calls do not throw.
+
+    // Because we are forced to try/catch this, we'll go aggressive.
+
+    // Just FWIW: IE8 Compat mode supports these features completely:
+    //   www.quirksmode.org/dom/html5.html
+    // But IE8 doesn't support either with local files
+
+    tests['localstorage'] = function() {
+        try {
+            localStorage.setItem(mod, mod);
+            localStorage.removeItem(mod);
+            return true;
+        } catch(e) {
+            return false;
+        }
+    };
+
+    tests['sessionstorage'] = function() {
+        try {
+            sessionStorage.setItem(mod, mod);
+            sessionStorage.removeItem(mod);
+            return true;
+        } catch(e) {
+            return false;
+        }
+    };
+
+
+    tests['webworkers'] = function() {
+        return !!window.Worker;
+    };
+
+
+    tests['applicationcache'] = function() {
+        return !!window.applicationCache;
+    };
+
+
+    // Thanks to Erik Dahlstrom
+    tests['svg'] = function() {
+        return !!document.createElementNS && !!document.createElementNS(ns.svg, 'svg').createSVGRect;
+    };
+
+    // specifically for SVG inline in HTML, not within XHTML
+    // test page: paulirish.com/demo/inline-svg
+    tests['inlinesvg'] = function() {
+      var div = document.createElement('div');
+      div.innerHTML = '<svg/>';
+      return (div.firstChild && div.firstChild.namespaceURI) == ns.svg;
+    };
+
+    // SVG SMIL animation
+    tests['smil'] = function() {
+        return !!document.createElementNS && /SVGAnimate/.test(toString.call(document.createElementNS(ns.svg, 'animate')));
+    };
+
+    // This test is only for clip paths in SVG proper, not clip paths on HTML content
+    // demo: srufaculty.sru.edu/david.dailey/svg/newstuff/clipPath4.svg
+
+    // However read the comments to dig into applying SVG clippaths to HTML content here:
+    //   github.com/Modernizr/Modernizr/issues/213#issuecomment-1149491
+    tests['svgclippaths'] = function() {
+        return !!document.createElementNS && /SVGClipPath/.test(toString.call(document.createElementNS(ns.svg, 'clipPath')));
+    };
+
+    /*>>webforms*/
+    // input features and input types go directly onto the ret object, bypassing the tests loop.
+    // Hold this guy to execute in a moment.
+    function webforms() {
+        /*>>input*/
+        // Run through HTML5's new input attributes to see if the UA understands any.
+        // We're using f which is the <input> element created early on
+        // Mike Taylr has created a comprehensive resource for testing these attributes
+        //   when applied to all input types:
+        //   miketaylr.com/code/input-type-attr.html
+        // spec: www.whatwg.org/specs/web-apps/current-work/multipage/the-input-element.html#input-type-attr-summary
+
+        // Only input placeholder is tested while textarea's placeholder is not.
+        // Currently Safari 4 and Opera 11 have support only for the input placeholder
+        // Both tests are available in feature-detects/forms-placeholder.js
+        Modernizr['input'] = (function( props ) {
+            for ( var i = 0, len = props.length; i < len; i++ ) {
+                attrs[ props[i] ] = !!(props[i] in inputElem);
+            }
+            if (attrs.list){
+              // safari false positive's on datalist: webk.it/74252
+              // see also github.com/Modernizr/Modernizr/issues/146
+              attrs.list = !!(document.createElement('datalist') && window.HTMLDataListElement);
+            }
+            return attrs;
+        })('autocomplete autofocus list placeholder max min multiple pattern required step'.split(' '));
+        /*>>input*/
+
+        /*>>inputtypes*/
+        // Run through HTML5's new input types to see if the UA understands any.
+        //   This is put behind the tests runloop because it doesn't return a
+        //   true/false like all the other tests; instead, it returns an object
+        //   containing each input type with its corresponding true/false value
+
+        // Big thanks to @miketaylr for the html5 forms expertise. miketaylr.com/
+        Modernizr['inputtypes'] = (function(props) {
+
+            for ( var i = 0, bool, inputElemType, defaultView, len = props.length; i < len; i++ ) {
+
+                inputElem.setAttribute('type', inputElemType = props[i]);
+                bool = inputElem.type !== 'text';
+
+                // We first check to see if the type we give it sticks..
+                // If the type does, we feed it a textual value, which shouldn't be valid.
+                // If the value doesn't stick, we know there's input sanitization which infers a custom UI
+                if ( bool ) {
+
+                    inputElem.value         = smile;
+                    inputElem.style.cssText = 'position:absolute;visibility:hidden;';
+
+                    if ( /^range$/.test(inputElemType) && inputElem.style.WebkitAppearance !== undefined ) {
+
+                      docElement.appendChild(inputElem);
+                      defaultView = document.defaultView;
+
+                      // Safari 2-4 allows the smiley as a value, despite making a slider
+                      bool =  defaultView.getComputedStyle &&
+                              defaultView.getComputedStyle(inputElem, null).WebkitAppearance !== 'textfield' &&
+                              // Mobile android web browser has false positive, so must
+                              // check the height to see if the widget is actually there.
+                              (inputElem.offsetHeight !== 0);
+
+                      docElement.removeChild(inputElem);
+
+                    } else if ( /^(search|tel)$/.test(inputElemType) ){
+                      // Spec doesn't define any special parsing or detectable UI
+                      //   behaviors so we pass these through as true
+
+                      // Interestingly, opera fails the earlier test, so it doesn't
+                      //  even make it here.
+
+                    } else if ( /^(url|email)$/.test(inputElemType) ) {
+                      // Real url and email support comes with prebaked validation.
+                      bool = inputElem.checkValidity && inputElem.checkValidity() === false;
+
+                    } else {
+                      // If the upgraded input compontent rejects the :) text, we got a winner
+                      bool = inputElem.value != smile;
+                    }
+                }
+
+                inputs[ props[i] ] = !!bool;
+            }
+            return inputs;
+        })('search tel url email datetime date month week time datetime-local number range color'.split(' '));
+        /*>>inputtypes*/
+    }
+    /*>>webforms*/
+
+
+    // End of test definitions
+    // -----------------------
+
+
+
+    // Run through all tests and detect their support in the current UA.
+    // todo: hypothetically we could be doing an array of tests and use a basic loop here.
+    for ( var feature in tests ) {
+        if ( hasOwnProp(tests, feature) ) {
+            // run the test, throw the return value into the Modernizr,
+            //   then based on that boolean, define an appropriate className
+            //   and push it into an array of classes we'll join later.
+            featureName  = feature.toLowerCase();
+            Modernizr[featureName] = tests[feature]();
+
+            classes.push((Modernizr[featureName] ? '' : 'no-') + featureName);
+        }
+    }
+
+    /*>>webforms*/
+    // input tests need to run.
+    Modernizr.input || webforms();
+    /*>>webforms*/
+
+
+    /**
+     * addTest allows the user to define their own feature tests
+     * the result will be added onto the Modernizr object,
+     * as well as an appropriate className set on the html element
+     *
+     * @param feature - String naming the feature
+     * @param test - Function returning true if feature is supported, false if not
+     */
+     Modernizr.addTest = function ( feature, test ) {
+       if ( typeof feature == 'object' ) {
+         for ( var key in feature ) {
+           if ( hasOwnProp( feature, key ) ) {
+             Modernizr.addTest( key, feature[ key ] );
+           }
+         }
+       } else {
+
+         feature = feature.toLowerCase();
+
+         if ( Modernizr[feature] !== undefined ) {
+           // we're going to quit if you're trying to overwrite an existing test
+           // if we were to allow it, we'd do this:
+           //   var re = new RegExp("\\b(no-)?" + feature + "\\b");
+           //   docElement.className = docElement.className.replace( re, '' );
+           // but, no rly, stuff 'em.
+           return Modernizr;
+         }
+
+         test = typeof test == 'function' ? test() : test;
+
+         if (typeof enableClasses !== "undefined" && enableClasses) {
+           docElement.className += ' ' + (test ? '' : 'no-') + feature;
+         }
+         Modernizr[feature] = test;
+
+       }
+
+       return Modernizr; // allow chaining.
+     };
+
+
+    // Reset modElem.cssText to nothing to reduce memory footprint.
+    setCss('');
+    modElem = inputElem = null;
+
+    /*>>shiv*/
+    /**
+     * @preserve HTML5 Shiv prev3.7.1 | @afarkas @jdalton @jon_neal @rem | MIT/GPL2 Licensed
+     */
+    ;(function(window, document) {
+        /*jshint evil:true */
+        /** version */
+        var version = '3.7.0';
+
+        /** Preset options */
+        var options = window.html5 || {};
+
+        /** Used to skip problem elements */
+        var reSkip = /^<|^(?:button|map|select|textarea|object|iframe|option|optgroup)$/i;
+
+        /** Not all elements can be cloned in IE **/
+        var saveClones = /^(?:a|b|code|div|fieldset|h1|h2|h3|h4|h5|h6|i|label|li|ol|p|q|span|strong|style|table|tbody|td|th|tr|ul)$/i;
+
+        /** Detect whether the browser supports default html5 styles */
+        var supportsHtml5Styles;
+
+        /** Name of the expando, to work with multiple documents or to re-shiv one document */
+        var expando = '_html5shiv';
+
+        /** The id for the the documents expando */
+        var expanID = 0;
+
+        /** Cached data for each document */
+        var expandoData = {};
+
+        /** Detect whether the browser supports unknown elements */
+        var supportsUnknownElements;
+
+        (function() {
+          try {
+            var a = document.createElement('a');
+            a.innerHTML = '<xyz></xyz>';
+            //if the hidden property is implemented we can assume, that the browser supports basic HTML5 Styles
+            supportsHtml5Styles = ('hidden' in a);
+
+            supportsUnknownElements = a.childNodes.length == 1 || (function() {
+              // assign a false positive if unable to shiv
+              (document.createElement)('a');
+              var frag = document.createDocumentFragment();
+              return (
+                typeof frag.cloneNode == 'undefined' ||
+                typeof frag.createDocumentFragment == 'undefined' ||
+                typeof frag.createElement == 'undefined'
+              );
+            }());
+          } catch(e) {
+            // assign a false positive if detection fails => unable to shiv
+            supportsHtml5Styles = true;
+            supportsUnknownElements = true;
+          }
+
+        }());
+
+        /*--------------------------------------------------------------------------*/
+
+        /**
+         * Creates a style sheet with the given CSS text and adds it to the document.
+         * @private
+         * @param {Document} ownerDocument The document.
+         * @param {String} cssText The CSS text.
+         * @returns {StyleSheet} The style element.
+         */
+        function addStyleSheet(ownerDocument, cssText) {
+          var p = ownerDocument.createElement('p'),
+          parent = ownerDocument.getElementsByTagName('head')[0] || ownerDocument.documentElement;
+
+          p.innerHTML = 'x<style>' + cssText + '</style>';
+          return parent.insertBefore(p.lastChild, parent.firstChild);
+        }
+
+        /**
+         * Returns the value of `html5.elements` as an array.
+         * @private
+         * @returns {Array} An array of shived element node names.
+         */
+        function getElements() {
+          var elements = html5.elements;
+          return typeof elements == 'string' ? elements.split(' ') : elements;
+        }
+
+        /**
+         * Returns the data associated to the given document
+         * @private
+         * @param {Document} ownerDocument The document.
+         * @returns {Object} An object of data.
+         */
+        function getExpandoData(ownerDocument) {
+          var data = expandoData[ownerDocument[expando]];
+          if (!data) {
+            data = {};
+            expanID++;
+            ownerDocument[expando] = expanID;
+            expandoData[expanID] = data;
+          }
+          return data;
+        }
+
+        /**
+         * returns a shived element for the given nodeName and document
+         * @memberOf html5
+         * @param {String} nodeName name of the element
+         * @param {Document} ownerDocument The context document.
+         * @returns {Object} The shived element.
+         */
+        function createElement(nodeName, ownerDocument, data){
+          if (!ownerDocument) {
+            ownerDocument = document;
+          }
+          if(supportsUnknownElements){
+            return ownerDocument.createElement(nodeName);
+          }
+          if (!data) {
+            data = getExpandoData(ownerDocument);
+          }
+          var node;
+
+          if (data.cache[nodeName]) {
+            node = data.cache[nodeName].cloneNode();
+          } else if (saveClones.test(nodeName)) {
+            node = (data.cache[nodeName] = data.createElem(nodeName)).cloneNode();
+          } else {
+            node = data.createElem(nodeName);
+          }
+
+          // Avoid adding some elements to fragments in IE < 9 because
+          // * Attributes like `name` or `type` cannot be set/changed once an element
+          //   is inserted into a document/fragment
+          // * Link elements with `src` attributes that are inaccessible, as with
+          //   a 403 response, will cause the tab/window to crash
+          // * Script elements appended to fragments will execute when their `src`
+          //   or `text` property is set
+          return node.canHaveChildren && !reSkip.test(nodeName) && !node.tagUrn ? data.frag.appendChild(node) : node;
+        }
+
+        /**
+         * returns a shived DocumentFragment for the given document
+         * @memberOf html5
+         * @param {Document} ownerDocument The context document.
+         * @returns {Object} The shived DocumentFragment.
+         */
+        function createDocumentFragment(ownerDocument, data){
+          if (!ownerDocument) {
+            ownerDocument = document;
+          }
+          if(supportsUnknownElements){
+            return ownerDocument.createDocumentFragment();
+          }
+          data = data || getExpandoData(ownerDocument);
+          var clone = data.frag.cloneNode(),
+          i = 0,
+          elems = getElements(),
+          l = elems.length;
+          for(;i<l;i++){
+            clone.createElement(elems[i]);
+          }
+          return clone;
+        }
+
+        /**
+         * Shivs the `createElement` and `createDocumentFragment` methods of the document.
+         * @private
+         * @param {Document|DocumentFragment} ownerDocument The document.
+         * @param {Object} data of the document.
+         */
+        function shivMethods(ownerDocument, data) {
+          if (!data.cache) {
+            data.cache = {};
+            data.createElem = ownerDocument.createElement;
+            data.createFrag = ownerDocument.createDocumentFragment;
+            data.frag = data.createFrag();
+          }
+
+
+          ownerDocument.createElement = function(nodeName) {
+            //abort shiv
+            if (!html5.shivMethods) {
+              return data.createElem(nodeName);
+            }
+            return createElement(nodeName, ownerDocument, data);
+          };
+
+          ownerDocument.createDocumentFragment = Function('h,f', 'return function(){' +
+                                                          'var n=f.cloneNode(),c=n.createElement;' +
+                                                          'h.shivMethods&&(' +
+                                                          // unroll the `createElement` calls
+                                                          getElements().join().replace(/[\w\-]+/g, function(nodeName) {
+            data.createElem(nodeName);
+            data.frag.createElement(nodeName);
+            return 'c("' + nodeName + '")';
+          }) +
+            ');return n}'
+                                                         )(html5, data.frag);
+        }
+
+        /*--------------------------------------------------------------------------*/
+
+        /**
+         * Shivs the given document.
+         * @memberOf html5
+         * @param {Document} ownerDocument The document to shiv.
+         * @returns {Document} The shived document.
+         */
+        function shivDocument(ownerDocument) {
+          if (!ownerDocument) {
+            ownerDocument = document;
+          }
+          var data = getExpandoData(ownerDocument);
+
+          if (html5.shivCSS && !supportsHtml5Styles && !data.hasCSS) {
+            data.hasCSS = !!addStyleSheet(ownerDocument,
+                                          // corrects block display not defined in IE6/7/8/9
+                                          'article,aside,dialog,figcaption,figure,footer,header,hgroup,main,nav,section{display:block}' +
+                                            // adds styling not present in IE6/7/8/9
+                                            'mark{background:#FF0;color:#000}' +
+                                            // hides non-rendered elements
+                                            'template{display:none}'
+                                         );
+          }
+          if (!supportsUnknownElements) {
+            shivMethods(ownerDocument, data);
+          }
+          return ownerDocument;
+        }
+
+        /*--------------------------------------------------------------------------*/
+
+        /**
+         * The `html5` object is exposed so that more elements can be shived and
+         * existing shiving can be detected on iframes.
+         * @type Object
+         * @example
+         *
+         * // options can be changed before the script is included
+         * html5 = { 'elements': 'mark section', 'shivCSS': false, 'shivMethods': false };
+         */
+        var html5 = {
+
+          /**
+           * An array or space separated string of node names of the elements to shiv.
+           * @memberOf html5
+           * @type Array|String
+           */
+          'elements': options.elements || 'abbr article aside audio bdi canvas data datalist details dialog figcaption figure footer header hgroup main mark meter nav output progress section summary template time video',
+
+          /**
+           * current version of html5shiv
+           */
+          'version': version,
+
+          /**
+           * A flag to indicate that the HTML5 style sheet should be inserted.
+           * @memberOf html5
+           * @type Boolean
+           */
+          'shivCSS': (options.shivCSS !== false),
+
+          /**
+           * Is equal to true if a browser supports creating unknown/HTML5 elements
+           * @memberOf html5
+           * @type boolean
+           */
+          'supportsUnknownElements': supportsUnknownElements,
+
+          /**
+           * A flag to indicate that the document's `createElement` and `createDocumentFragment`
+           * methods should be overwritten.
+           * @memberOf html5
+           * @type Boolean
+           */
+          'shivMethods': (options.shivMethods !== false),
+
+          /**
+           * A string to describe the type of `html5` object ("default" or "default print").
+           * @memberOf html5
+           * @type String
+           */
+          'type': 'default',
+
+          // shivs the document according to the specified `html5` object options
+          'shivDocument': shivDocument,
+
+          //creates a shived element
+          createElement: createElement,
+
+          //creates a shived documentFragment
+          createDocumentFragment: createDocumentFragment
+        };
+
+        /*--------------------------------------------------------------------------*/
+
+        // expose html5
+        window.html5 = html5;
+
+        // shiv the document
+        shivDocument(document);
+
+    }(this, document));
+    /*>>shiv*/
+
+    // Assign private properties to the return object with prefix
+    Modernizr._version      = version;
+
+    // expose these for the plugin API. Look in the source for how to join() them against your input
+    /*>>prefixes*/
+    Modernizr._prefixes     = prefixes;
+    /*>>prefixes*/
+    /*>>domprefixes*/
+    Modernizr._domPrefixes  = domPrefixes;
+    Modernizr._cssomPrefixes  = cssomPrefixes;
+    /*>>domprefixes*/
+
+    /*>>mq*/
+    // Modernizr.mq tests a given media query, live against the current state of the window
+    // A few important notes:
+    //   * If a browser does not support media queries at all (eg. oldIE) the mq() will always return false
+    //   * A max-width or orientation query will be evaluated against the current state, which may change later.
+    //   * You must specify values. Eg. If you are testing support for the min-width media query use:
+    //       Modernizr.mq('(min-width:0)')
+    // usage:
+    // Modernizr.mq('only screen and (max-width:768)')
+    Modernizr.mq            = testMediaQuery;
+    /*>>mq*/
+
+    /*>>hasevent*/
+    // Modernizr.hasEvent() detects support for a given event, with an optional element to test on
+    // Modernizr.hasEvent('gesturestart', elem)
+    Modernizr.hasEvent      = isEventSupported;
+    /*>>hasevent*/
+
+    /*>>testprop*/
+    // Modernizr.testProp() investigates whether a given style property is recognized
+    // Note that the property names must be provided in the camelCase variant.
+    // Modernizr.testProp('pointerEvents')
+    Modernizr.testProp      = function(prop){
+        return testProps([prop]);
+    };
+    /*>>testprop*/
+
+    /*>>testallprops*/
+    // Modernizr.testAllProps() investigates whether a given style property,
+    //   or any of its vendor-prefixed variants, is recognized
+    // Note that the property names must be provided in the camelCase variant.
+    // Modernizr.testAllProps('boxSizing')
+    Modernizr.testAllProps  = testPropsAll;
+    /*>>testallprops*/
+
+
+    /*>>teststyles*/
+    // Modernizr.testStyles() allows you to add custom styles to the document and test an element afterwards
+    // Modernizr.testStyles('#modernizr { position:absolute }', function(elem, rule){ ... })
+    Modernizr.testStyles    = injectElementWithStyles;
+    /*>>teststyles*/
+
+
+    /*>>prefixed*/
+    // Modernizr.prefixed() returns the prefixed or nonprefixed property name variant of your input
+    // Modernizr.prefixed('boxSizing') // 'MozBoxSizing'
+
+    // Properties must be passed as dom-style camelcase, rather than `box-sizing` hypentated style.
+    // Return values will also be the camelCase variant, if you need to translate that to hypenated style use:
+    //
+    //     str.replace(/([A-Z])/g, function(str,m1){ return '-' + m1.toLowerCase(); }).replace(/^ms-/,'-ms-');
+
+    // If you're trying to ascertain which transition end event to bind to, you might do something like...
+    //
+    //     var transEndEventNames = {
+    //       'WebkitTransition' : 'webkitTransitionEnd',
+    //       'MozTransition'    : 'transitionend',
+    //       'OTransition'      : 'oTransitionEnd',
+    //       'msTransition'     : 'MSTransitionEnd',
+    //       'transition'       : 'transitionend'
+    //     },
+    //     transEndEventName = transEndEventNames[ Modernizr.prefixed('transition') ];
+
+    Modernizr.prefixed      = function(prop, obj, elem){
+      if(!obj) {
+        return testPropsAll(prop, 'pfx');
+      } else {
+        // Testing DOM property e.g. Modernizr.prefixed('requestAnimationFrame', window) // 'mozRequestAnimationFrame'
+        return testPropsAll(prop, obj, elem);
+      }
+    };
+    /*>>prefixed*/
+
+
+    /*>>cssclasses*/
+    // Remove "no-js" class from <html> element, if it exists:
+    docElement.className = docElement.className.replace(/(^|\s)no-js(\s|$)/, '$1$2') +
+
+                            // Add the new classes to the <html> element.
+                            (enableClasses ? ' js ' + classes.join(' ') : '');
+    /*>>cssclasses*/
+
+    return Modernizr;
+
+})(this, this.document);
+
 (function (ELEMENT) {
 	ELEMENT.matches = ELEMENT.matches || ELEMENT.mozMatchesSelector || ELEMENT.msMatchesSelector || ELEMENT.oMatchesSelector || ELEMENT.webkitMatchesSelector || function matches(selector) {
 		var
@@ -10665,10 +12072,9 @@ if (!Array.prototype.indexOf)
 }));
 
 !function($) {
-
 "use strict";
 
-var FOUNDATION_VERSION = '6.0.5';
+var FOUNDATION_VERSION = '6.1.1';
 
 // Global Foundation object
 // This is attached to the window, or used as a module for AMD/Browserify
@@ -10718,18 +12124,19 @@ var Foundation = {
    * @param {Object} plugin - an instance of a plugin, usually `this` in context.
    * @fires Plugin#init
    */
-  registerPlugin: function(plugin){
-    var pluginName = functionName(plugin.constructor).toLowerCase();
-
+  registerPlugin: function(plugin, name){
+    var pluginName = name ? hyphenate(name) : functionName(plugin.constructor).toLowerCase();
     plugin.uuid = this.GetYoDigits(6, pluginName);
-    plugin.$element.attr('data-' + pluginName, plugin.uuid)
+
+    if(!plugin.$element.attr('data-' + pluginName)){ plugin.$element.attr('data-' + pluginName, plugin.uuid); }
+    if(!plugin.$element.data('zfPlugin')){ plugin.$element.data('zfPlugin', plugin); }
           /**
            * Fires when the plugin has initialized.
            * @event Plugin#init
            */
-          .trigger('init.zf.' + pluginName);
+    plugin.$element.trigger('init.zf.' + pluginName);
 
-    this._activePlugins[plugin.uuid] = plugin;
+    this._uuids.push(plugin.uuid);
 
     return;
   },
@@ -10741,16 +12148,18 @@ var Foundation = {
    * @fires Plugin#destroyed
    */
   unregisterPlugin: function(plugin){
-    var pluginName = functionName(plugin.constructor).toLowerCase();
+    var pluginName = hyphenate(functionName(plugin.$element.data('zfPlugin').constructor));
 
-    delete this._activePlugins[plugin.uuid];
-    plugin.$element.removeAttr('data-' + pluginName)
+    this._uuids.splice(this._uuids.indexOf(plugin.uuid), 1);
+    plugin.$element.removeAttr('data-' + pluginName).removeData('zfPlugin')
           /**
            * Fires when the plugin has been destroyed.
            * @event Plugin#destroyed
            */
           .trigger('destroyed.zf.' + pluginName);
-
+    for(var prop in plugin){
+      plugin[prop] = null;//clean up script to prep for garbage collection.
+    }
     return;
   },
 
@@ -10760,34 +12169,37 @@ var Foundation = {
    * @param {String} plugins - optional string of an individual plugin key, attained by calling `$(element).data('pluginName')`, or string of a plugin class i.e. `'dropdown'`
    * @default If no argument is passed, reflow all currently active plugins.
    */
-  _reflow: function(plugins){
-    var actvPlugins = Object.keys(this._activePlugins);
-    var _this = this;
-
-    if(!plugins){
-      actvPlugins.forEach(function(p){
-        _this._activePlugins[p]._init();
-      });
-
-    }else if(typeof plugins === 'string'){
-      var namespace = plugins.split('-')[1];
-
-      if(namespace){
-
-        this._activePlugins[plugins]._init();
-
-      }else{
-        namespace = new RegExp(plugins, 'i');
-
-        actvPlugins.filter(function(p){
-          return namespace.test(p);
-        }).forEach(function(p){
-          _this._activePlugins[p]._init();
-        });
-      }
-    }
-
-  },
+   reInit: function(plugins){
+     var isJQ = plugins instanceof $;
+     try{
+       if(isJQ){
+         plugins.each(function(){
+           $(this).data('zfPlugin')._init();
+         });
+       }else{
+         var type = typeof plugins,
+         _this = this,
+         fns = {
+           'object': function(plgs){
+             plgs.forEach(function(p){
+               $('[data-'+ p +']').foundation('_init');
+             });
+           },
+           'string': function(){
+             $('[data-'+ plugins +']').foundation('_init');
+           },
+           'undefined': function(){
+             this['object'](Object.keys(_this._plugins));
+           }
+         };
+         fns[type](plugins);
+       }
+     }catch(err){
+       console.error(err);
+     }finally{
+       return plugins;
+     }
+   },
 
   /**
    * returns a random base-36 uid with namespacing
@@ -10807,6 +12219,7 @@ var Foundation = {
    * @param {String|Array} plugins - A list of plugins to initialize. Leave this out to initialize everything.
    */
   reflow: function(elem, plugins) {
+
     // If plugins is undefined, just grab everything
     if (typeof plugins === 'undefined') {
       plugins = Object.keys(this._plugins);
@@ -10824,14 +12237,14 @@ var Foundation = {
       var plugin = _this._plugins[name];
 
       // Localize the search to all elements inside elem, as well as elem itself, unless elem === document
-      var $elem = $(elem).find('[data-'+name+']').addBack('*');
+      var $elem = $(elem).find('[data-'+name+']').addBack('[data-'+name+']');
 
       // For each plugin found, initialize it
       $elem.each(function() {
         var $el = $(this),
             opts = {};
         // Don't double-dip on plugins
-        if ($el.attr('zf-plugin')) {
+        if ($el.data('zfPlugin')) {
           console.warn("Tried to initialize "+name+" on an element that already has a Foundation plugin.");
           return;
         }
@@ -10842,7 +12255,13 @@ var Foundation = {
             if(opt[0]) opts[opt[0]] = parseValue(opt[1]);
           });
         }
-        $el.data('zf-plugin', new plugin($(this), opts));
+        try{
+          $el.data('zfPlugin', new plugin($(this), opts));
+        }catch(er){
+          console.error(er);
+        }finally{
+          return;
+        }
       });
     });
   },
@@ -11020,7 +12439,7 @@ function functionName(fn) {
 function parseValue(str){
   if(/true/.test(str)) return true;
   else if(/false/.test(str)) return false;
-  else if(!isNaN(str * 1)/* && typeof (str * 1) === "number"*/) return parseFloat(str);
+  else if(!isNaN(str * 1)) return parseFloat(str);
   return str;
 }
 // Convert PascalCase to kebab-case
@@ -11223,7 +12642,10 @@ function hyphenate(str) {
     40: 'ARROW_DOWN'
   };
 
-  // constants for easier comparing Can be used like Foundation.parseKey(event) === Foundation.keys.SPACE
+  /*
+   * Constants for easier comparing.
+   * Can be used like Foundation.parseKey(event) === Foundation.keys.SPACE
+   */
   var keys = (function(kcs) {
     var k = {};
     for (var kc in kcs) k[kcs[kc]] = kcs[kc];
@@ -11254,11 +12676,11 @@ function hyphenate(str) {
   /**
    * Handles the given (keyboard) event
    * @param {Event} event - the event generated by the event handler
-   * @param {Object} component - Foundation component, e.g. Slider or Reveal
+   * @param {String} component - Foundation component's name, e.g. Slider or Reveal
    * @param {Objects} functions - collection of functions that are to be executed
    */
   var handleKey = function(event, component, functions) {
-    var commandList = commands[Foundation.getFnName(component)],
+    var commandList = commands[component],
       keyCode = parseKey(event),
       cmds,
       command,
@@ -11276,14 +12698,14 @@ function hyphenate(str) {
 
 
     fn = functions[command];
-    if (fn && typeof fn === 'function') { // execute function with context of the component if exists
-        fn.apply(component);
+    if (fn && typeof fn === 'function') { // execute function  if exists
+        fn.apply();
         if (functions.handled || typeof functions.handled === 'function') { // execute function when event was handled
-            functions.handled.apply(component);
+            functions.handled.apply();
         }
     } else {
         if (functions.unhandled || typeof functions.unhandled === 'function') { // execute function when event was not handled
-            functions.unhandled.apply(component);
+            functions.unhandled.apply();
         }
     }
   };
@@ -11523,7 +12945,7 @@ function parseStyleToObject(str) {
   return styleObject;
 }
 
-}(jQuery, Foundation)
+}(jQuery, Foundation);
 
 /**
  * Motion module.
@@ -11768,7 +13190,7 @@ Foundation.Motion = Motion;
   $.spotSwipe = {
     version: '1.0.0',
     enabled: 'ontouchstart' in document.documentElement,
-    preventDefault: true,
+    preventDefault: false,
     moveThreshold: 75,
     timeThreshold: 200
   };
@@ -11798,10 +13220,11 @@ Foundation.Motion = Motion;
       if(Math.abs(dx) >= $.spotSwipe.moveThreshold && elapsedTime <= $.spotSwipe.timeThreshold) {
         dir = dx > 0 ? 'left' : 'right';
       }
-      else if(Math.abs(dy) >= $.spotSwipe.moveThreshold && elapsedTime <= $.spotSwipe.timeThreshold) {
-        dir = dy > 0 ? 'down' : 'up';
-      }
+      // else if(Math.abs(dy) >= $.spotSwipe.moveThreshold && elapsedTime <= $.spotSwipe.timeThreshold) {
+      //   dir = dy > 0 ? 'down' : 'up';
+      // }
       if(dir) {
+        e.preventDefault();
         onTouchEnd.call(this);
         $(this).trigger('swipe', dir).trigger('swipe' + dir);
       }
@@ -12334,25 +13757,54 @@ Foundation.Motion = Motion;
   function Abide(element, options) {
     this.$element = element;
     this.options  = $.extend({}, Abide.defaults, this.$element.data(), options);
-    this.$window  = $(window);
-    this.name     = 'Abide';
-    this.attr     = 'data-abide';
 
     this._init();
-    this._events();
 
-    Foundation.registerPlugin(this);
+    Foundation.registerPlugin(this, 'Abide');
   }
 
   /**
    * Default settings for plugin
    */
   Abide.defaults = {
-    validateOn: 'fieldChange', // options: fieldChange, manual, submit
+    /**
+     * The default event to validate inputs. Checkboxes and radios validate immediately.
+     * Remove or change this value for manual validation.
+     * @option
+     * @example 'fieldChange'
+     */
+    validateOn: 'fieldChange',
+    /**
+     * Class to be applied to input labels on failed validation.
+     * @option
+     * @example 'is-invalid-label'
+     */
     labelErrorClass: 'is-invalid-label',
+    /**
+     * Class to be applied to inputs on failed validation.
+     * @option
+     * @example 'is-invalid-input'
+     */
     inputErrorClass: 'is-invalid-input',
+    /**
+     * Class selector to use to target Form Errors for show/hide.
+     * @option
+     * @example '.form-error'
+     */
     formErrorSelector: '.form-error',
+    /**
+     * Class added to Form Errors on failed validation.
+     * @option
+     * @example 'is-visible'
+     */
     formErrorClass: 'is-visible',
+    /**
+     * Set to true to validate text inputs on any value change.
+     * @option
+     * @example false
+     */
+    liveValidate: false,
+
     patterns: {
       alpha : /^[a-zA-Z]+$/,
       alpha_numeric : /^[a-zA-Z0-9]+$/,
@@ -12384,13 +13836,17 @@ Foundation.Motion = Motion;
       // #FFF or #FFFFFF
       color : /^#?([a-fA-F0-9]{6}|[a-fA-F0-9]{3})$/
     },
+    /**
+     * Optional validation functions to be used. `equalTo` being the only default included function.
+     * Functions should return only a boolean if the input is valid or not. Functions are given the following arguments:
+     * el : The jQuery element to validate.
+     * required : Boolean value of the required attribute be present or not.
+     * parent : The direct parent of the input.
+     * @option
+     */
     validators: {
       equalTo: function (el, required, parent) {
-        var from  = document.getElementById(el.getAttribute(this.add_namespace('data-equalto'))).value,
-            to    = el.value,
-            valid = (from === to);
-
-        return valid;
+        return $('#' + el.attr('data-equalto')).val() === el.val();
       }
     }
   };
@@ -12400,7 +13856,10 @@ Foundation.Motion = Motion;
    * Initializes the Abide plugin and calls functions to get Abide functioning on load.
    * @private
    */
-  Abide.prototype._init = function() {
+  Abide.prototype._init = function(){
+    this.$inputs = this.$element.find('input, textarea, select').not('[data-abide-ignore]');
+
+    this._events();
   };
 
   /**
@@ -12408,41 +13867,36 @@ Foundation.Motion = Motion;
    * @private
    */
   Abide.prototype._events = function() {
-    var self = this;
-    this.$element
-      .off('.abide')
-      .on('reset.fndtn.abide', function(e) {
-        self.resetForm($(this));
-      })
-      .on('submit.fndtn.abide', function(e) {
-        e.preventDefault();
-        self.validateForm(self.$element);
-      })
-      .find('input, textarea, select')
-        .off('.abide')
-        .on('blur.fndtn.abide change.fndtn.abide', function (e) {
-          if (self.options.validateOn === 'fieldChange') {
-            self.validateInput($(e.target), self.$element);
-          }
-          // self.validateForm(self.$element);
+    var _this = this;
+
+    this.$element.off('.abide')
+        .on('reset.zf.abide', function(e){
+          _this.resetForm();
         })
-        .on('keydown.fndtn.abide', function (e) {
-          // if (settings.live_validate === true && e.which != 9) {
-          //   clearTimeout(self.timer);
-          //   self.timer = setTimeout(function () {
-          //     self.validate([this], e);
-          //   }.bind(this), settings.timeout);
-          // }
-          // self.validateForm(self.$element);
+        .on('submit.zf.abide', function(e){
+          return _this.validateForm();
         });
 
+    if(this.options.validateOn === 'fieldChange'){
+        this.$inputs.off('change.zf.abide')
+            .on('change.zf.abide', function(e){
+              _this.validateInput($(this));
+            });
+    }
+
+    if(this.options.liveValidate){
+      this.$inputs.off('input.zf.abide')
+          .on('input.zf.abide', function(e){
+            _this.validateInput($(this));
+          });
+    }
   },
   /**
    * Calls necessary functions to update Abide upon DOM change
    * @private
    */
   Abide.prototype._reflow = function() {
-    var self = this;
+    this._init();
   };
   /**
    * Checks whether or not a form element has the required attribute and if it's checked or not
@@ -12450,256 +13904,251 @@ Foundation.Motion = Motion;
    * @returns {Boolean} Boolean value depends on whether or not attribute is checked or empty
    */
   Abide.prototype.requiredCheck = function($el) {
+    if(!$el.attr('required')) return true;
+    var isGood = true;
     switch ($el[0].type) {
-      case 'text':
-        if ($el.attr('required') && !$el.val()) {
-          // requirement check does not pass
-          return false;
-        } else {
-          return true;
-        }
-        break;
+
       case 'checkbox':
-        if ($el.attr('required') && !$el.is(':checked')) {
-          return false;
-        } else {
-          return true;
-        }
-        break;
       case 'radio':
-        if ($el.attr('required') && !$el.is(':checked')) {
-          return false;
-        } else {
-          return true;
-        }
+        isGood = $el[0].checked;
         break;
+
+      case 'select':
+      case 'select-one':
+      case 'select-multiple':
+        var opt = $el.find('option:selected');
+        if(!opt.length || !opt.val()) isGood = false;
+        break;
+
       default:
-        if ($el.attr('required') && (!$el.val() || !$el.val().length || $el.is(':empty'))) {
-          return false;
-        } else {
-          return true;
-        }
+        if(!$el.val() || !$el.val().length) isGood = false;
     }
+    return isGood;
   };
   /**
-   * Checks whether or not a form element has the required attribute and if it's checked or not
-   * @param {Object} element - jQuery object to check for required attribute
+   * Based on $el, get the first element with selector in this order:
+   * 1. The element's direct sibling('s).
+   * 3. The element's parent's children.
+   *
+   * This allows for multiple form errors per input, though if none are found, no form errors will be shown.
+   *
+   * @param {Object} $el - jQuery object to use as reference to find the form error selector.
+   * @returns {Object} jQuery object with the selector.
+   */
+  Abide.prototype.findFormError = function($el){
+    var $error = $el.siblings(this.options.formErrorSelector)
+    if(!$error.length){
+      $error = $el.parent().find(this.options.formErrorSelector);
+    }
+    return $error;
+  };
+  /**
+   * Get the first element in this order:
+   * 2. The <label> with the attribute `[for="someInputId"]`
+   * 3. The `.closest()` <label>
+   *
+   * @param {Object} $el - jQuery object to check for required attribute
    * @returns {Boolean} Boolean value depends on whether or not attribute is checked or empty
    */
   Abide.prototype.findLabel = function($el) {
-    if ($el.next('label').length) {
-      return $el.next('label');
-    }
-    else {
+    var $label = this.$element.find('label[for="' + $el[0].id + '"]');
+    if(!$label.length){
       return $el.closest('label');
     }
+    return $label;
   };
   /**
    * Adds the CSS error class as specified by the Abide settings to the label, input, and the form
-   * @param {Object} element - jQuery object to add the class to
+   * @param {Object} $el - jQuery object to add the class to
    */
-  Abide.prototype.addErrorClasses = function($el) {
-    var self = this,
-        $label = self.findLabel($el),
-        $formError = $el.next(self.options.formErrorSelector) || $el.find(self.options.formErrorSelector);
+  Abide.prototype.addErrorClasses = function($el){
+    var $label = this.findLabel($el),
+        $formError = this.findFormError($el);
 
-    // label
-    if ($label) {
-      $label.addClass(self.options.labelErrorClass);
+    if($label.length){
+      $label.addClass(this.options.labelErrorClass);
     }
-    // form error
-    if ($formError) {
-      $formError.addClass(self.options.formErrorClass);
+    if($formError.length){
+      $formError.addClass(this.options.formErrorClass);
     }
-    // input
-    $el.addClass(self.options.inputErrorClass);
+    $el.addClass(this.options.inputErrorClass).attr('data-invalid', '');
   };
   /**
    * Removes CSS error class as specified by the Abide settings from the label, input, and the form
-   * @param {Object} element - jQuery object to remove the class from
+   * @param {Object} $el - jQuery object to remove the class from
    */
-  Abide.prototype.removeErrorClasses = function($el) {
-    var self = this,
-        $label = self.findLabel($el),
-        $formError = $el.next(self.options.formErrorSelector) || $el.find(self.options.formErrorSelector);
-    // label
-    if ($label && $label.hasClass(self.options.labelErrorClass)) {
-      $label.removeClass(self.options.labelErrorClass);
+  Abide.prototype.removeErrorClasses = function($el){
+    var $label = this.findLabel($el),
+        $formError = this.findFormError($el);
+
+    if($label.length){
+      $label.removeClass(this.options.labelErrorClass);
     }
-    // form error
-    if ($formError && $formError.hasClass(self.options.formErrorClass)) {
-      $formError.removeClass(self.options.formErrorClass);
+    if($formError.length){
+      $formError.removeClass(this.options.formErrorClass);
     }
-    // input
-    if ($el.hasClass(self.options.inputErrorClass)) {
-      $el.removeClass(self.options.inputErrorClass);
-    }
+    $el.removeClass(this.options.inputErrorClass).removeAttr('data-invalid');
   };
   /**
    * Goes through a form to find inputs and proceeds to validate them in ways specific to their type
    * @fires Abide#invalid
    * @fires Abide#valid
    * @param {Object} element - jQuery object to validate, should be an HTML input
-   * @param {Object} form - jQuery object of the entire form to find the various input elements
+   * @returns {Boolean} goodToGo - If the input is valid or not.
    */
-  Abide.prototype.validateInput = function($el, $form) {
-    var self = this,
-        textInput = $form.find('input[type="text"]'),
-        checkInput = $form.find('input[type="checkbox"]'),
-        label,
-        radioGroupName;
+  Abide.prototype.validateInput = function($el){
+    var clearRequire = this.requiredCheck($el),
+        validated = false,
+        customValidator = true,
+        validator = $el.attr('data-validator'),
+        equalTo = true;
 
-    if ($el[0].type === 'text') {
-      if (!self.requiredCheck($el) || !self.validateText($el)) {
-        self.addErrorClasses($el);
-        $el.trigger('invalid.fndtn.abide', $el[0]);
-      }
-      else {
-        self.removeErrorClasses($el);
-        $el.trigger('valid.fndtn.abide', $el[0]);
-      }
-    }
-    else if ($el[0].type === 'radio') {
-      radioGroupName = $el.attr('name');
-      label = $el.siblings('label');
+    switch ($el[0].type) {
 
-      if (self.validateRadio(radioGroupName)) {
-        $(label).each(function() {
-          if ($(this).hasClass(self.options.labelErrorClass)) {
-            $(this).removeClass(self.options.labelErrorClass);
-          }
-        });
-        $el.trigger('valid.fndtn.abide', $el[0]);
-      }
-      else {
-        $(label).each(function() {
-          $(this).addClass(self.options.labelErrorClass);
-        });
-        $el.trigger('invalid.fndtn.abide', $el[0]);
-      };
+      case 'radio':
+        validated = this.validateRadio($el.attr('name'));
+        break;
+
+      case 'checkbox':
+        validated = clearRequire;
+        break;
+
+      case 'select':
+      case 'select-one':
+      case 'select-multiple':
+        validated = clearRequire;
+        break;
+
+      default:
+        validated = this.validateText($el);
     }
-    else if ($el[0].type === 'checkbox') {
-      if (!self.requiredCheck($el)) {
-        self.addErrorClasses($el);
-        $el.trigger('invalid.fndtn.abide', $el[0]);
-      }
-      else {
-        self.removeErrorClasses($el);
-        $el.trigger('valid.fndtn.abide', $el[0]);
-      }
-    }
-    else {
-      if (!self.requiredCheck($el) || !self.validateText($el)) {
-        self.addErrorClasses($el);
-        $el.trigger('invalid.fndtn.abide', $el[0]);
-      }
-      else {
-        self.removeErrorClasses($el);
-        $el.trigger('valid.fndtn.abide', $el[0]);
-      }
-    }
+
+    if(validator){ customValidator = this.matchValidation($el, validator, $el.attr('required')); }
+    if($el.attr('data-equalto')){ equalTo = this.options.validators.equalTo($el); }
+
+    var goodToGo = [clearRequire, validated, customValidator, equalTo].indexOf(false) === -1,
+        message = (goodToGo ? 'valid' : 'invalid') + '.zf.abide';
+
+    this[goodToGo ? 'removeErrorClasses' : 'addErrorClasses']($el);
+
+    /**
+     * Fires when the input is done checking for validation. Event trigger is either `valid.zf.abide` or `invalid.zf.abide`
+     * Trigger includes the DOM element of the input.
+     * @event Abide#valid
+     * @event Abide#invalid
+     */
+    $el.trigger(message, $el[0]);
+
+    return goodToGo;
   };
   /**
    * Goes through a form and if there are any invalid inputs, it will display the form error element
-   * @param {Object} element - jQuery object to validate, should be a form HTML element
+   * @returns {Boolean} noError - true if no errors were detected...
+   * @fires Abide#formvalid
+   * @fires Abide#forminvalid
    */
-  Abide.prototype.validateForm = function($form) {
-    var self = this,
-        inputs = $form.find('input'),
-        inputCount = $form.find('input').length,
-        counter = 0;
+  Abide.prototype.validateForm = function(){
+    var acc = [],
+        _this = this;
 
-    while (counter < inputCount) {
-      self.validateInput($(inputs[counter]), $form);
-      counter++;
-    }
-
-    // what are all the things that can go wrong with a form?
-    if ($form.find('.form-error.is-visible').length || $form.find('.is-invalid-label').length) {
-      $form.find('[data-abide-error]').css('display', 'block');
-    }
-    else {
-      $form.find('[data-abide-error]').css('display', 'none');
-    }
-  };
-  /**
-   * Determines whether or a not a text input is valid based on the patterns specified in the attribute
-   * @param {Object} element - jQuery object to validate, should be a text input HTML element
-   * @returns {Boolean} Boolean value depends on whether or not the input value matches the pattern specified
-   */
-  Abide.prototype.validateText = function($el) {
-    var self = this,
-        valid = false,
-        patternLib = this.options.patterns,
-        inputText = $($el).val(),
-        // maybe have a different way of parsing this bc people might use type
-        pattern = $($el).attr('pattern');
-
-    // if there's no value, then return true
-    // since required check has already been done
-    if (inputText.length === 0) {
-      return true;
-    }
-    else {
-      if (inputText.match(patternLib[pattern])) {
-        return true;
-      }
-      else {
-        return false;
-      }
-    }
-  };
-  /**
-   * Determines whether or a not a radio input is valid based on whether or not it is required and selected
-   * @param {String} group - A string that specifies the name of a radio button group
-   * @returns {Boolean} Boolean value depends on whether or not at least one radio input has been selected (if it's required)
-   */
-  Abide.prototype.validateRadio = function(group) {
-    var self = this,
-        labels = $(':radio[name="' + group + '"]').siblings('label'),
-        counter = 0;
-    // go through each radio button
-    $(':radio[name="' + group + '"]').each(function() {
-      // put them through the required checkpoint
-      if (!self.requiredCheck($(this))) {
-        // if at least one doesn't pass, add a tally to the counter
-        counter++;
-      }
-      // if at least one is checked
-      // reset the counter
-      if ($(this).is(':checked')) {
-        counter = 0;
-      }
+    this.$inputs.each(function(){
+      acc.push(_this.validateInput($(this)));
     });
 
-    if (counter > 0) {
-      return false;
-    }
-    else {
-      return true;
-    }
-  };
-  Abide.prototype.matchValidation = function(val, validation) {
+    var noError = acc.indexOf(false) === -1;
 
+    this.$element.find('[data-abide-error]').css('display', (noError ? 'none' : 'block'));
+        /**
+         * Fires when the form is finished validating. Event trigger is either `formvalid.zf.abide` or `forminvalid.zf.abide`.
+         * Trigger includes the element of the form.
+         * @event Abide#formvalid
+         * @event Abide#forminvalid
+         */
+    this.$element.trigger((noError ? 'formvalid' : 'forminvalid') + '.zf.abide', [this.$element]);
+
+    return noError;
+  };
+  /**
+   * Determines whether or a not a text input is valid based on the pattern specified in the attribute. If no matching pattern is found, returns true.
+   * @param {Object} $el - jQuery object to validate, should be a text input HTML element
+   * @param {String} pattern - string value of one of the RegEx patterns in Abide.options.patterns
+   * @returns {Boolean} Boolean value depends on whether or not the input value matches the pattern specified
+   */
+   Abide.prototype.validateText = function($el, pattern){
+     // pattern = pattern ? pattern : $el.attr('pattern') ? $el.attr('pattern') : $el.attr('type');
+     pattern = (pattern || $el.attr('pattern') || $el.attr('type'));
+     var inputText = $el.val();
+
+     return inputText.length ?//if text, check if the pattern exists, if so, test it, if no text or no pattern, return true.
+            this.options.patterns.hasOwnProperty(pattern) ? this.options.patterns[pattern].test(inputText) :
+            pattern && pattern !== $el.attr('type') ? new RegExp(pattern).test(inputText) : true : true;
+   };  /**
+   * Determines whether or a not a radio input is valid based on whether or not it is required and selected
+   * @param {String} groupName - A string that specifies the name of a radio button group
+   * @returns {Boolean} Boolean value depends on whether or not at least one radio input has been selected (if it's required)
+   */
+  Abide.prototype.validateRadio = function(groupName){
+    var $group = this.$element.find(':radio[name="' + groupName + '"]'),
+        counter = [],
+        _this = this;
+
+    $group.each(function(){
+      var rdio = $(this),
+          clear = _this.requiredCheck(rdio);
+      counter.push(clear);
+      if(clear) _this.removeErrorClasses(rdio);
+    });
+
+    return counter.indexOf(false) === -1;
+  };
+  /**
+   * Determines if a selected input passes a custom validation function. Multiple validations can be used, if passed to the element with `data-validator="foo bar baz"` in a space separated listed.
+   * @param {Object} $el - jQuery input element.
+   * @param {String} validators - a string of function names matching functions in the Abide.options.validators object.
+   * @param {Boolean} required - self explanatory?
+   * @returns {Boolean} - true if validations passed.
+   */
+  Abide.prototype.matchValidation = function($el, validators, required){
+    var _this = this;
+    required = required ? true : false;
+    var clear = validators.split(' ').map(function(v){
+      return _this.options.validators[v]($el, required, $el.parent());
+    });
+    return clear.indexOf(false) === -1;
   };
   /**
    * Resets form inputs and styles
-   * @param {Object} $form - A jQuery object that should be an HTML form element
+   * @fires Abide#formreset
    */
-  Abide.prototype.resetForm = function($form) {
-    var self = this;
-    var invalidAttr = 'data-invalid';
-    // remove data attributes
-    $('[' + self.invalidAttr + ']', $form).removeAttr(invalidAttr);
-    // remove styles
-    $('.' + self.options.labelErrorClass, $form).not('small').removeClass(self.options.labelErrorClass);
-    $('.' + self.options.inputErrorClass, $form).not('small').removeClass(self.options.inputErrorClass);
-    $('.form-error.is-visible').removeClass('is-visible');
+  Abide.prototype.resetForm = function() {
+    var $form = this.$element,
+        opts = this.options;
+
+    $('.' + opts.labelErrorClass, $form).not('small').removeClass(opts.labelErrorClass);
+    $('.' + opts.inputErrorClass, $form).not('small').removeClass(opts.inputErrorClass);
+    $(opts.formErrorSelector + '.' + opts.formErrorClass).removeClass(opts.formErrorClass);
     $form.find('[data-abide-error]').css('display', 'none');
-    $(':input', $form).not(':button, :submit, :reset, :hidden, [data-abide-ignore]').val('').removeAttr(invalidAttr);
+    $(':input', $form).not(':button, :submit, :reset, :hidden, [data-abide-ignore]').val('').removeAttr('data-invalid');
+    /**
+     * Fires when the form has been reset.
+     * @event Abide#formreset
+     */
+    $form.trigger('formreset.zf.abide', [$form]);
   };
+  /**
+   * Destroys an instance of Abide.
+   * Removes error styles and classes from elements, without resetting their values.
+   */
   Abide.prototype.destroy = function(){
-    //TODO this...
+    var _this = this;
+    this.$element.off('.abide')
+        .find('[data-abide-error]').css('display', 'none');
+    this.$inputs.off('.abide')
+        .each(function(){
+          _this.removeErrorClasses($(this));
+        });
+
+    Foundation.unregisterPlugin(this);
   };
 
   Foundation.plugin(Abide, 'Abide');
@@ -12735,7 +14184,7 @@ Foundation.Motion = Motion;
 
     this._init();
 
-    Foundation.registerPlugin(this);
+    Foundation.registerPlugin(this, 'Accordion');
     Foundation.Keyboard.register('Accordion', {
       'ENTER': 'toggle',
       'SPACE': 'toggle',
@@ -12772,6 +14221,9 @@ Foundation.Motion = Motion;
   Accordion.prototype._init = function() {
     this.$element.attr('role', 'tablist');
     this.$tabs = this.$element.children('li');
+    if (this.$tabs.length == 0) {
+      this.$tabs = this.$element.children('[data-accordion-item]');
+    }
     this.$tabs.each(function(idx, el){
 
       var $el = $(el),
@@ -12819,7 +14271,7 @@ Foundation.Motion = Motion;
             _this.down($tabContent);
           }
         }).on('keydown.zf.accordion', function(e){
-          Foundation.Keyboard.handleKey(e, _this, {
+          Foundation.Keyboard.handleKey(e, 'Accordion', {
             toggle: function() {
               _this.toggle($tabContent);
             },
@@ -12874,13 +14326,13 @@ Foundation.Motion = Motion;
       .addBack()
       .parent().addClass('is-active');
 
-    Foundation.Move(_this.options.slideSpeed, $target, function(){
+    // Foundation.Move(_this.options.slideSpeed, $target, function(){
       $target.slideDown(_this.options.slideSpeed);
-    });
+    // });
 
-    if(!firstTime){
-      Foundation._reflow(this.$element.attr('data-accordion'));
-    }
+    // if(!firstTime){
+    //   Foundation._reflow(this.$element.attr('data-accordion'));
+    // }
     $('#' + $target.attr('aria-labelledby')).attr({
       'aria-expanded': true,
       'aria-selected': true
@@ -12907,9 +14359,9 @@ Foundation.Motion = Motion;
       return;
     }
 
-    Foundation.Move(this.options.slideSpeed, $target, function(){
+    // Foundation.Move(this.options.slideSpeed, $target, function(){
       $target.slideUp(_this.options.slideSpeed);
-    });
+    // });
 
     $target.attr('aria-hidden', true)
            .parent().removeClass('is-active');
@@ -12966,7 +14418,7 @@ Foundation.Motion = Motion;
 
     this._init();
 
-    Foundation.registerPlugin(this);
+    Foundation.registerPlugin(this, 'AccordionMenu');
     Foundation.Keyboard.register('AccordionMenu', {
       'ENTER': 'toggle',
       'SPACE': 'toggle',
@@ -13081,7 +14533,7 @@ Foundation.Motion = Motion;
           return;
         }
       });
-      Foundation.Keyboard.handleKey(e, _this, {
+      Foundation.Keyboard.handleKey(e, 'AccordionMenu', {
         open: function() {
           if ($target.is(':hidden')) {
             _this.down($target);
@@ -13130,11 +14582,13 @@ Foundation.Motion = Motion;
    * @param {jQuery} $target - the submenu to toggle
    */
   AccordionMenu.prototype.toggle = function($target){
-    if (!$target.is(':hidden')) {
-      this.up($target);
-    }
-    else {
-      this.down($target);
+    if(!$target.is(':animated')) {
+      if (!$target.is(':hidden')) {
+        this.up($target);
+      }
+      else {
+        this.down($target);
+      }
     }
   };
   /**
@@ -13226,7 +14680,7 @@ Foundation.Motion = Motion;
 
     this._init();
 
-    Foundation.registerPlugin(this);
+    Foundation.registerPlugin(this, 'Drilldown');
     Foundation.Keyboard.register('Drilldown', {
       'ENTER': 'open',
       'SPACE': 'open',
@@ -13267,7 +14721,7 @@ Foundation.Motion = Motion;
   Drilldown.prototype._init = function(){
     this.$submenuAnchors = this.$element.find('li.has-submenu');
     this.$submenus = this.$submenuAnchors.children('[data-submenu]');
-    this.$menuItems = this.$element.find('li:visible').not('.js-drilldown-back').attr('role', 'menuitem');
+    this.$menuItems = this.$element.find('li').not('.js-drilldown-back').attr('role', 'menuitem');
 
     this._prepareMenu();
 
@@ -13302,8 +14756,8 @@ Foundation.Motion = Motion;
           $back = $menu.find('.js-drilldown-back');
       if(!$back.length){
         $menu.prepend(_this.options.backButton);
-        _this._back($menu);
       }
+      _this._back($menu);
     });
     if(!this.$element.parent().hasClass('is-drilldown')){
       this.$wrapper = $(this.options.wrapper).addClass('is-drilldown').css(this._getMaxDims());
@@ -13361,7 +14815,7 @@ Foundation.Motion = Motion;
           return;
         }
       });
-      Foundation.Keyboard.handleKey(e, _this, {
+      Foundation.Keyboard.handleKey(e, 'Drilldown', {
         next: function() {
           if ($element.is(_this.$submenuAnchors)) {
             _this._show($element);
@@ -13543,7 +14997,7 @@ Foundation.Motion = Motion;
     this.options = $.extend({}, Dropdown.defaults, this.$element.data(), options);
     this._init();
 
-    Foundation.registerPlugin(this);
+    Foundation.registerPlugin(this, 'Dropdown');
     Foundation.Keyboard.register('Dropdown', {
       'ENTER': 'open',
       'SPACE': 'open',
@@ -13566,6 +15020,12 @@ Foundation.Motion = Motion;
      * @example false
      */
     hover: false,
+    /**
+     * Don't close dropdown when hovering over dropdown pane
+     * @option
+     * @example true
+     */
+    hoverPane: false,
     /**
      * Number of pixels between the dropdown pane and the triggering element on open.
      * @option
@@ -13595,7 +15055,13 @@ Foundation.Motion = Motion;
      * @option
      * @example true
      */
-    autoFocus: false
+    autoFocus: false,
+    /**
+     * Allows a click on the body to close the dropdown.
+     * @option
+     * @example true
+     */
+    closeOnClick: false
   };
   /**
    * Initializes the plugin by setting/checking options and attributes, adding helper variables, and saving the anchor.
@@ -13725,46 +15191,62 @@ Foundation.Motion = Motion;
       this.$anchor.off('mouseenter.zf.dropdown mouseleave.zf.dropdown')
           .on('mouseenter.zf.dropdown', function(){
             clearTimeout(_this.timeout);
-            _this.timeOut = setTimeout(function(){
+            _this.timeout = setTimeout(function(){
               _this.open();
               _this.$anchor.data('hover', true);
             }, _this.options.hoverDelay);
           }).on('mouseleave.zf.dropdown', function(){
             clearTimeout(_this.timeout);
-            _this.timeOut = setTimeout(function(){
+            _this.timeout = setTimeout(function(){
               _this.close();
               _this.$anchor.data('hover', false);
             }, _this.options.hoverDelay);
           });
+      if(this.options.hoverPane){
+        this.$element.off('mouseenter.zf.dropdown mouseleave.zf.dropdown')
+            .on('mouseenter.zf.dropdown', function(){
+              clearTimeout(_this.timeout);
+            }).on('mouseleave.zf.dropdown', function(){
+              clearTimeout(_this.timeout);
+              _this.timeout = setTimeout(function(){
+                _this.close();
+                _this.$anchor.data('hover', false);
+              }, _this.options.hoverDelay);
+            });
+      }
     }
     this.$anchor.add(this.$element).on('keydown.zf.dropdown', function(e) {
 
-      var visibleFocusableElements = Foundation.Keyboard.findFocusable(_this.$element);
+      var $target = $(this),
+        visibleFocusableElements = Foundation.Keyboard.findFocusable(_this.$element);
 
-      Foundation.Keyboard.handleKey(e, _this, {
+      Foundation.Keyboard.handleKey(e, 'Dropdown', {
         tab_forward: function() {
-          if (this.$element.find(':focus').is(visibleFocusableElements.eq(-1))) { // left modal downwards, setting focus to first element
-            if (this.options.trapFocus) { // if focus shall be trapped
+          if (_this.$element.find(':focus').is(visibleFocusableElements.eq(-1))) { // left modal downwards, setting focus to first element
+            if (_this.options.trapFocus) { // if focus shall be trapped
               visibleFocusableElements.eq(0).focus();
               e.preventDefault();
             } else { // if focus is not trapped, close dropdown on focus out
-              this.close();
+              _this.close();
             }
           }
         },
         tab_backward: function() {
-          if (this.$element.find(':focus').is(visibleFocusableElements.eq(0)) || this.$element.is(':focus')) { // left modal upwards, setting focus to last element
-            if (this.options.trapFocus) { // if focus shall be trapped
+          if (_this.$element.find(':focus').is(visibleFocusableElements.eq(0)) || _this.$element.is(':focus')) { // left modal upwards, setting focus to last element
+            if (_this.options.trapFocus) { // if focus shall be trapped
               visibleFocusableElements.eq(-1).focus();
               e.preventDefault();
             } else { // if focus is not trapped, close dropdown on focus out
-              this.close();
+              _this.close();
             }
           }
         },
         open: function() {
-          _this.open();
-          _this.$element.attr('tabindex', -1).focus();
+          if ($target.is(_this.$anchor)) {
+            _this.open();
+            _this.$element.attr('tabindex', -1).focus();
+            e.preventDefault();
+          }
         },
         close: function() {
           _this.close();
@@ -13772,6 +15254,26 @@ Foundation.Motion = Motion;
         }
       });
     });
+  };
+  /**
+   * Adds an event handler to the body to close any dropdowns on a click.
+   * @function
+   * @private
+   */
+  Dropdown.prototype._addBodyHandler = function(){
+     var $body = $(document.body).not(this.$element),
+         _this = this;
+     $body.off('click.zf.dropdown')
+          .on('click.zf.dropdown', function(e){
+            if(_this.$anchor.is(e.target) || _this.$anchor.find(e.target).length) {
+              return;
+            }
+            if(_this.$element.find(e.target).length) {
+              return;
+            }
+            _this.close();
+            $body.off('click.zf.dropdown');
+          });
   };
   /**
    * Opens the dropdown pane, and fires a bubbling event to close other dropdowns.
@@ -13792,7 +15294,7 @@ Foundation.Motion = Motion;
     this._setPosition();
     this.$element.addClass('is-open')
         .attr({'aria-hidden': false});
-        
+
     if(this.options.autoFocus){
       var $focusable = Foundation.Keyboard.findFocusable(this.$element);
       if($focusable.length){
@@ -13800,6 +15302,7 @@ Foundation.Motion = Motion;
       }
     }
 
+    if(this.options.closeOnClick){ this._addBodyHandler(); }
 
     /**
      * Fires once the dropdown is visible.
@@ -13890,7 +15393,7 @@ Foundation.Motion = Motion;
     Foundation.Nest.Feather(this.$element, 'dropdown');
     this._init();
 
-    Foundation.registerPlugin(this);
+    Foundation.registerPlugin(this, 'DropdownMenu');
     Foundation.Keyboard.register('DropdownMenu', {
       'ENTER': 'open',
       'SPACE': 'open',
@@ -14142,7 +15645,7 @@ Foundation.Motion = Motion;
           });
         }
       }
-      Foundation.Keyboard.handleKey(e, _this, functions);
+      Foundation.Keyboard.handleKey(e, 'DropdownMenu', functions);
 
     });
   };
@@ -14268,17 +15771,13 @@ Foundation.Motion = Motion;
    * @param {Object} element - jQuery object to add the trigger to.
    * @param {Object} options - Overrides to the default plugin settings.
    */
-  function Equalizer(element, options) {
+  function Equalizer(element, options){
     this.$element = element;
     this.options  = $.extend({}, Equalizer.defaults, this.$element.data(), options);
-    this.$window  = $(window);
-    this.name     = 'equalizer';
-    this.attr     = 'data-equalizer';
 
     this._init();
-    this._events();
 
-    Foundation.registerPlugin(this);
+    Foundation.registerPlugin(this, 'Equalizer');
   }
 
   /**
@@ -14292,116 +15791,237 @@ Foundation.Motion = Motion;
      */
     equalizeOnStack: true,
     /**
-     * Amount of time, in ms, to debounce the size checking/equalization. Lower times mean smoother transitions/less performance on mobile.
+     * Enable height equalization row by row.
      * @option
-     * @example 50
+     * @example false
      */
-    throttleInterval: 50
+    equalizeByRow: false,
+    /**
+     * String representing the minimum breakpoint size the plugin should equalize heights on.
+     * @option
+     * @example 'medium'
+     */
+    equalizeOn: ''
   };
 
   /**
    * Initializes the Equalizer plugin and calls functions to get equalizer functioning on load.
    * @private
    */
-  Equalizer.prototype._init = function() {
-    this._reflow();
-  };
+  Equalizer.prototype._init = function(){
+    var eqId = this.$element.attr('data-equalizer') || '';
+    var $watched = this.$element.find('[data-equalizer-watch="' + eqId + '"]');
 
+    this.$watched = $watched.length ? $watched : this.$element.find('[data-equalizer-watch]');
+    this.$element.attr('data-resize', (eqId || Foundation.GetYoDigits(6, 'eq')));
+
+    this.hasNested = this.$element.find('[data-equalizer]').length > 0;
+    this.isNested = this.$element.parentsUntil(document.body, '[data-equalizer]').length > 0;
+    this.isOn = false;
+
+    var imgs = this.$element.find('img');
+    var tooSmall;
+    if(this.options.equalizeOn){
+      tooSmall = this._checkMQ();
+      $(window).on('changed.zf.mediaquery', this._checkMQ.bind(this));
+    }else{
+      this._events();
+    }
+    if((tooSmall !== undefined && tooSmall === false) || tooSmall === undefined){
+      if(imgs.length){
+        Foundation.onImagesLoaded(imgs, this._reflow.bind(this));
+      }else{
+        this._reflow();
+      }
+    }
+
+  };
+  /**
+   * Removes event listeners if the breakpoint is too small.
+   * @private
+   */
+  Equalizer.prototype._pauseEvents = function(){
+    this.isOn = false;
+    this.$element.off('.zf.equalizer resizeme.zf.trigger');
+  };
   /**
    * Initializes events for Equalizer.
    * @private
    */
-  Equalizer.prototype._events = function() {
-    var self = this;
-
-    this.$window
-      .off('.equalizer')
-      .on('resize.fndtn.equalizer', Foundation.util.throttle(function () {
-        self._reflow();
-      }, self.options.throttleInterval));
+  Equalizer.prototype._events = function(){
+    var _this = this;
+    this._pauseEvents();
+    if(this.hasNested){
+      this.$element.on('postequalized.zf.equalizer', function(e){
+        if(e.target !== _this.$element[0]){ _this._reflow(); }
+      });
+    }else{
+      this.$element.on('resizeme.zf.trigger', this._reflow.bind(this));
+    }
+    this.isOn = true;
   };
-
+  /**
+   * Checks the current breakpoint to the minimum required size.
+   * @private
+   */
+  Equalizer.prototype._checkMQ = function(){
+    var tooSmall = !Foundation.MediaQuery.atLeast(this.options.equalizeOn);
+    if(tooSmall){
+      if(this.isOn){
+        this._pauseEvents();
+        this.$watched.css('height', 'auto');
+      }
+    }else{
+      if(!this.isOn){
+        this._events();
+      }
+    }
+    return tooSmall;
+  }
   /**
    * A noop version for the plugin
    * @private
    */
-  Equalizer.prototype._killswitch = function() {
+  Equalizer.prototype._killswitch = function(){
     return;
   };
   /**
    * Calls necessary functions to update Equalizer upon DOM change
    * @private
    */
-  Equalizer.prototype._reflow = function() {
-    var self = this;
-
-    $('[' + this.attr + ']').each(function() {
-      var $eqParent       = $(this),
-          adjustedHeights = [],
-          $images = $eqParent.find('img');
-
-      if ($images.length) {
-        Foundation.onImagesLoaded($images, function() {
-          adjustedHeights = self.getHeights($eqParent);
-          self.applyHeight($eqParent, adjustedHeights);
-        });
+  Equalizer.prototype._reflow = function(){
+    if(!this.options.equalizeOnStack){
+      if(this._isStacked()){
+        this.$watched.css('height', 'auto');
+        return false;
       }
-      else {
-        adjustedHeights = self.getHeights($eqParent);
-        self.applyHeight($eqParent, adjustedHeights);
-      }
-    });
+    }
+    if (this.options.equalizeByRow) {
+      this.getHeightsByRow(this.applyHeightByRow.bind(this));
+    }else{
+      this.getHeights(this.applyHeight.bind(this));
+    }
+  };
+  /**
+   * Manually determines if the first 2 elements are *NOT* stacked.
+   * @private
+   */
+  Equalizer.prototype._isStacked = function(){
+    return this.$watched[0].offsetTop !== this.$watched[1].offsetTop;
   };
   /**
    * Finds the outer heights of children contained within an Equalizer parent and returns them in an array
-   * @param {Object} $eqParent A jQuery instance of an Equalizer container
-   * @returns {Array} heights An array of heights of children within Equalizer container
+   * @param {Function} cb - A non-optional callback to return the heights array to.
+   * @returns {Array} heights - An array of heights of children within Equalizer container
    */
-  Equalizer.prototype.getHeights = function($eqParent) {
-    var eqGroupName = $eqParent.data('equalizer'),
-        eqGroup     = eqGroupName ? $eqParent.find('[' + this.attr + '-watch="' + eqGroupName + '"]:visible') : $eqParent.find('[' + this.attr + '-watch]:visible'),
-        heights;
+  Equalizer.prototype.getHeights = function(cb){
+    var heights = [];
+    for(var i = 0, len = this.$watched.length; i < len; i++){
+      this.$watched[i].style.height = 'auto';
+      heights.push(this.$watched[i].offsetHeight);
+    }
+    cb(heights);
+  };
+  /**
+   * Finds the outer heights of children contained within an Equalizer parent and returns them in an array
+   * @param {Function} cb - A non-optional callback to return the heights array to.
+   * @returns {Array} groups - An array of heights of children within Equalizer container grouped by row with element,height and max as last child
+   */
+  Equalizer.prototype.getHeightsByRow = function(cb) {
+    var lastElTopOffset = this.$watched.first().offset().top,
+        groups = [],
+        group = 0;
+    //group by Row
+    groups[group] = [];
+    for(var i = 0, len = this.$watched.length; i < len; i++){
+      this.$watched[i].style.height = 'auto';
+      //maybe could use this.$watched[i].offsetTop
+      var elOffsetTop = $(this.$watched[i]).offset().top;
+      if (elOffsetTop!=lastElTopOffset) {
+        group++;
+        groups[group] = [];
+        lastElTopOffset=elOffsetTop;
+      };
+      groups[group].push([this.$watched[i],this.$watched[i].offsetHeight]);
+    }
 
-    eqGroup.height('inherit');
-    heights = eqGroup.map(function () { return $(this).outerHeight(false);}).get();
-    
-    return heights;
+    for (var i = 0, len = groups.length; i < len; i++) {
+      var heights = $(groups[i]).map(function () { return this[1]}).get();
+      var max         = Math.max.apply(null, heights);
+      groups[i].push(max);
+    }
+    cb(groups);
   };
   /**
    * Changes the CSS height property of each child in an Equalizer parent to match the tallest
-   * @param {Object} $eqParent - A jQuery instance of an Equalizer container
    * @param {array} heights - An array of heights of children within Equalizer container
-   * @fires Equalizer#preEqualized
-   * @fires Equalizer#postEqualized
+   * @fires Equalizer#preequalized
+   * @fires Equalizer#postequalized
    */
-  Equalizer.prototype.applyHeight = function($eqParent, heights) {
-    var eqGroupName = $eqParent.data('equalizer'),
-        eqGroup     = eqGroupName ? $eqParent.find('['+this.attr+'-watch="'+eqGroupName+'"]:visible') : $eqParent.find('['+this.attr+'-watch]:visible'),
-        max         = Math.max.apply(null, heights);
-
+  Equalizer.prototype.applyHeight = function(heights){
+    var max = Math.max.apply(null, heights);
     /**
      * Fires before the heights are applied
-     * @event Equalizer#preEqualized
+     * @event Equalizer#preequalized
      */
-    $eqParent.trigger('preEqualized.zf.Equalizer');
+    this.$element.trigger('preequalized.zf.equalizer');
 
-    // for now, apply the max height found in the array
-    for (var i = 0; i < eqGroup.length; i++) {
-      $(eqGroup[i]).css('height', max);
-    }
+    this.$watched.css('height', max);
 
     /**
      * Fires when the heights have been applied
-     * @event Equalizer#postEqualized
+     * @event Equalizer#postequalized
      */
-    $eqParent.trigger('postEqualized.zf.Equalizer');
+     this.$element.trigger('postequalized.zf.equalizer');
+  };
+  /**
+   * Changes the CSS height property of each child in an Equalizer parent to match the tallest by row
+   * @param {array} groups - An array of heights of children within Equalizer container grouped by row with element,height and max as last child
+   * @fires Equalizer#preequalized
+   * @fires Equalizer#preequalizedRow
+   * @fires Equalizer#postequalizedRow
+   * @fires Equalizer#postequalized
+   */
+  Equalizer.prototype.applyHeightByRow = function(groups){
+    /**
+     * Fires before the heights are applied
+     */
+    this.$element.trigger('preequalized.zf.equalizer');
+    for (var i = 0, len = groups.length; i < len ; i++) {
+      var groupsILength = groups[i].length,
+          max = groups[i][groupsILength - 1];
+      if (groupsILength<=2) {
+        $(groups[i][0][0]).css({'height':'auto'});
+        continue;
+      };
+      /**
+        * Fires before the heights per row are applied
+        * @event Equalizer#preequalizedRow
+        */
+      this.$element.trigger('preequalizedrow.zf.equalizer');
+      for (var j = 0, lenJ = (groupsILength-1); j < lenJ ; j++) {
+        $(groups[i][j][0]).css({'height':max});
+      }
+      /**
+        * Fires when the heights per row have been applied
+        * @event Equalizer#postequalizedRow
+        */
+      this.$element.trigger('postequalizedrow.zf.equalizer');
+    }
+    /**
+     * Fires when the heights have been applied
+     */
+     this.$element.trigger('postequalized.zf.equalizer');
   };
   /**
    * Destroys an instance of Equalizer.
    * @function
    */
   Equalizer.prototype.destroy = function(){
-    //TODO this.
+    this._pauseEvents();
+    this.$watched.css('height', 'auto');
+
+    Foundation.unregisterPlugin(this);
   };
 
   Foundation.plugin(Equalizer, 'Equalizer');
@@ -14441,7 +16061,7 @@ Foundation.Motion = Motion;
     this._init();
     this._events();
 
-    Foundation.registerPlugin(this);
+    Foundation.registerPlugin(this, 'Interchange');
   }
 
   /**
@@ -14478,7 +16098,7 @@ Foundation.Motion = Motion;
    * @private
    */
   Interchange.prototype._events = function() {
-    $(window).on('resize.fndtn.interchange', Foundation.util.throttle(this._reflow.bind(this), 50));
+    $(window).on('resize.zf.interchange', Foundation.util.throttle(this._reflow.bind(this), 50));
   };
 
   /**
@@ -14565,7 +16185,6 @@ Foundation.Motion = Motion;
     // Replacing images
     if (this.$element[0].nodeName === 'IMG') {
       this.$element.attr('src', path).load(function() {
-        _this.$element.trigger('replaced.zf.interchange');
         _this.currentPath = path;
       });
     }
@@ -14577,10 +16196,11 @@ Foundation.Motion = Motion;
     else {
       $.get(path, function(response) {
         _this.$element.html(response);
-        _this.$element.trigger('replaced.zf.interchange');
+        $(response).foundation();
         _this.currentPath = path;
       });
     }
+    this.$element.trigger('replaced.zf.interchange');
   };
   /**
    * Destroys an instance of interchange.
@@ -14651,7 +16271,7 @@ Foundation.Motion = Motion;
     this._init();
     this._events();
 
-    Foundation.registerPlugin(this);
+    Foundation.registerPlugin(this, 'ResponsiveMenu');
   }
 
   ResponsiveMenu.defaults = {};
@@ -14770,7 +16390,7 @@ function ResponsiveToggle(element, options) {
   this._init();
   this._events();
 
-  Foundation.registerPlugin(this);
+  Foundation.registerPlugin(this, 'ResponsiveToggle');
 }
 
 ResponsiveToggle.defaults = {
@@ -14878,7 +16498,7 @@ Foundation.plugin(ResponsiveToggle, 'ResponsiveToggle');
     this.options = $.extend({}, Reveal.defaults, this.$element.data(), options);
     this._init();
 
-    Foundation.registerPlugin(this);
+    Foundation.registerPlugin(this, 'Reveal');
     Foundation.Keyboard.register('Reveal', {
       'ENTER': 'open',
       'SPACE': 'open',
@@ -14996,7 +16616,7 @@ Foundation.plugin(ResponsiveToggle, 'ResponsiveToggle');
       this.options.fullScreen = true;
       this.options.overlay = false;
     }
-    if(this.options.overlay){
+    if(this.options.overlay && !this.$overlay){
       this.$overlay = this._makeOverlay(this.id);
     }
 
@@ -15102,7 +16722,7 @@ Foundation.plugin(ResponsiveToggle, 'ResponsiveToggle');
   /**
    * Opens the modal controlled by `this.$anchor`, and closes all others by default.
    * @function
-   * @fires Reveal#closeAll
+   * @fires Reveal#closeme
    * @fires Reveal#open
    */
   Reveal.prototype.open = function(){
@@ -15121,7 +16741,7 @@ Foundation.plugin(ResponsiveToggle, 'ResponsiveToggle');
         /**
          * Fires immediately before the modal opens.
          * Closes any other modals that are currently open
-         * @event Reveal#closeAll
+         * @event Reveal#closeme
          */
         _this.$element.trigger('closeme.zf.reveal', _this.id);
       }
@@ -15183,11 +16803,11 @@ Foundation.plugin(ResponsiveToggle, 'ResponsiveToggle');
     }
     if(this.options.closeOnEsc){
       $(window).on('keydown.zf.reveal', function(e){
-        Foundation.Keyboard.handleKey(e, _this, {
+        Foundation.Keyboard.handleKey(e, 'Reveal', {
           close: function() {
-            if (this.options.closeOnEsc) {
-              this.close();
-              this.$anchor.focus();
+            if (_this.options.closeOnEsc) {
+              _this.close();
+              _this.$anchor.focus();
             }
           }
         });
@@ -15201,15 +16821,15 @@ Foundation.plugin(ResponsiveToggle, 'ResponsiveToggle');
     this.$element.on('keydown.zf.reveal', function(e) {
       var $target = $(this);
       // handle keyboard event with keyboard util
-      Foundation.Keyboard.handleKey(e, _this, {
+      Foundation.Keyboard.handleKey(e, 'Reveal', {
         tab_forward: function() {
-          if (this.$element.find(':focus').is(_this.focusableElements.eq(-1))) { // left modal downwards, setting focus to first element
+          if (_this.$element.find(':focus').is(_this.focusableElements.eq(-1))) { // left modal downwards, setting focus to first element
             _this.focusableElements.eq(0).focus();
             e.preventDefault();
           }
         },
         tab_backward: function() {
-          if (this.$element.find(':focus').is(_this.focusableElements.eq(0)) || this.$element.is(':focus')) { // left modal upwards, setting focus to last element
+          if (_this.$element.find(':focus').is(_this.focusableElements.eq(0)) || _this.$element.is(':focus')) { // left modal upwards, setting focus to last element
             _this.focusableElements.eq(-1).focus();
             e.preventDefault();
           }
@@ -15220,13 +16840,13 @@ Foundation.plugin(ResponsiveToggle, 'ResponsiveToggle');
               _this.$anchor.focus();
             }, 1);
           } else if ($target.is(_this.focusableElements)) { // dont't trigger if acual element has focus (i.e. inputs, links, ...)
-            this.open();
+            _this.open();
           }
         },
         close: function() {
-          if (this.options.closeOnEsc) {
-            this.close();
-            this.$anchor.focus();
+          if (_this.options.closeOnEsc) {
+            _this.close();
+            _this.$anchor.focus();
           }
         }
       });
@@ -15354,13 +16974,13 @@ Foundation.plugin(ResponsiveToggle, 'ResponsiveToggle');
 
     this._init();
 
-    Foundation.registerPlugin(this);
+    Foundation.registerPlugin(this, 'Sticky');
   }
   Sticky.defaults = {
     /**
      * Customizable container template. Add your own classes for styling and sizing.
      * @option
-     * @example '<div data-sticky-container class="small-6 columns"></div>'
+     * @example '&lt;div data-sticky-container class="small-6 columns"&gt;&lt;/div&gt;'
      */
     container: '<div data-sticky-container></div>',
     /**
@@ -15427,7 +17047,6 @@ Foundation.plugin(ResponsiveToggle, 'ResponsiveToggle');
 
   /**
    * Initializes the sticky element by adding classes, getting/setting dimensions, breakpoints and attributes
-   * Also triggered by Foundation._reflow
    * @function
    * @private
    */
@@ -15448,14 +17067,12 @@ Foundation.plugin(ResponsiveToggle, 'ResponsiveToggle');
 
     this.scrollCount = this.options.checkEvery;
     this.isStuck = false;
-    // console.log(this.options.anchor, this.options.topAnchor);
-    if(this.options.topAnchor !== ''){
-      this._parsePoints();
-      // console.log(this.points[0]);
-    }else{
-      this.$anchor = this.options.anchor ? $('#' + this.options.anchor) : $(document.body);
-    }
 
+    if(this.options.anchor !== ''){
+      this.$anchor = $('#' + this.options.anchor);
+    }else{
+      this._parsePoints();
+    }
 
     this._setSizes(function(){
       _this._calc(false);
@@ -15472,22 +17089,27 @@ Foundation.plugin(ResponsiveToggle, 'ResponsiveToggle');
         btm = this.options.btmAnchor,
         pts = [top, btm],
         breaks = {};
-    for(var i = 0, len = pts.length; i < len && pts[i]; i++){
-      var pt;
-      if(typeof pts[i] === 'number'){
-        pt = pts[i];
-      }else{
-        var place = pts[i].split(':'),
-            anchor = $('#' + place[0]);
+    if(top && btm){
 
-        pt = anchor.offset().top;
-        if(place[1] && place[1].toLowerCase() === 'bottom'){
-          pt += anchor[0].getBoundingClientRect().height;
+      for(var i = 0, len = pts.length; i < len && pts[i]; i++){
+        var pt;
+        if(typeof pts[i] === 'number'){
+          pt = pts[i];
+        }else{
+          var place = pts[i].split(':'),
+              anchor = $('#' + place[0]);
+
+          pt = anchor.offset().top;
+          if(place[1] && place[1].toLowerCase() === 'bottom'){
+            pt += anchor[0].getBoundingClientRect().height;
+          }
         }
+        breaks[i] = pt;
       }
-      breaks[i] = pt;
+    }else{
+      breaks = {0: 1, 1: document.documentElement.scrollHeight};
     }
-      // console.log(breaks);
+
     this.points = breaks;
     return;
   };
@@ -15498,19 +17120,11 @@ Foundation.plugin(ResponsiveToggle, 'ResponsiveToggle');
    * @param {String} id - psuedo-random id for unique scroll event listener.
    */
   Sticky.prototype._events = function(id){
-    // console.log('called');
     var _this = this,
-        scrollListener = 'scroll.zf.' + id;
+        scrollListener = this.scrollListener = 'scroll.zf.' + id;
     if(this.isOn){ return; }
     if(this.canStick){
       this.isOn = true;
-      // this.$anchor.off('change.zf.sticky')
-      //             .on('change.zf.sticky', function(){
-      //               _this._setSizes(function(){
-      //                 _this._calc(false);
-      //               });
-      //             });
-
       $(window).off(scrollListener)
                .on(scrollListener, function(e){
                  if(_this.scrollCount === 0){
@@ -15547,7 +17161,6 @@ Foundation.plugin(ResponsiveToggle, 'ResponsiveToggle');
    */
   Sticky.prototype._pauseListeners = function(scrollListener){
     this.isOn = false;
-    // this.$anchor.off('change.zf.sticky');
     $(window).off(scrollListener);
 
     /**
@@ -15647,7 +17260,7 @@ Foundation.plugin(ResponsiveToggle, 'ResponsiveToggle');
       css[stickTo] = 0;
       css[notStuckTo] = anchorPt;
     }
-    
+
     css['left'] = '';
     this.isStuck = false;
     this.$element.removeClass('is-stuck is-at-' + stickTo)
@@ -15675,7 +17288,6 @@ Foundation.plugin(ResponsiveToggle, 'ResponsiveToggle');
         comp = window.getComputedStyle(this.$container[0]),
         pdng = parseInt(comp['padding-right'], 10);
 
-    // console.log(this.$anchor);
     if(this.$anchor && this.$anchor.length){
       this.anchorHeight = this.$anchor[0].getBoundingClientRect().height;
     }else{
@@ -15756,7 +17368,7 @@ Foundation.plugin(ResponsiveToggle, 'ResponsiveToggle');
                  .off('resizeme.zf.trigger');
 
     this.$anchor.off('change.zf.sticky');
-    $(window).off('scroll.zf.sticky');
+    $(window).off(this.scrollListener);
 
     if(this.wasWrapped){
       this.$element.unwrap();
@@ -15802,7 +17414,7 @@ Foundation.plugin(ResponsiveToggle, 'ResponsiveToggle');
     this._init();
     this._events();
 
-    Foundation.registerPlugin(this);
+    Foundation.registerPlugin(this, 'Toggler');
   }
 
   Toggler.defaults = {
@@ -15831,25 +17443,16 @@ Foundation.plugin(ResponsiveToggle, 'ResponsiveToggle');
     // Otherwise, parse toggle class
     else {
       input = this.$element.data('toggler');
-
       // Allow for a . at the beginning of the string
-      if (input[0] === '.') {
-        this.className = input.slice(1);
-      }
-      else {
-        this.className = input;
-      }
+      this.className = input[0] === '.' ? input.slice(1) : input;
     }
 
     // Add ARIA attributes to triggers
     var id = this.$element[0].id;
     $('[data-open="'+id+'"], [data-close="'+id+'"], [data-toggle="'+id+'"]')
       .attr('aria-controls', id);
-
     // If the target is hidden, add aria-hidden
-    if (this.$element.is(':hidden')) {
-      this.$element.attr('aria-expanded', 'false');
-    }
+    this.$element.attr('aria-expanded', this.$element.is(':hidden') ? false : true);
   };
 
   /**
@@ -15858,12 +17461,7 @@ Foundation.plugin(ResponsiveToggle, 'ResponsiveToggle');
    * @private
    */
   Toggler.prototype._events = function() {
-    var _this = this;
-
-    this.$element.on('toggle.zf.trigger', function() {
-      _this.toggle();
-      return false;
-    });
+    this.$element.off('toggle.zf.trigger').on('toggle.zf.trigger', this.toggle.bind(this));
   };
 
   /**
@@ -15873,19 +17471,14 @@ Foundation.plugin(ResponsiveToggle, 'ResponsiveToggle');
    * @fires Toggler#off
    */
   Toggler.prototype.toggle = function() {
-    if (!this.options.animate) {
-      this._toggleClass();
-    }
-    else {
-      this._toggleAnimate();
-    }
+    this[ this.options.animate ? '_toggleAnimate' : '_toggleClass']();
   };
 
   Toggler.prototype._toggleClass = function() {
-    var _this = this;
     this.$element.toggleClass(this.className);
 
-    if (this.$element.hasClass(this.className)) {
+    var isOn = this.$element.hasClass(this.className);
+    if (isOn) {
       /**
        * Fires if the target element has the class after a toggle.
        * @event Toggler#on
@@ -15900,7 +17493,7 @@ Foundation.plugin(ResponsiveToggle, 'ResponsiveToggle');
       this.$element.trigger('off.zf.toggler');
     }
 
-    _this._updateARIA();
+    this._updateARIA(isOn);
   };
 
   Toggler.prototype._toggleAnimate = function() {
@@ -15909,24 +17502,19 @@ Foundation.plugin(ResponsiveToggle, 'ResponsiveToggle');
     if (this.$element.is(':hidden')) {
       Foundation.Motion.animateIn(this.$element, this.animationIn, function() {
         this.trigger('on.zf.toggler');
-        _this._updateARIA();
+        _this._updateARIA(true);
       });
     }
     else {
       Foundation.Motion.animateOut(this.$element, this.animationOut, function() {
         this.trigger('off.zf.toggler');
-        _this._updateARIA();
+        _this._updateARIA(false);
       });
     }
   };
 
-  Toggler.prototype._updateARIA = function() {
-    if (this.$element.is(':hidden')) {
-      this.$element.attr('aria-expanded', 'false');
-    }
-    else {
-      this.$element.attr('aria-expanded', 'true');
-    }
+  Toggler.prototype._updateARIA = function(isOn) {
+    this.$element.attr('aria-expanded', isOn ? true : false);
   };
 
   /**
