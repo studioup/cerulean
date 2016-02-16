@@ -23,12 +23,14 @@
 		"success": "#3adb76",
 		"warning": "#ffae00",
 		"alert": "#ec5840",
+		"info" : "#1B7BED",
 		"light-gray": "#e6e6e6",
 		"medium-gray": "#cacaca",
 		"dark-gray": "#8a8a8a",
 		"black": "#0a0a0a",
 		"white": "#fefefe",
 		"triangles": "$color-primary"
+		
 	},
 	"body" : {
 		"background": "$color-white",

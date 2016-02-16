@@ -1,3 +1,4 @@
+/*
 @font-face {
     font-family: 'icons';
     src:url('../fonts/icons.eot?-6y4ajy');
@@ -18,7 +19,7 @@
     text-transform: none;
     line-height: 1;
 
-    /* Better Font Rendering =========== */
+  
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
 }
@@ -29,4 +30,324 @@
 
 .icon-chevron-right:before {
     content: "\e93c";
+}
+
+*/
+
+
+
+@font-face {
+    font-family: 'nucleo-cerulean';
+    src:    url('../fonts/nucleo-cerulean.eot?7w4di5');
+    src:    url('../fonts/nucleo-cerulean.eot?7w4di5#iefix') format('embedded-opentype'),
+        url('../fonts/nucleo-cerulean.ttf?7w4di5') format('truetype'),
+        url('../fonts/nucleo-cerulean.woff?7w4di5') format('woff'),
+        url('../fonts/nucleo-cerulean.svg?7w4di5#nucleo-cerulean') format('svg');
+    font-weight: normal;
+    font-style: normal;
+}
+
+
+.nuc {
+    /* use !important to prevent issues with browser extensions that change fonts */
+    font-family: 'nucleo-cerulean' !important;
+    speak: none;
+    font-style: normal;
+    font-weight: normal;
+    font-variant: normal;
+    text-transform: none;
+    line-height: 1;
+
+    /* Better Font Rendering =========== */
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    &:before{
+    	vertical-align: middle
+    }
+}
+
+.nuc-s-user:before {
+    content: "\e900";
+}
+.nuc-s-plus:before {
+    content: "\e901";
+}
+.nuc-s-minus:before {
+    content: "\e902";
+}
+.nuc-s-cross:before {
+    content: "\e903";
+}
+.nuc-s-calendar:before {
+    content: "\e904";
+}
+.nuc-s-check-circle:before {
+    content: "\e905";
+}
+.nuc-s-check:before {
+    content: "\e906";
+}
+.nuc-s-plus-circle:before {
+    content: "\e907";
+}
+.nuc-s-minus-circle:before {
+    content: "\e908";
+}
+.nuc-s-cross-circle:before {
+    content: "\e909";
+}
+.nuc-s-pencil:before {
+    content: "\e90a";
+}
+.nuc-s-mail:before {
+    content: "\e90b";
+}
+.nuc-s-house:before {
+    content: "\e90c";
+}
+.nuc-s-zoom-in:before {
+    content: "\e90d";
+}
+.nuc-s-zoom-out:before {
+    content: "\e90e";
+}
+.nuc-s-search:before {
+    content: "\e90f";
+}
+.nuc-s-question-circle:before {
+    content: "\e910";
+}
+.nuc-s-exclamation-circle:before {
+    content: "\e911";
+}
+.nuc-s-info-circle:before {
+    content: "\e912";
+}
+.nuc-s-heart:before {
+    content: "\e913";
+}
+.nuc-s-star:before {
+    content: "\e914";
+}
+.nuc-s-menu:before {
+    content: "\e915";
+}
+.nuc-s-dots:before {
+    content: "\e916";
+}
+.nuc-s-phone:before {
+    content: "\e917";
+}
+.nuc-s-share:before {
+    content: "\e918";
+}
+.nuc-s-time:before {
+    content: "\e919";
+}
+.nuc-s-play-circle:before {
+    content: "\e91a";
+}
+.nuc-media-glyph-1_button-play:before {
+    content: "\e91b";
+}
+.nuc-s-pin:before {
+    content: "\e91c";
+}
+.nuc-s-chevron-down:before {
+    content: "\e91d";
+}
+.nuc-s-chevron-left:before {
+    content: "\e91e";
+}
+.nuc-s-chevron-right:before {
+    content: "\e91f";
+}
+.nuc-s-chevron-up:before {
+    content: "\e920";
+}
+.nuc-s-angle-circle-down:before {
+    content: "\e921";
+}
+.nuc-s-angle-circle-left:before {
+    content: "\e922";
+}
+.nuc-s-angle-circle-right:before {
+    content: "\e923";
+}
+.nuc-s-angle-circle-up:before {
+    content: "\e924";
+}
+.nuc-s-arrow-down:before {
+    content: "\e925";
+}
+.nuc-s-arrow-left:before {
+    content: "\e926";
+}
+.nuc-s-arrow-right:before {
+    content: "\e927";
+}
+.nuc-s-arrow-up:before {
+    content: "\e928";
+}
+.nuc-s-download:before {
+    content: "\e929";
+}
+.nuc-s-arrow-circle-down:before {
+    content: "\e92a";
+}
+.nuc-s-arrow-circle-left:before {
+    content: "\e92b";
+}
+.nuc-s-arrow-circle-right:before {
+    content: "\e92c";
+}
+.nuc-s-arrow-circle-up:before {
+    content: "\e92d";
+}
+.nuc-o-user:before {
+    content: "\e92e";
+}
+.nuc-o-plus:before {
+    content: "\e92f";
+}
+.nuc-o-minus:before {
+    content: "\e930";
+}
+.nuc-o-cross:before {
+    content: "\e931";
+}
+.nuc-o-calendar:before {
+    content: "\e932";
+}
+.nuc-o-check-circle:before {
+    content: "\e933";
+}
+.nuc-o-check:before {
+    content: "\e934";
+}
+.nuc-o-plus-circle:before {
+    content: "\e935";
+}
+.nuc-o-minus-circle:before {
+    content: "\e936";
+}
+.nuc-o-cross-circle:before {
+    content: "\e937";
+}
+.nuc-o-pencil:before {
+    content: "\e938";
+}
+.nuc-o-mail:before {
+    content: "\e939";
+}
+.nuc-o-house:before {
+    content: "\e93a";
+}
+.nuc-o-zoom-in:before {
+    content: "\e93b";
+}
+.nuc-o-zoom-out:before {
+    content: "\e93c";
+}
+.nuc-o-search:before {
+    content: "\e93d";
+}
+.nuc-o-question:before {
+    content: "\e93e";
+}
+.nuc-o-exclamation:before {
+    content: "\e93f";
+}
+.nuc-o-info:before {
+    content: "\e940";
+}
+.nuc-o-question-circle:before {
+    content: "\e941";
+}
+.nuc-o-exclamation-circle:before {
+    content: "\e942";
+}
+.nuc-o-info-circle:before {
+    content: "\e943";
+}
+.nuc-o-heart:before {
+    content: "\e944";
+}
+.nuc-o-star:before {
+    content: "\e945";
+}
+.nuc-o-menu:before {
+    content: "\e946";
+}
+.nuc-o-dots:before {
+    content: "\e947";
+}
+.nuc-o-phone:before {
+    content: "\e948";
+}
+.nuc-o-share:before {
+    content: "\e949";
+}
+.nuc-o-time:before {
+    content: "\e94a";
+}
+.nuc-o-play-circle:before {
+    content: "\e94b";
+}
+.nuc-o-play:before {
+    content: "\e94c";
+}
+.nuc-o-pin:before {
+    content: "\e94d";
+}
+.nuc-o-angle-down:before {
+    content: "\e94e";
+}
+.nuc-o-angle-left:before {
+    content: "\e94f";
+}
+.nuc-o-angle-right:before {
+    content: "\e950";
+}
+.nuc-o-angle-up:before {
+    content: "\e951";
+}
+.nuc-o-angle-circle-down:before {
+    content: "\e952";
+}
+.nuc-o-angle-circle-left:before {
+    content: "\e953";
+}
+.nuc-o-angle-circle-right:before {
+    content: "\e954";
+}
+.nuc-o-angle-circle-up:before {
+    content: "\e955";
+}
+.nuc-o-arrow-down:before {
+    content: "\e956";
+}
+.nuc-o-arrow-left:before {
+    content: "\e957";
+}
+.nuc-o-arrow-right:before {
+    content: "\e958";
+}
+.nuc-o-arrow-up:before {
+    content: "\e959";
+}
+.nuc-o-download:before {
+    content: "\e95a";
+}
+.nuc-o-arrow-circle-down:before {
+    content: "\e95b";
+}
+.nuc-o-arrow-circle-left:before {
+    content: "\e95c";
+}
+.nuc-o-arrow-circle-right:before {
+    content: "\e95d";
+}
+.nuc-o-arrow-circle-up:before {
+    content: "\e95e";
 }
