@@ -321,4 +321,124 @@ function change_sticky_class($classes) {
 add_filter('post_class','change_sticky_class');
 
 
+
+// Attach callback to 'tiny_mce_before_init' 
+//add_filter( 'tiny_mce_before_init', 'my_mce_before_init_insert_formats' ); 
+
+function my_theme_add_editor_styles() {
+    if (defined('PRODUCTION') && PRODUCTION == true && defined('UNCSS') && UNCSS == true) {
+		add_editor_style( get_stylesheet_directory_uri() . '/css/style.clean.css' );
+	} elseif (defined('PRODUCTION') && PRODUCTION == true ) {
+		add_editor_style( get_stylesheet_directory_uri() . '/css/style.min.css' );
+	}else{
+		add_editor_style( get_stylesheet_directory_uri() . '/css/style.css' );
+	}
+
+}
+add_action( 'init', 'my_theme_add_editor_styles' );
+
+
+
+
+//echo '<pre>';
+//var_dump($config_sass);
+//echo '</pre>';
+
+
+
+function mytheme_change_tinymce_colors( $init ) {
+	$config_sass = json_decode( file_get_contents(get_template_directory()."/config_sass.json"), true );
+	
+    $default_colours = '
+        "000000", "Black",
+        "993300", "Burnt orange",
+        "333300", "Dark olive",
+        "003300", "Dark green",
+        "003366", "Dark azure",
+        "000080", "Navy Blue",
+        "333399", "Indigo",
+        "333333", "Very dark gray",
+        "800000", "Maroon",
+        "FF6600", "Orange",
+        "808000", "Olive",
+        "008000", "Green",
+        "008080", "Teal",
+        "0000FF", "Blue",
+        "666699", "Grayish blue",
+        "808080", "Gray",
+        "FF0000", "Red",
+        "FF9900", "Amber",
+        "99CC00", "Yellow green",
+        "339966", "Sea green",
+        "33CCCC", "Turquoise",
+        "3366FF", "Royal blue",
+        "800080", "Purple",
+        "999999", "Medium gray",
+        "FF00FF", "Magenta",
+        "FFCC00", "Gold",
+        "FFFF00", "Yellow",
+        "00FF00", "Lime",
+        "00FFFF", "Aqua",
+        "00CCFF", "Sky blue",
+        "993366", "Brown",
+        "C0C0C0", "Silver",
+        "FF99CC", "Pink",
+        "FFCC99", "Peach",
+        "FFFF99", "Light yellow",
+        "CCFFCC", "Pale green",
+        "CCFFFF", "Pale cyan",
+        "99CCFF", "Light sky blue",
+        "CC99FF", "Plum",
+        "FFFFFF", "White"
+        ';
+    $i = 0;
+    $custom_colours = '';
+    foreach($config_sass['color'] as $k => $v){
+	    if( strpos($v, '$') === false ){
+		    if($i != 0){
+			    $custom_colours .= ',
+			    ';
+		    }
+		    $custom_colours .= '"'.str_ireplace('#', '', $v).'", "'.str_ireplace('-', ' ', $k).'"';
+		    $i++;
+	    }
+    }
+    /*
+    $custom_colours = '
+		"'.str_ireplace('#', '', $config_sass['color']['dark-gray']).'", "dark gray",
+        "'.str_ireplace('#', '', $config_sass['color']['medium-gray']).'", "medium gray",
+        "'.str_ireplace('#', '', $config_sass['color']['light-gray']).'", "light gray",
+        "'.str_ireplace('#', '', $config_sass['color']['primary']).'", "primary",
+        "'.str_ireplace('#', '', $config_sass['color']['secondary']).'", "secondary",
+        "'.str_ireplace('#', '', $config_sass['color']['info']).'", "info",
+        "'.str_ireplace('#', '', $config_sass['color']['black']).'", "black",
+        "'.str_ireplace('#', '', $config_sass['color']['success']).'", "success",
+        "'.str_ireplace('#', '', $config_sass['color']['warning']).'", "warning"
+        ';
+    */
+    //$init['textcolor_map'] = '['.$default_colours.','.$custom_colours.']';
+    $init['textcolor_map'] = '['.$custom_colours.']';
+    $init['textcolor_rows'] = 6; // expand colour grid to 6 rows
+    //var_dump( str_ireplace('#', '', $config_sass['color']['dark-gray']));
+	//exit;
+	//echo $init['textcolor_map'];
+    return $init;
+}
+add_filter('tiny_mce_before_init', 'mytheme_change_tinymce_colors');
+
+
+function acf_set_featured_image( $value, $post_id, $field  ){
+    
+    if($value != ''){
+	    //Add the value which is the image ID to the _thumbnail_id meta data for the current post
+	    add_post_meta($post_id, '_thumbnail_id', $value);
+    }
+ 
+    return $value;
+}
+
+// acf/update_value/name={$field_name} - filter for a specific field based on it's name
+add_filter('acf/update_value/name=header_image', 'acf_set_featured_image', 10, 3);
+ 
+
 ?>
