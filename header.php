@@ -58,12 +58,12 @@
 
 </head>
 
-<body <?php body_class('antialiased'); ?>>
+<body id="main-body" <?php body_class('antialiased'); ?> data-toggler=".menu-expanded">
     <div class="animsition">
         <header id="main-header">
             <div class="title-bar" id="main-menu-mobile-bar" data-responsive-toggle="main-menu" data-hide-for="large">
                 <div class="title-bar-right">
-                    <button class="menu-icon" type="button" data-toggle></button>
+                    <button class="menu-icon" type="button" data-toggle="main-body"></button>
                 </div>
                 <div class="title-bar-left">
                     <div class="title-bar-title"><a href="<?php echo esc_url( home_url( '/' ) ); ?>" title="<?php echo esc_attr( get_bloginfo( 'name', 'display' ) ); ?>" rel="home">
