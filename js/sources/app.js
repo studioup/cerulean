@@ -2,8 +2,11 @@
 // Documentation can be found at: http://foundation.zurb.com/docs
 
 (function($) {
+	
+	
+
     
-    
+    $('.ddl-full-width-row').addClass('expanded').addClass('collapse');
     
     //inject special media queries for interchange on retina devices
     var retinaQueries = configShared.mediaqueries.retina.replace("'","").split(",");

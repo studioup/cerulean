@@ -93,6 +93,7 @@ $breakpoint-classes: (small medium large) !default;
 $grid-row-width: $global-width !default;
 $grid-column-count: 12 !default;
 $grid-column-gutter: 30px !default;
+$grid-column-align-edge: false;
 
 // 4. Base Typography
 // ------------------

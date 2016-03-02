@@ -21,7 +21,7 @@
             <div class="credits">
                 <div class="row">
                     <div class="large-8 small-12 medium-8 columns">
-                        <p>&copy; <?php echo date('Y'); ?> Business Name <small>- <?php _e('VAT ID','cerulean');?> xxxxxxxx.</small> </p>
+                        <p>&copy; <?php echo date('Y'); ?> <?php echo get_global_option('indirizzo_footer')?> </p>
                     </div>
                     <div id="credits" class="large-4 small-12 medium-4 columns">
                         <a href="http://www.studioup.it/" title="Studio Up - Agenzie Web Milano"><strong>Studio Up - Agenzia Web Milano</strong></a>

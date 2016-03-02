@@ -18,23 +18,23 @@
         "text-direction": "ltr"
     },
 	"color":{
-		"primary" : "#2199e8",
-		"secondary": "#777",
+		"primary" : "#3D5AFE",
+		"secondary": "#9EC1FC",
 		"success": "#3adb76",
 		"warning": "#ffae00",
 		"alert": "#ec5840",
 		"info" : "#1B7BED",
-		"light-gray": "#e6e6e6",
+		"light-gray": "#EBEDF7",
 		"medium-gray": "#cacaca",
-		"dark-gray": "#8a8a8a",
+		"dark-gray": "#6C7E90",
 		"black": "#0a0a0a",
-		"white": "#fefefe",
+		"white": "#FFFFFF",
 		"triangles": "$color-primary"
 		
 	},
 	"body" : {
 		"background": "$color-white",
-		"font-color": "$color-black",
+		"font-color": "$color-dark-gray",
 		"font-family": "\"Helvetica Neue\", Helvetica, Roboto, Arial, sans-serif",
 		"antialiased": "true"
 	},
@@ -43,7 +43,7 @@
 	"topbar":{ 
 		"padding": "0.5rem",
 		"background": "transparent",
-		"link-color": "$color-black",
+		"link-color": "$color-white",
 		"input-width": "200px",
 		"height": "rem-calc(72)"
 	},
@@ -51,7 +51,7 @@
     	"padding": "rem-calc(16) rem-calc(45)",
         "margin": "$global-margin/2 0",
         "fill": "solid",
-        "background": "$color-black",
+        "background": "$color-primary",
         "background-hover": "scale-color($button-background, $lightness: -15%)",
         "color": "$color-white",
         "color-alt": "$color-black",
@@ -65,6 +65,8 @@
         "icon-color" : "$color-black",
         "icon-color-hover" : "$color-primary"
 	},
-	"header-lineheight" : "1.2"
-	
+	"header": { 
+		"lineheight" : "1.2",
+		"color" : "$color-primary"
+	}
 }

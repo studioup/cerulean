@@ -17,7 +17,7 @@ var $      = require('gulp-load-plugins')(),
     plumber = require('gulp-plumber'),
     bower = require('gulp-bower'),
     remoteSrc = require('gulp-remote-src'),
-    closureCompiler = require('gulp-closure-compiler'),
+    //closureCompiler = require('gulp-closure-compiler'),
     jsonWrapper = require('gulp-json-wrapper')
     isProduction = false;
     

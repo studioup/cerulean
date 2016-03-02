@@ -43,6 +43,9 @@ require_once('lib/nav.php'); // filter default wordpress menu classes and clean 
 */
 require_once('lib/img.php'); // filter default wordpress menu classes and clean wp_nav_menu markup
 
+
+require_once('lib/shortcodes.php');
+
 //remove wpml language selector css
 define('ICL_DONT_LOAD_LANGUAGE_SELECTOR_CSS', true);
 
@@ -194,6 +197,8 @@ if( function_exists('acf_add_options_sub_page') )
     }
     add_action( 'current_screen', 'cl_set_global_options_pages' );
     
+    
+    
     function cl_acf_set_language() {
       return acf_get_setting('default_language');
     }
@@ -321,7 +326,6 @@ function change_sticky_class($classes) {
 add_filter('post_class','change_sticky_class');
 
 
-
 // Attach callback to 'tiny_mce_before_init' 
 //add_filter( 'tiny_mce_before_init', 'my_mce_before_init_insert_formats' ); 
 
@@ -438,7 +442,180 @@ function acf_set_featured_image( $value, $post_id, $field  ){
 }
 
 // acf/update_value/name={$field_name} - filter for a specific field based on it's name
-add_filter('acf/update_value/name=header_image', 'acf_set_featured_image', 10, 3);
+add_filter('acf/update_value/name=featured_image', 'acf_set_featured_image', 10, 3);
  
+/*
+add_filter('acf/location/rule_types', 'acf_location_rules_types');
+function acf_location_rules_types( $choices )
+{
+	var_dump($choices);
+	exit;
+    $choices['Basic']['user'] = 'User';
+
+    return $choices;
+}
+*/
+
+//add_filter('acf/location/rule_match/page', 'acf_location_rules_match_post', 10, 3);
+add_filter('acf/location/rule_match/page', 'acf_location_rules_match_page', 10, 3);
+
+
+
+
+function acf_location_rules_match_page( $match, $rule, $options ) {
+	
+	global $sitepress;
+	//exit;
+	// bail early if not a post
+	if( !$options['post_id'] ) return false;
+	
+	
+	// translate $rule['value']
+	// - this variable will hold the original post_id, but $options['post_id'] will hold the translated version
+	//if( function_exists('icl_object_id') )
+	//{
+	//	$rule['value'] = icl_object_id( $rule['value'], $options['post_type'], true );
+	//}
+	
+	
+	// compare
+    if( $rule['operator'] == "==") {
+    	
+    	$match = ( icl_object_id($options['post_id'], 'page', $sitepress->get_default_language()) == icl_object_id($rule['value'], 'page', $sitepress->get_default_language()) );
+    
+    } elseif( $rule['operator'] == "!=") {
+    	
+    	$match = ( icl_object_id($options['post_id'], 'page', $sitepress->get_default_language()) != icl_object_id($rule['value'], 'page', $sitepress->get_default_language()) );
+    
+    }
+    
+    
+    // return
+    return $match;
+
+}
+	
+	
+
+
+// layouts support for foundation
+// Define the name of your framework
+add_filter('ddl-set_framework', function( $slug ){
+    return 'foundation';
+});
+ 
+ 
+// Define the list of supported frameworks
+add_filter('ddl-set_up_frameworks', function( $array ){
+    $array['foundation'] = (object) array('label' => 'Foundation by ZURB');
+    return $array;
+});
+ 
+// Define the CSS class that will be added to the container element
+add_filter('ddl-get_container_class', function( $el ){
+    return 'container';
+});
+ 
+// Define the CSS class that will be added to fluid container element
+add_filter('ddl-get_container_fluid_class', function( $el ){
+    return 'container-fluid';
+});
+ 
+// Define the CSS class that will be added to the row element in the grid
+add_filter('ddl-get_row_class', function( $el ){
+    return 'row';
+});
+ 
+// Define the offset prefix CSS class that will be added to the element in the grid
+add_filter('ddl-get_offset_prefix', function( $el ){
+    return 'offset-';
+});
+ 
+// Define the prefix CSS classes that will be added to the columns in the grid
+add_filter('ddl-get-column-prefix', function( $el,$this ){
+    return array( 'large-');
+});
+ 
+// Define any additional CSS classes that need to be added to the columns in the grid
+add_filter('ddl-get_additional_column_class', function( $el ){
+    return 'columns';
+});
+ 
+// Define if framework supports native support for Layouts Image Box cell responsive images
+add_filter('ddl-framework_supports_responsive_images', function( $bool ){
+    return false;
+});
+ 
+// Define the CSS class for the thumbnail image
+add_filter('ddl-get_thumbnail_class', function( $bool ){
+    return 'th';
+});
+
+/*
+add_filter('ddl-get_column_width', function( $width, $column_prefix, $this ){
+	echo '<pre>';
+	var_dump($width);
+	var_dump($this);
+	echo '</pre>';
+});
+*/
+
+function include_files_by_folder( $tpls_dir = '' )
+{
+    $dir_str = dirname(__FILE__) . $tpls_dir;
+    $dir = opendir( $dir_str );
+    while( ( $currentFile = readdir($dir) ) !== false ) {
+       if ( $currentFile == '.' || $currentFile == '..' || $currentFile[0] == '.' ) {
+          continue;
+       }
+
+       include $dir_str.$currentFile;
+    }
+    closedir($dir);
+}
+include_files_by_folder('/lib/widgets/');
+
+if( class_exists( 'WPDD_Layouts' ) && !function_exists( 'include_ddl_layouts' ) )
+{
+    
+ 
+    include_files_by_folder('/lib/cell_layouts/');
+}
+
+
+/*amp support */
+add_filter( 'amp_post_template_data', 'xyz_amp_set_site_icon_url' );
+
+function xyz_amp_set_site_icon_url( $data ) {
+    // Ideally a 32x32 image
+    /*
+    $image =  wp_get_attachment_image_src( get_field('logo','options') , 'fd-sm' );
+    
+    if(!empty($image) && !empty($image[0])){
+        $data[ 'site_icon_url' ] = $image[0];
+    }
+    */
+    $data[ 'site_icon_url' ] = get_stylesheet_directory_uri() . '/img/favicons/favicon-96x96.png';
+    return $data;
+}
+
+add_action( 'amp_post_template_css', 'xyz_amp_my_additional_css_styles' );
+
+function xyz_amp_my_additional_css_styles( $amp_template ) {
+	$config_sass = json_decode( file_get_contents(get_template_directory()."/config_sass.json"), true );
+	//var_dump( $config_sass["color"]["primary"]);
+	//exit;
+    // only CSS here please...
+    ?>
+    .amp-wp-byline amp-img {
+        /* border-radius: 0; */ /* we don't want round avatars! */
+    }
+    body nav.amp-wp-title-bar {
+	    
+		background: <?php echo $config_sass["color"]["primary"];?>;
+    }
+    <?php
+	    
+}
 
 ?>

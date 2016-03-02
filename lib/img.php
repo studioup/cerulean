@@ -1,4 +1,8 @@
 <?php
+
+// [bartag foo="foo-value"]
+
+
 function get_the_post_thumbnail_src( $post_id=false , $size = 'full' ){
     if($post_id==false && $post && is_object( $post ) && $post->ID){
         $post_id = $post->ID;
@@ -25,13 +29,16 @@ function get_image_src_from_id( $id , $size = 'full' ){
     return false;
 }
 
+
+
+
 function the_image_src_from_id( $id , $size = 'full' ){
     echo get_image_src_from_id( $id , $size );
 }
 
 function get_img_interchange_array_from_id($id,$size = 'large-12'){
     $interchange = false;
-
+	
     
     switch ($size){
         case "off-grid":
@@ -150,12 +157,15 @@ function get_img_interchange_array_from_id($id,$size = 'large-12'){
     
     
     $img = wp_get_attachment_metadata($id);
+    //var_dump($img);
     if($img){
         $interchange = array();
         foreach($sizes as $k => $size){
             $img_sized =  wp_get_attachment_image_src( $id , $size );
             if(isset( $img_sized[0] )){
                 $interchange[$k] = $img_sized[0];
+            }else{
+	            //$interchange[$k] = '';
             }
             /*
             if(isset($img['sizes']) && isset($img['sizes'][$size]) ){
@@ -168,6 +178,24 @@ function get_img_interchange_array_from_id($id,$size = 'large-12'){
         //echo '<pre>';
         //var_dump($interchange);
         //echo '</pre>';
+    }else{
+
+        foreach($sizes as $k => $size){
+            $img_sized =  wp_get_attachment_image_src( $id , 'full' );
+            if(isset( $img_sized[0] )){
+                $interchange[$k] = $img_sized[0];
+            }else{
+	            //$interchange[$k] = '';
+            }
+            /*
+            if(isset($img['sizes']) && isset($img['sizes'][$size]) ){
+                $interchange[$k] = $img['sizes'][$size]['url'];
+            }else{
+                //get_img_src_from_id()
+            }
+            */
+        }
+	    
     }
     return $interchange; 
     /*
@@ -178,6 +206,7 @@ function get_img_interchange_array_from_id($id,$size = 'large-12'){
 }
 
 function get_img_interchange_from_id($id,$size = 'large-12'){
+
     $interchange_array = get_img_interchange_array_from_id($id,$size);
     //$dataInterchange = 'data-interchange="';
     foreach($interchange_array as $k => $size){
@@ -189,6 +218,26 @@ function get_img_interchange_from_id($id,$size = 'large-12'){
 function the_img_interchange_from_id($id,$size = 'large-12'){
     echo get_img_interchange_from_id($id,$size);
 }
+
+
+function get_img_interchange_from_field($field,$size ='large-12',$post_id = null, $field_fallback = null, $fallback_post_id = null, $global_fallback = true){
+
+	$id = get_field($field,$post_id );
+	if(empty($id)){
+		if($global_fallback === true || $global_fallback === 'true'){
+			$id = get_global_option($field_fallback);
+		}else{
+			$id = get_field($field_fallback ,$fallback_post_id );
+		}
+	}
+	return get_img_interchange_from_id($id,$size);
+}
+
+function the_img_interchange_from_field($field,$size ='large-12',$post_id = null, $field_fallback = null, $fallback_post_id = null, $global_fallback = true){
+	echo get_img_interchange_from_field($field,$size,$post_id,$field_fallback,$fallback_post_id, $global_fallback);
+}
+
+
 
 
 if ( function_exists( 'get_field' ) ) {
@@ -242,3 +291,8 @@ if ( function_exists( 'get_sub_field' ) ) {
         return false;
     }
 }
+
+
+
+
+
