@@ -1,17 +1,19 @@
-<?php get_header(); ?>
-
+<?php
+/*
+Template Name: Full Width
+*/
+get_header(); ?>
 
 <!-- Start the main container -->
-<div class="container default-top-padding" role="document">
-    <!-- Row for main content area -->
 
-    <main id="main" role="main" >
-		
-		<?php the_ddlayout(); ?>							
-	    					
-	</main> <!-- end #main -->
+    <!-- Row for main content area -->
+    	<div id="content" role="main">
+    	    <main id="main" class="" >
+				<?php the_ddlayout(); ?>							
+			    					
+			</main> <!-- end #main -->
 
     
-</div>
+    	</div>
 		
 <?php get_footer(); ?>

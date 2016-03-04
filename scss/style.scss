@@ -171,7 +171,7 @@ time {
     background-color: #fbfbfb;
     border: none;
     padding: rem-calc(50) rem-calc(80);
-    margin: rem-calc(50) (-($grid-column-gutter/2));
+    margin: rem-calc(50) ( -1 * ( map-get($grid-column-gutter, medium) /2 ));
     @include breakpoint(medium up) {
         //margin: rem-calc(50) (-$content-padding);
     }
@@ -348,23 +348,7 @@ ol.commentlist {
 
 
 
-// Start the footer
-footer.full-width {
-    background-color: $primary-color;
-    //border-top: 1px solid #ccc;
-    color: $secondary-color;
-    padding-top: rem-calc(14);
-    p {
-        font-size: rem-calc(14);
-    }
-    a {
-        color: $white;
-        font-size: rem-calc(15);
-        &:hover, &:focus {
-            color: $secondary-color;
-        }
-    }
-}
+
 
 // Fix admin bar issue, by bybe on Github
 .admin-bar > .fixed {
@@ -413,6 +397,7 @@ body, html{
 
 .page-wrapper{
     min-height: 80vh;
+    padding-top: $topbar-height;
 }
 
 
@@ -449,21 +434,16 @@ body{
 
 #main-menu-mobile-bar{
     position: relative;
-    z-index: 1000;
-    background: rgba($color-primary,0);
+    padding: 0 !important;
     
-    > .row > .columns{
-	    position: relative;
-    }
-    //padding-top: rem-calc(10);
     .title-bar-title{
         //margin-left: -15px;
-        margin-top: 10px;
+        a{
+	        padding: 20px;
+			display: block;
+        }
         img{
-            height: rem-calc(64);
-            @include breakpoint(smallplus down) {
-	            height: rem-calc(44);
-            }
+            height: 50px;
         }
         span{
             display: none;
@@ -471,20 +451,20 @@ body{
         }
     }
     .menu-icon{
-        width: 29px;
-        height: 23px;
-        position: absolute;
-        top: 30px;
-        right: 0;
+        width: 35px;
+	    height: 28px;
+	    position: absolute;
+	    top: 28px;
+	    right: 12px;
         &:after{
+	        background: $primary-color;
             height: 3px;
-            background: $white;
-            box-shadow: 0 10px 0 $white, 0 19px 0 $white;
+            box-shadow: 0 12px 0 $primary-color,0 24px 0 $primary-color;
             
         }
         &:hover::after {
-            background: $secondary-color;
-            box-shadow: 0 10px 0 $secondary-color, 0 19px 0 $secondary-color;
+            background: $color-black;
+            box-shadow: 0 12px 0 $color-black, 0 24px 0 $color-black;
         }
     }
 }
@@ -496,247 +476,39 @@ body #main-header{
 }
 
 
-.primary-bg, .full-bg.primary-bg{
-	background: $color-primary;
-}
 
-.light-gray-bg, .full-bg{
-	background: $color-light-gray;
-}
-
-.arrow-wrapper{
-	border: rem-calc(3) solid $color-secondary;
-	border-radius: 50%;
-	width: rem-calc(34);
-	height: rem-calc(34);
-	display: inline-table;
-	vertical-align: middle;
-	position: relative;
-	font-size: rem-calc(18);
-	text-align: center;
-	line-height: 1;
-	&.extra-left-space{
-		left: $grid-column-gutter/2;
-	}
-	&.extra-right-space{
-		right: $grid-column-gutter/2;
-	}
-	
-	.nuc{
-		font-size: rem-calc(14);
-		vertical-align: middle;
-		position: relative;
-		&.nuc-s-chevron-up {
-			top: rem-calc(1);
-		}
-		&.nuc-s-chevron-down {
-		    top: rem-calc(3);
-		    
-		}
-		&.nuc-s-chevron-left {
-		    right: rem-calc(1);
-		    top: rem-calc(2);
-    	}
-    	&.nuc-s-chevron-right {
-    		left: rem-calc(1);
-		    top: rem-calc(2);
-		}
-	}
-}
-
-.has-border{
-	border-bottom: rem-calc(9) solid $color-secondary;
-}
-
-.page-header .o-tbl{
-	height: rem-calc(250);
-}
-
-.company-keypoint-card-title{
-	@extend .text-center;
-}
-
-.section-heading, .company-keypoint-card-title{
-	@extend .uppercase;
-}
-.product-card-title, .company-keypoint-card-title{
-	@extend .like-h6;
-}
-
-.news-card-title{
-	@extend .like-h5;
-}
-
-.section-heading, .product-card-title, .company-keypoint-card-title, .news-card-title{
-	@extend .color-white;
-	@extend .primary-bg;
-	
-	padding: $grid-column-gutter/2 $grid-column-gutter/2;
-}
-
-.section-heading{
-	@extend .xlittle-bottom-margin;
-}
-
-.breadcrumbs{
-	a{
-		color: $white;
-		&:hover{
-			color: $color-secondary;
-		}
-	}
-	.breadcrumb_last{
-		display: none;
-	}
-}
-
-.company-keypoint-card-main-image{
-	position: relative;
-	.overlay{
-		background: $black;
-		opacity: 0.2;
-		
-	}
-	.company-keypoint-card-icon, .overlay{
-		display: block;
-		width: 100%;
-		height: 100%;
-		position: absolute;
-		top: 0;
-		left: 0;
-	}
-}
-
-.company-story-card:not(.first):before {
-    content: "";
-    display: block;
-    height: rem-calc(50);
-    width:  rem-calc(5);
-    background: $color-light-gray;
-    position: relative;
-    left: 50%;
-    transform: translateX(-50%);
-}
-
-.company-keypoint-card > div , .news-card > a, .product-card > a {
-	@extend .xlittle-bottom-margin;
-	box-shadow: 4px 4px 10px 0px rgba(0,0,0,0.2);
-	display: block;
-}
-
-.news-card .new-card-content{
-	background: $white;
-}
-
-.widget_yearly_archive ul {
-    list-style: none;
-    margin-left: 0;
-    margin-top: 60px;
-    li{
-	    border-bottom: 1px solid $color-secondary;
-	    padding: 20px 0;
-	    &:first-child{
-		    border-top: 1px solid $color-secondary;
-		}
-	}
-
-
-
-}
-
-.widgettitle{
-	text-transform: uppercase;
-}
-
-#map{
-	height: rem-calc(500);
-}
-#partners-map{
-	height: rem-calc(730);
-}
-
-.large-12.columns.partners-map{
-	@include breakpoint(medium down) {
-		padding: 0;
-	}
-}
-
-.partners-columns{
-	column-count: 3;
-	@include breakpoint(smallplus down) {
-		column-count: 1;
-	}
-	@include breakpoint(medium only) {
-		column-count: 2;
-	}
-	font-size: rem-calc(17);
-	.country-block-inside{
-		break-inside: avoid-column;
-	}
-}
-
-
-
-.primary-bg{
-	ul.links-list li{
-		border-color: $white;
-		color: $white;
-		&:first-child{
-			border-color: $white;
-		}
-		a{
-			color: $white;
-			&:hover{
-				color: $secondary-color;
-			}
-		}
-	}
-}
-
-ul.links-list {
-    margin-left: 0;
-    list-style: none;
-    li{
-	    border-bottom: 1px solid blue;
-	    &:first-child{
-			border-top: 1px solid blue;
-		}
-		 a{
-		    padding: 20px 50px 20px 0;
-		    display: block;
-		    position: relative;
-		    @extend .clearfix;
-		}
-		.arrow-wrapper{
-		    position: absolute;
-		    right: 0;
-		    top: 50%;
-		    transform: translateY(-50%);
-		}
-
-
-	}
-
-}
-
-hr.home-hr {
-    margin-top: rem-calc(16);
-    border-bottom-width: rem-calc(6);
-    border-color: $white;
-}
-
-.ddl-full-width-row{
-	@extend .expanded;
-}
-
-.row.expanded, .ddl-full-width-row{
-	> .columns > .row,  > .columns > div > .row{
-		margin-left: auto;
-		margin-right: auto;
-	}
-}
-
-
+@include breakpoint(medium down) {
+    #main-header{
+        
+        &.expanded{
+	        height: 100%;
+            position: fixed;
+            top: 0;
+            left: 0;
+            background: $body-background;
+            border: rem-calc(5) solid $black;
+            z-index: 10000;
+            //display: table !important;
+            //vertical-align: middle;
+            #main-menu{
+	            position: absolute;
+			    top: 50%;
+			    width: 100%;
+			    transform: translateY(-50%);
+			    //padding: rem-calc(100) 0;
+	            //display: table-row !important;
+	            > div{
+		            //display: table-cell !important;
+	            }
+            }
+        }
+    }
+    body.home #main-header.expanded{
+        background-image: linear-gradient(0deg, #0276F9 0%, #4DA0FF 100%);
+        //background-image: linear-gradient(0deg, #0276F9 0%, #3f9aff 100%);
+    } 
+      
+} 
 
 /*
 	"button" : {
@@ -779,8 +551,8 @@ hr.home-hr {
 }
 
 #main-menu {
-    //font-weight: $global-weight-bold;
-    //text-transform: uppercase;
+    font-weight: $global-weight-bold;
+    text-transform: uppercase;
     @include breakpoint(medium down) {
         //background: $body-background;
     }
@@ -790,34 +562,18 @@ hr.home-hr {
 			display: inline-block !important;
 		}
     }
-    .top-bar-left{
-	    @include breakpoint(smallplus down) {
-		    margin-top: rem-calc(20);
-	    }
-	    a{
-			font-size: rem-calc(22);
-			text-transform: uppercase;
-			@include breakpoint(smallplus down) {
-		        font-size: rem-calc(14);
-	        }
-		}
-    }
     a{
         
-        font-size: rem-calc(45);
-        
+        font-size: rem-calc(16);
         letter-spacing: rem-calc(3);
         &:hover,&.active{
-            color: $secondary-color;
-        }
-        @include breakpoint(smallplus down) {
-	        font-size: rem-calc(25);
+            color: $primary-color;
         }
     }
         
     ul.menu>li.menu-text.name {
         img{
-            height: $topbar-height - ($topbar-padding*2);
+            //height: $topbar-height - ($topbar-padding*2);
             width: auto !important;
         }
         span{
@@ -827,59 +583,52 @@ hr.home-hr {
 
 }
 
-#main-menu{
-	display: none;
+.archive-dropdown-wrapper{
+	
+	.archive-dropdown-title{
+		background: $color-primary;
+		color: $color-white;
+		border-radius: rem-calc(32);
+		margin-bottom: rem-calc(-32);
+	    z-index: 1000;
+	    position: relative;
+	    padding:     rem-calc(17) rem-calc(32);
+		//@extend .xxlittle-vertical-padding;
+		//@extend .xxlittle-horizontal-padding;
+		cursor: pointer;
+	}
+	.archive-dropdown-body{
+		
+		overflow: hidden;
+		ul{
+			background: $color-dark-gray;
+			list-style: none;
+			margin-left: 0;
+			padding-top: rem-calc(32);
+			li{
+				//padding: rem-calc(20);
+				padding: 0 rem-calc(32);
+				@extend .xxlittle-horizontal-padding;
+				a{
+					padding: rem-calc(20) 0;
+					display: block;
+					border-top: 1px solid $color-white;
+					color: $white;
+				}
+				&:first-child{
+					a{
+						border-top: none;
+					}
+				}
+			}
+		}
+	}
 }
 
-body.menu-expanded{
-	overflow-y: hidden;
-	height: 100vh !important;
-	#main-menu-mobile-bar{
-		background: rgba($color-primary,1);
-	}
-	#main-menu {
-		display: block;
-	    height: 100vh;
-	    position: absolute;
-	    width: 100%;
-	    top: 0;
-	    left: 0;
-	    background: $color-primary;
-	    overflow-y: scroll;
-	    padding: 0;
-	    > .o-tbl{
-		    height: 100vh;
-		    padding-top: 80px;
-		    padding-bottom: 80px;
-	    }
-	}
-}
-
-
-.page-header{
-	position: relative;
-	.o-tbl{
-		position: relative;
-	}
-}
-.header-overlay{
-	background: $primary-color;
-	opacity: 0.1;
-	position: absolute;
-	top: 0;
-	left: 0;
-	display: block;
-	width: 100%;
-	height: 100%;
-}
 
 body.home{
-	.page-header > .o-tbl{
-		height: 100vh;	
-	}
-    .header-overlay{
-		opacity: 0.44;
-	}
+    //color: $white;
+    //background: $primary-color;
 }
 
 
@@ -888,78 +637,34 @@ body.home{
 
 
 .social-sharer ul{
-	margin-left: 0;
 	li{
 		display: inline-block;
-		margin-left: rem-calc(10);
-		margin-right: rem-calc(10);
-		a{
-			padding-left: rem-calc(10);
-			padding-right: rem-calc(10);
-			width: rem-calc(72);
-			height: rem-calc(72);
-			font-size: rem-calc(40);
-			@extend .button;
-		}
 	}	
 }
 
 
 
-
-
-
-.single-product-main-image{
-	height: rem-calc(320);
-	display: block;
-	@include breakpoint(medium up) {
-		height: rem-calc(620);
-	}
-}
-
-.home-slider{
-	height: auto !important;
-	background: none;
-	.company-keypoint-card{
-		padding: 0 $grid-column-gutter/2;
-	}
-}
-
-.home-slider-next,.home-slider-prev{
-	position: absolute;
-    display: block;
-    top: 50%;
-    -webkit-transform: translate(0, -50%);
-    -ms-transform: translate(0, -50%);
-    transform: translate(0, -50%);
-    color: $primary-color;
-    &.slick-disabled{
-	    opacity: 0.5;
+// Start the footer
+footer.full-width {
+    padding-top: rem-calc(14);
+    p {
+        font-size: rem-calc(14);
+    }
+    a {
+        color: $white;
+        //font-size: rem-calc(15);
+        &:hover, &:focus {
+            color: $color-secondary;
+        }
     }
 }
-
-.home-slider-prev {
-    left: -50px;
-    [dir="rtl"] & {
-        left: auto;
-        right: -50px;
-    }
-}
-
-.home-slider-next{
-    right: -50px;
-    [dir="rtl"] & {
-        left: -50px;
-        right: auto;
-    }
-
-}
-
 
 #main-footer {
     position: relative;
     display: block;
     width:100%;
+    background: $primary-color;
+    color: $white;
     .credits{
         padding-top: rem-calc(25);
         padding-bottom: rem-calc(25);
@@ -970,29 +675,29 @@ body.home{
             background-position: center;
             background-repeat: no-repeat;
             height: 30px;
-            display: block;
+            display: inline-block;
             float: right;
             width: 150px;
             @include breakpoint(smallplus down) {
+	            float: none;
 	            margin: 0 auto;
-				float: none;
             }
             strong{
                 display: none;
             }
         }
         p{
-            //color: #7d7d7d;
-            font-size: rem-calc(14);
+            color: $white;
+            //font-size: rem-calc(14);
             line-height: rem-calc(30);
             strong{
-                font-size: rem-calc(14);
-                //color: #7d7d7d;
-                font-weight: bolder;
+                //font-size: rem-calc(14);
+                color: $white;
+                //font-weight: bolder;
             }
             small{
                 font-size: rem-calc(14);
-                //color: #c1c1c1;
+                color: $white;
             }
 
         }
@@ -1004,28 +709,59 @@ body.home{
 
 // hack per foundation 6
 #main-menu{
-	.divider{
-		display: none;
-	}
-	.top-bar-right{
-		@include breakpoint(medium ) {
-			.menu.vertical > li{
-				text-align: right;
-			}
-		}
-	}
-	.top-bar-left{
-		@include breakpoint(small only) {
-			text-align: center;
-			> ul {
-				display: inline-block;
+	padding-top: 0;
+	@include breakpoint(large up) {
+		.menu-tbl{
+			display: table !important;
+			width: 100%;
+			table-layout: fixed;
+			.menu-tbl-row{
+				display: table-row !important;
+				.menu-item{
+					padding: 0 rem-calc(10) !important;
+					display: table-cell !important;
+					vertical-align: middle;
+				}
 			}
 		}
 	}
     .top-bar-left, .top-bar-right{
         >ul.menu >li{
+	        background: $color-white;
+	        a{
+	        	color: $color-white;
+	        }
+	        &:hover, &:active{
+		        a{
+		        	color: $color-black;
+		        }
+	        }
+	        &:nth-child(3) {
+			    background: $color-warning;
+			}
+	        &:nth-child(5) {
+			    background: $color-primary;
+			}
+			&:nth-child(7) {
+			    background: $color-secondary;
+			}
+			&:nth-child(9) {
+			    background: $color-info;
+			}
+			&:nth-child(11) {
+			    background: $color-success;
+			}
             @include breakpoint(large up) {
                 height: $topbar-height;
+                //width: 16.6666666666666%;
+                &.divider{
+	                display: none;
+                }
+                &.name{
+	                a{
+		                vertical-align: middle;
+	                }
+                }
             }
         }
     }

@@ -81,10 +81,11 @@
             </div>
             
             <div class="top-bar" id="main-menu">
-                <div class="column row" >
-                    <div class="top-bar-left" >
-                        <ul class="menu">
-                            <li class="menu-text name show-for-large" >
+                <div class="column row " >
+                    
+                    <div class="top-bar-left menu-tbl" >
+                        <ul class="main-menu menu vertical large-horizontal menu-tbl-row" data-dropdown-menu>
+                            <li class="menu-text name show-for-large menu-item" >
                                 <h2><a href="<?php echo esc_url( home_url( '/' ) ); ?>" title="<?php echo esc_attr( get_bloginfo( 'name', 'display' ) ); ?>" rel="home" >
                                     <?php if(get_global_option_img('logo')){ ?>
                                         <img src="<?php the_global_option_img('logo'); ?>">
@@ -95,11 +96,6 @@
                                     </a>
                                 </h2>
                             </li>
-                        </ul>
-                    </div>
-                    <div class="top-bar-left" >
-                        <ul class="menu vertical large-horizontal" data-dropdown-menu>
-                            
                             <?php
                                 wp_nav_menu( array(
                                     'theme_location' => 'primary',
@@ -116,59 +112,7 @@
                             ?>
                         </ul>
                     </div>
-                    <div class="top-bar-right"  >
-                        <ul class="menu vertical large-horizontal" data-responsive-menu="accordion large-dropdown">
-                        <?php 
-                            if( function_exists('icl_get_languages') ){
-                                $languages = icl_get_languages('skip_missing=0&orderby=custom');
-                                if(count($languages) == 2 ){ 
-                                    ?>
-                                    
-                                    <?php 
-                                    foreach($languages as $language){
-                                        if($language['active'] != 1){ ?>
-                                            <li>
-                                                <a href="<?php echo $language['url'];?>">
-                                                
-                                                    <span class="hide-for-large" ><?php echo $language['native_name']; ?></span>
-                                                    <span class="show-for-large uppercase" ><?php echo $language['language_code']; ?></span>
-                                                </a>
-                                            </li>
-                                        <?php } 
-                                    } 
-
-                                } else {
-                                    
-                                    foreach($languages as $language){ 
-                                        if($language['active'] == 1){
-                                            //if($i != 0) echo ' | ';
-                                            //var_dump($language);
-                                            ?>
-                                            <li class="has-submenu" >
-                                                <a href="#">
-                                                    
-                                                    <?php echo $language['native_name']; ?>
-                                                    <!--
-                                                    <span class="hide-for-large" ><?php echo $language['native_name']; ?></span>
-                                                    <span class="show-for-large uppercase" ><?php echo $language['language_code']; ?></span>
-                                                    -->
-                                                </a>
-                                                <ul class="vertical submenu menu" data-submenu>
-                                                    <?php 
-                                                    foreach($languages as $language2){
-                                                        if($language2['active'] != 1){ ?>
-                                                            <li><a href="<?php echo $language2['url'];?>"><?php echo $language2['native_name']; ?></a></li>
-                                                        <?php } ?>
-                                                    <?php } ?>
-                                                </ul>
-                                            </li>
-                                            <?php 
-                                        }
-                                    }
-                                }
-                            } ?>
-                        </ul>
-                    </div>
+                    
                 </div>
             </div>
             

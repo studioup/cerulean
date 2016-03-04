@@ -17,6 +17,7 @@ var $      = require('gulp-load-plugins')(),
     plumber = require('gulp-plumber'),
     bower = require('gulp-bower'),
     remoteSrc = require('gulp-remote-src'),
+    babel = require('gulp-babel'),
     //closureCompiler = require('gulp-closure-compiler'),
     jsonWrapper = require('gulp-json-wrapper')
     isProduction = false;
@@ -111,11 +112,36 @@ gulp.task('site-js', function() {
 });    
 
 // JSHint, concat, and minify Foundation JavaScript
-gulp.task('foundation-js', function() {
+gulp.task('base-js', function() {
+	var uglify =  $.uglify()
+    .on('error', function (e) {
+      console.log(e);
+    });
     return gulp.src(config.jsBase)
     .pipe(plumber())
     .pipe($.sourcemaps.init({loadMaps: true}))
+    //.pipe($.babel())
+    .pipe(concat('base.js'))
+    //.pipe(uglify)
+    .pipe($.sourcemaps.write('./maps/'))
+    .pipe(gulp.dest('./js'));
+    //.pipe(rename({suffix: '.min'}))
+    //.pipe(uglify())
+    //.pipe(gulp.dest('./js'))
+});
+
+// JSHint, concat, and minify Foundation JavaScript
+gulp.task('foundation-js', function() {
+	var uglify =  $.uglify()
+    .on('error', function (e) {
+      console.log(e);
+    });
+    return gulp.src(config.jsFoundation)
+    .pipe(plumber())
+    .pipe($.sourcemaps.init({loadMaps: true}))
+    .pipe($.babel())
     .pipe(concat('foundation.js'))
+    //.pipe(uglify)
     .pipe($.sourcemaps.write('./maps/'))
     .pipe(gulp.dest('./js'));
     //.pipe(rename({suffix: '.min'}))
@@ -126,19 +152,25 @@ gulp.task('foundation-js', function() {
 
 // JSHint, concat, and minify Foundation JavaScript
 gulp.task('app-js', function() {
+	var uglify =  $.uglify()
+    .on('error', function (e) {
+      console.log(e);
+    });
     return gulp.src([	
+	    './js/base.js',
         './js/foundation.js',
         './js/scripts.js',
     ])
     .pipe($.sourcemaps.init({loadMaps: true}))
-    //.pipe(concat('combined.js'))
+    //.pipe($.babel())
+    .pipe(concat('combined.js'))
     .pipe(rename({suffix: '.min'}))
-    .pipe(uglify())
+    .pipe(uglify)
     .pipe($.sourcemaps.write('./maps/'))
     .pipe(gulp.dest('./js'))
 });
 
-gulp.task('app-js-sync', ['foundation-js','site-js'], function() {
+gulp.task('app-js-sync', ['base-js','foundation-js','site-js'], function() {
     gulp.start('minify-styles', 'app-js');
 });
 
@@ -180,5 +212,7 @@ gulp.task('watch', function() {
   
   // Watch foundation-js files
   gulp.watch('./bower_components/foundation-sites/js/*.js', ['foundation-js']);
+  
+  
 
 });

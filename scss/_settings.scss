@@ -25,22 +25,27 @@
 //  20. Label
 //  21. Media Object
 //  22. Menu
-//  23. Off-canvas
-//  24. Orbit
-//  25. Pagination
-//  26. Progress Bar
-//  27. Reveal
-//  28. Slider
-//  29. Switch
-//  30. Table
-//  31. Tabs
-//  32. Thumbnail
-//  33. Tooltip
-//  34. Top Bar
-//  35. Slick Slider
+//  23. Meter
+//  24. Off-canvas
+//  25. Orbit
+//  26. Pagination
+//  27. Progress Bar
+//  28. Reveal
+//  29. Slider
+//  30. Switch
+//  31. Table
+//  32. Tabs
+//  33. Thumbnail
+//  34. Title Bar
+//  35. Tooltip
+//  36. Top Bar
+
+//  37. Slick Slider
+//  38. Padding & margin
+//  39. Icon font
 
 $global-font-size: 20px !default;
-$rem-base: $global-font-size !default;
+
 @import 'util/util';
 @import 'json_generated_config';
 
@@ -49,6 +54,13 @@ $rem-base: $global-font-size !default;
 
 $global-width: rem-calc(1200) !default;
 $global-lineheight: 1.5 !default;
+$foundation-palette: (
+  primary: $color-primary,
+  secondary: $color-secondary,
+  success: $color-success,
+  warning: $color-warning,
+  alert: $color-alert
+) !default;
 $primary-color: $color-primary;
 $secondary-color: $color-secondary;
 $success-color: $color-success;
@@ -63,16 +75,16 @@ $body-background: $white !default;
 $body-font-color: $black !default;
 $body-font-family: "Helvetica Neue", Helvetica, Roboto, Arial, sans-serif !default;
 $body-antialiased: true !default;
-$text-direction: ltr !default;
 $global-margin: 1rem !default;
 $global-padding: 1rem !default;
-$global-margin: 1rem !default;
 $global-weight-normal: normal !default;
 $global-weight-bold: bold !default;
 $global-radius: 0 !default;
-$global-namespace: false !default;
 $global-text-direction: ltr !default;
+$global-flexbox: false !default;
+$print-transparent-backgrounds: true;
 
+@include add-foundation-colors;
 
 
 // 2. Breakpoints
@@ -92,7 +104,12 @@ $breakpoint-classes: (small medium large) !default;
 
 $grid-row-width: $global-width !default;
 $grid-column-count: 12 !default;
-$grid-column-gutter: 30px !default;
+$grid-column-gutter: (
+  small: 20px,
+  medium: 30px,
+) !default;
+$grid-column-align-edge: true !default;
+$block-grid-max: 8 !default;
 
 // 4. Base Typography
 // ------------------
@@ -179,11 +196,12 @@ $stat-font-size: 2.5rem !default;
 
 $abide-inputs: true !default;
 $abide-labels: true !default;
-$input-background-invalid: $alert-color !default;
-$form-label-color-invalid: $alert-color !default;
-$input-error-color: $alert-color !default;
+$input-background-invalid: map-get($foundation-palette, alert) !default;
+$form-label-color-invalid: map-get($foundation-palette, alert) !default;
+$input-error-color: map-get($foundation-palette, alert) !default;
 $input-error-font-size: rem-calc(12) !default;
 $input-error-font-weight: $global-weight-bold !default;
+
 
 // 7. Accordion
 // ------------
@@ -202,6 +220,7 @@ $accordion-content-padding: 1rem !default;
 // -----------------
 
 $accordionmenu-arrows: true !default;
+$accordionmenu-arrow-color: $primary-color !default;
 
 // 9. Badge
 // --------
@@ -228,12 +247,12 @@ $breadcrumbs-item-slash: true !default;
 // ----------
 
 $button-padding: 0.85em 1em !default;
-$button-margin: 0 $global-margin $global-margin 0 !default;
+$button-margin: 0 0 $global-margin 0 !default;
 $button-fill: solid !default;
 $button-background: $primary-color !default;
 $button-background-hover: scale-color($button-background, $lightness: -15%) !default;
-$button-color: #fff !default;
-$button-color-alt: #000 !default;
+$button-color: $white !default;
+$button-color-alt: $black !default;
 $button-radius: $global-radius !default;
 $button-sizes: (
   tiny: 0.6rem,
@@ -279,13 +298,16 @@ $closebutton-color-hover: $black !default;
 // -------------
 
 $drilldown-transition: transform 0.15s linear !default;
+$drilldown-arrows: true !default;
+$drilldown-arrow-color: $primary-color !default;
+$drilldown-background: $white !default;
 
 // 16. Dropdown
 // ------------
 
 $dropdown-padding: 1rem !default;
 $dropdown-border: 1px solid $medium-gray !default;
-$dropdown-font-size: 16rem !default;
+$dropdown-font-size: 1rem !default;
 $dropdown-width: 300px !default;
 $dropdown-radius: $global-radius !default;
 $dropdown-sizes: (
@@ -298,14 +320,14 @@ $dropdown-sizes: (
 // -----------------
 
 $dropdownmenu-arrows: true !default;
+$dropdownmenu-arrow-color: $anchor-color !default;
 $dropdownmenu-min-width: 200px !default;
 $dropdownmenu-background: $white !default;
-$dropdown-border: 1px solid $medium-gray !default;
+$dropdownmenu-border: 1px solid $medium-gray !default;
 
 // 18. Flex Video
 // --------------
 
-$flexvideo-padding-top: rem-calc(25) !default;
 $flexvideo-margin-bottom: rem-calc(16) !default;
 $flexvideo-ratio: 4 by 3 !default;
 $flexvideo-ratio-widescreen: 16 by 9 !default;
@@ -318,7 +340,7 @@ $fieldset-padding: rem-calc(20) !default;
 $fieldset-margin: rem-calc(18 0) !default;
 $legend-padding: rem-calc(0 3) !default;
 $form-spacing: rem-calc(16) !default;
-$helptext-color: #333 !default;
+$helptext-color: $black !default;
 $helptext-font-size: rem-calc(13) !default;
 $helptext-font-style: italic !default;
 $input-prefix-color: $black !default;
@@ -329,10 +351,11 @@ $form-label-color: $black !default;
 $form-label-font-size: rem-calc(14) !default;
 $form-label-font-weight: $global-weight-normal !default;
 $form-label-line-height: 1.8 !default;
-$select-background: #fafafa !default;
-$select-triangle-color: #333 !default;
+$select-background: $white !default;
+$select-triangle-color: $dark-gray !default;
 $select-radius: $global-radius !default;
-$input-color: $dark-gray !default;
+$input-color: $black !default;
+$input-placeholder-color: $medium-gray !default;
 $input-font-family: inherit !default;
 $input-font-size: rem-calc(16) !default;
 $input-background: $white !default;
@@ -369,10 +392,21 @@ $mediaobject-image-width-stacked: 100% !default;
 $menu-margin: 0 !default;
 $menu-margin-nested: 1rem !default;
 $menu-item-padding: 0.7rem 1rem !default;
+$menu-item-color-active: $white !default;
+$menu-item-background-active: map-get($foundation-palette, primary) !default;
 $menu-icon-spacing: 0.25rem !default;
-$menu-expand-max: 6 !default;
 
-// 23. Off-canvas
+// 23. Meter
+// ---------
+
+$meter-height: 1rem !default;
+$meter-radius: $global-radius !default;
+$meter-background: $medium-gray !default;
+$meter-fill-good: $success-color !default;
+$meter-fill-medium: $warning-color !default;
+$meter-fill-bad: $alert-color !default;
+
+// 24. Off-canvas
 // --------------
 
 $offcanvas-size: 250px !default;
@@ -380,12 +414,13 @@ $offcanvas-background: $light-gray !default;
 $offcanvas-zindex: -1 !default;
 $offcanvas-transition-length: 0.5s !default;
 $offcanvas-transition-timing: ease !default;
+$offcanvas-fixed-reveal: true !default;
 $offcanvas-exit-background: rgba($white, 0.25) !default;
-$maincontent-class: 'main-content' !default;
+$maincontent-class: 'off-canvas-content' !default;
 $maincontent-shadow: 0 0 10px rgba($black, 0.5) !default;
 $maincontent-prevent-scroll: true !default;
 
-// 24. Orbit
+// 25. Orbit
 // ---------
 
 $orbit-bullet-background: $medium-gray !default;
@@ -400,7 +435,7 @@ $orbit-control-background-hover: rgba($black, 0.5) !default;
 $orbit-control-padding: 1rem !default;
 $orbit-control-zindex: 10 !default;
 
-// 25. Pagination
+// 26. Pagination
 // --------------
 
 $pagination-font-size: rem-calc(14) !default;
@@ -417,7 +452,7 @@ $pagination-ellipsis-color: $black !default;
 $pagination-mobile-items: false !default;
 $pagination-arrows: true !default;
 
-// 26. Progress Bar
+// 27. Progress Bar
 // ----------------
 
 $progress-height: 1rem !default;
@@ -426,24 +461,24 @@ $progress-margin-bottom: $global-margin !default;
 $progress-meter-background: $primary-color !default;
 $progress-radius: $global-radius !default;
 
-// 27. Reveal
+// 28. Reveal
 // ----------
 
 $reveal-background: $white !default;
 $reveal-width: 600px !default;
 $reveal-max-width: $global-width !default;
-$reveal-offset: rem-calc(100) !default;
 $reveal-padding: $global-padding !default;
 $reveal-border: 1px solid $medium-gray !default;
 $reveal-radius: $global-radius !default;
 $reveal-zindex: 1005 !default;
 $reveal-overlay-background: rgba($black, 0.45) !default;
 
-// 28. Slider
+// 29. Slider
 // ----------
 
+$slider-width-vertical: 0.5rem !default;
+$slider-transition: all 0.2s ease-in-out !default;
 $slider-height: 0.5rem !default;
-$slider-width-vertical: $slider-height !default;
 $slider-background: $light-gray !default;
 $slider-fill-background: $medium-gray !default;
 $slider-handle-height: 1.4rem !default;
@@ -451,9 +486,8 @@ $slider-handle-width: 1.4rem !default;
 $slider-handle-background: $primary-color !default;
 $slider-opacity-disabled: 0.25 !default;
 $slider-radius: $global-radius !default;
-$slider-transition: all 0.2s ease-in-out !default;
 
-// 29. Switch
+// 30. Switch
 // ----------
 
 $switch-background: $medium-gray !default;
@@ -469,7 +503,7 @@ $switch-paddle-offset: 0.25rem !default;
 $switch-paddle-radius: $global-radius !default;
 $switch-paddle-transition: all 0.25s ease-out !default;
 
-// 30. Table
+// 31. Table
 // ---------
 
 $table-background: $white !default;
@@ -486,14 +520,13 @@ $table-foot-background: smart-scale($table-background, $table-color-scale) !defa
 $table-head-font-color: $body-font-color !default;
 $show-header-for-stacked: false !default;
 
-// 31. Tabs
+// 32. Tabs
 // --------
 
 $tab-margin: 0 !default;
 $tab-background: $white !default;
 $tab-background-active: $light-gray !default;
-$tab-border: $light-gray !default;
-$tab-item-color: foreground($tab-background, $primary-color) !default;
+$tab-item-font-size: rem-calc(12) !default;
 $tab-item-background-hover: $white !default;
 $tab-item-padding: 1.25rem 1.5rem !default;
 $tab-expand-max: 6 !default;
@@ -502,7 +535,7 @@ $tab-content-border: $light-gray !default;
 $tab-content-color: foreground($tab-background, $primary-color) !default;
 $tab-content-padding: 1rem !default;
 
-// 32. Thumbnail
+// 33. Thumbnail
 // -------------
 
 $thumbnail-border: solid 4px $white !default;
@@ -512,29 +545,43 @@ $thumbnail-shadow-hover: 0 0 6px 1px rgba($primary-color, 0.5) !default;
 $thumbnail-transition: box-shadow 200ms ease-out !default;
 $thumbnail-radius: $global-radius !default;
 
-// 33. Tooltip
+// 34. Title Bar
+// -------------
+
+$titlebar-background: $black !default;
+$titlebar-color: $white !default;
+$titlebar-padding: 0.5rem !default;
+$titlebar-text-font-weight: bold !default;
+$titlebar-icon-color: $white !default;
+$titlebar-icon-color-hover: $medium-gray !default;
+$titlebar-icon-spacing: 0.25rem !default;
+
+// 35. Tooltip
 // -----------
 
+$has-tip-font-weight: $global-weight-bold !default;
+$has-tip-border-bottom: dotted 1px $dark-gray !default;
 $tooltip-background-color: $black !default;
 $tooltip-color: $white !default;
 $tooltip-padding: 0.75rem !default;
 $tooltip-font-size: $small-font-size !default;
 $tooltip-pip-width: 0.75rem !default;
 $tooltip-pip-height: $tooltip-pip-width * 0.866 !default;
-$tooltip-pip-offset: 1.25rem !default;
 $tooltip-radius: $global-radius !default;
 
-// 34. Top Bar
+// 36. Top Bar
 // -----------
 
 $topbar-padding: 0.5rem !default;
-$topbar-background: #eee !default;
-$topbar-link-color: #fff !default;
+$topbar-background: $light-gray !default;
+$topbar-submenu-background: $topbar-background !default;
+$topbar-title-spacing: 1rem !default;
 $topbar-input-width: 200px !default;
+$topbar-unstack-breakpoint: medium !default;
 
 $topbar-height: rem-calc(100) !default;
 
-// 35. Slick Slider
+// 37. Slick Slider
 // -----------
 
 $slick-font-path: "../bower_components/slick-carousel/slick/fonts/" !default;
@@ -552,7 +599,7 @@ $slick-opacity-on-hover: 1 !default;
 $slick-opacity-not-active: 0.25 !default;
 
 
-// 36. Padding & margin
+// 38. Padding & margin
 // -----------
 $spacing-classes: (
   small: (
@@ -573,7 +620,7 @@ $spacing-classes: (
   ),
 ) !default;
 
-// 36. FontAwesome
+// 39. FontAwesome
 // -----------
 $fa-font-path:        "../bower_components/font-awesome/fonts/";
 //@import '../config_sass.json' !default;

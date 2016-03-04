@@ -18,23 +18,23 @@
         "text-direction": "ltr"
     },
 	"color":{
-		"primary" : "#3D5AFE",
-		"secondary": "#9EC1FC",
-		"success": "#3adb76",
-		"warning": "#ffae00",
-		"alert": "#ec5840",
-		"info" : "#1B7BED",
-		"light-gray": "#EBEDF7",
-		"medium-gray": "#cacaca",
-		"dark-gray": "#6C7E90",
+		"primary" : "#FF0048",
+		"secondary": "#AA00FF",
+		"success": "#4BE274",
+		"warning": "#FFAA00",
+		"alert": "#FF0048",
+		"info" : "#00AAFF",
+		"light-gray": "#FFF3E8",
+		"medium-gray": "#D3C3B5",
+		"dark-gray": "#D3C3B5",
 		"black": "#0a0a0a",
-		"white": "#FFFFFF",
+		"white": "#ffffff",
 		"triangles": "$color-primary"
 		
 	},
 	"body" : {
 		"background": "$color-white",
-		"font-color": "$color-dark-gray",
+		"font-color": "$color-black",
 		"font-family": "\"Helvetica Neue\", Helvetica, Roboto, Arial, sans-serif",
 		"antialiased": "true"
 	},
@@ -43,16 +43,16 @@
 	"topbar":{ 
 		"padding": "0.5rem",
 		"background": "transparent",
-		"link-color": "$color-white",
+		"link-color": "$color-black",
 		"input-width": "200px",
-		"height": "rem-calc(72)"
+		"height": "rem-calc(100)"
 	},
 	"button" : {
     	"padding": "rem-calc(16) rem-calc(45)",
         "margin": "$global-margin/2 0",
         "fill": "solid",
         "background": "$color-primary",
-        "background-hover": "scale-color($button-background, $lightness: -15%)",
+        "background-hover": "$color-secondary",
         "color": "$color-white",
         "color-alt": "$color-black",
         "radius": "$global-radius",
@@ -65,8 +65,11 @@
         "icon-color" : "$color-black",
         "icon-color-hover" : "$color-primary"
 	},
-	"header": { 
+	"header": {
 		"lineheight" : "1.2",
+		"sizes": "(  small: ( 'h1': 60, 'h2': 46, 'h3': 38, 'h4': 30, 'h5': 25, 'h6': 16, ), medium: ( 'h1': 85, 'h2': 70, 'h3': 54, 'h4': 40, 'h5': 30, 'h6': 18, ) )",
+		"font-weight" : "$global-weight-bold",
 		"color" : "$color-primary"
 	}
+	
 }
