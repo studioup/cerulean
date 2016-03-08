@@ -229,6 +229,8 @@ function get_img_interchange_from_field($field,$size ='large-12',$post_id = null
 		}else{
 			$id = get_field($field_fallback ,$fallback_post_id );
 		}
+	}else if(is_array($id) && isset($id['ID'])){
+		$id = $id['ID'];
 	}
 	return get_img_interchange_from_id($id,$size);
 }

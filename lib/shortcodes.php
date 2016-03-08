@@ -136,10 +136,39 @@ function the_field_shortcode( $atts ) {
     $a = shortcode_atts( array(
         'field' => null,
         'post_id' => null,
+        'global' => false
     ), $atts );
 	
-	return get_field($a['field'],$a['post_id']);
+	if($a['global'] == true || $a['field'] == 'true'){
+		return get_global_option($a['field']);
+	}else{
+		return get_field($a['field'],$a['post_id']);
+	}
 	
     //return "foo = {$a['foo']}";
 }
 add_shortcode( 'the_field', 'the_field_shortcode' );
+
+function get_social_links(){
+	ob_start();
+	
+	$social = get_global_option('social');
+	?>
+	<div class="social-sharer">
+	    <ul class="">
+		    <?php foreach($social as $k => $v){?>
+	        <li>
+	            <a href="<?php echo $v['link'] ?>" target="_blank" rel="nofollow"><i class="fa <?php echo $v['icon'] ?>"></i></a>
+	        </li>
+	        <?php } ?>
+	
+	
+	    </ul>
+	</div>
+	<?php
+	//var_dump($social);
+	$result = ob_get_clean();
+	return $result;
+}
+add_shortcode( 'social_links', 'get_social_links' );
+

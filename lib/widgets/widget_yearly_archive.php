@@ -95,21 +95,38 @@ class WP_Widget_Yearly_Archives extends WP_Widget {
 		</select>
 		<?php } else { ?>
 		<ul>
-		<?php
-		/**
-		 * Filter the arguments for the Archives widget.
-		 *
-		 * @since 2.8.0
-		 *
-		 * @see wp_get_archives()
-		 *
-		 * @param array $args An array of Archives option arguments.
-		 */
-		wp_get_archives( apply_filters( 'widget_archives_args', array(
-			'type'            => 'yearly',
-			'show_post_count' => $c
-		) ) );
-		?>
+
+			<?php
+				$queried_object = get_queried_object();
+				
+				//global $post;
+				
+				if( empty($queried_object->name)  ){
+					if($queried_object->post_type == 'page'){
+						$post_type = 'post';
+					}else{
+						$post_type = $queried_object->post_type;
+					}
+				}else{
+					$post_type = $queried_object->name;
+				}
+				//var_dump( $queried_object );
+				//exit;
+			/**
+			 * Filter the arguments for the Archives widget.
+			 *
+			 * @since 2.8.0
+			 *
+			 * @see wp_get_archives()
+			 *
+			 * @param array $args An array of Archives option arguments.
+			 */
+			wp_get_archives( apply_filters( 'widget_archives_args', array(
+				'type'            => 'yearly',
+				'show_post_count' => $c,
+				'post_type'     => $post_type
+			) ) );
+			?>	
 		</ul>
 		<?php
 		}

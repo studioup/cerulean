@@ -618,4 +618,12 @@ function xyz_amp_my_additional_css_styles( $amp_template ) {
 	    
 }
 
+add_filter('getarchives_join', 'my_custom_post_type_archive_join', 10, 2);
+function my_custom_post_type_archive_join($join,$args){  
+	$post_type = isset($args['post_type']) ? $args['post_type'] : 'post'; 
+	$join = str_ireplace("t.element_type='post_post'", "t.element_type='post_$post_type'", $join);
+	return  $join;
+	
+}
+
 ?>
