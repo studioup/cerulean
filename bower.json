@@ -15,7 +15,11 @@
     "animate-sass": "tgdev/animate-sass",
     "cookies-enabler": "studioup/cookies-enabler",
     "animsition": "blivesta/animsition",
-    "slick-carousel": "~1.5.9"
+    "slick-carousel": "~1.5.9",
+    "gsap": "greensock/GreenSock-JS",
+    "ScrollMagic": "*",
+    "jquery-cookie" : "*",
+    "browser-redirect-geoip": "khromov/wp-wpml-geoip-browser-language-redirect"
   },
   "resolutions": {
     "jquery": "2.x"

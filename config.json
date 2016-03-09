@@ -44,6 +44,9 @@
 	"jsLibraries" : [
                 "bower_components/wow/dist/wow.js",
                 "bower_components/outdated-browser/outdatedbrowser/outdatedbrowser.js",
+                //"bower_components/gsap/src/uncompressed/TweenMax.js",
+                //"bower_components/scrollmagic/scrollmagic/uncompressed/ScrollMagic.js",
+                //"bower_components/scrollmagic/scrollmagic/uncompressed/plugins/animation.gsap.js"
                 "bower_components/slick-carousel/slick/slick.js"
                 //"bower_components/FlexSlider/jquery.flexslider.js"
 	],
