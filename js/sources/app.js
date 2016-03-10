@@ -3,7 +3,32 @@
 
 (function($) {
 	
-	
+	function wowGrid(){
+	    $('[data-wow-grid]').each(function(){
+		    var columns;
+		    if( parseInt( $(this).attr('data-wow') ) > 0){
+			    columns = parseInt( $(this).attr('data-wow') );
+		    }else{
+		    	columns = Math.floor( $(this).innerWidth() / $(this).children().eq(1).outerWidth() );
+		    }
+		    $(this).children().each(function(index){
+			    var delay = (index % columns *0.2) + ( Math.floor(index/columns) * 0.1);
+			    if(columns === 1){
+				    
+				    $(this).addClass('wow fadeInUp');
+			    }else{
+				    $(this).addClass('wow fadeInRight');
+			    }
+			    $(this).attr('data-wow-delay',delay+"s");
+			    
+		    });
+		});
+	}
+    wowGrid();
+    $( window ).resize(function() {
+        wowGrid();
+    });
+
 
     
     $('.ddl-full-width-row').addClass('expanded').addClass('collapse');
