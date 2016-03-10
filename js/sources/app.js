@@ -13,11 +13,13 @@
 		    }
 		    $(this).children().each(function(index){
 			    var delay = (index % columns *0.2) + ( Math.floor(index/columns) * 0.1);
-			    if(columns === 1){
-				    
-				    $(this).addClass('wow fadeInUp');
-			    }else{
-				    $(this).addClass('wow fadeInRight');
+			    if( !$(this).hasClass('wow') ){
+				    if(columns === 1){
+					    
+					    $(this).addClass('wow fadeInUp');
+				    }else{
+					    $(this).addClass('wow fadeInRight');
+				    }
 			    }
 			    $(this).attr('data-wow-delay',delay+"s");
 			    
