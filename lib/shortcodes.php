@@ -1,22 +1,21 @@
 <?php 
 	
-// [bartag foo="foo-value"]
-function theme_button_shortcode( $atts , $content) {
+function theme_link_shortcode( $atts , $content) {
     $a = shortcode_atts( array(
         'link' => null,
         'field' => null,
         'field_post_id' => null,
         'translate' => false,
         'classes' => '',
-        'global_option' => false
+        'global' => false,
+        'prepend' => "",
+        'append' => ""
     ), $atts );
     
     $link = '';
     if($a['field'] !== null ){
-	    if($a['global_option'] === true || $a['global_option'] === 'true'){
-		    add_filter('acf/settings/current_language', 'cl_acf_set_language', 100);
-	        $link = get_field($a['field'],$a['field_post_id']);
-	        remove_filter('acf/settings/current_language', 'cl_acf_set_language', 100);
+	    if( $a['global'] === true || $a['global'] === 'true'){
+		    $link = get_global_option($a['field']);
 	    	
 	    }else{
 		    $link = get_field($a['field'],$a['field_post_id']);
@@ -26,7 +25,9 @@ function theme_button_shortcode( $atts , $content) {
 	    $link =  $a['link'];
     }
     if(empty($link)){
-	    $link = '#';
+	    $link = '#'.$a["append"];
+    }else{
+	    $link = $a["prepend"].$link.$a["append"];
     }
     $modifier = '';
     
@@ -53,7 +54,19 @@ function theme_button_shortcode( $atts , $content) {
     }else{
 	    $modifier = ' target="_blank" rel="nofollow" ';
     }
-	return '<a href="'.$link.'" '.$modifier.' class="button '.$classes.'" >'.do_shortcode($content).'</a>';
+	return '<a href="'.$link.'" '.$modifier.' class="'.$classes.'" >'.do_shortcode($content).'</a>';
+    //return "foo = {$a['foo']}";
+}
+add_shortcode( 'link', 'theme_link_shortcode' );
+	
+// [bartag foo="foo-value"]
+function theme_button_shortcode( $atts , $content) {
+	if(isset($atts['classes'])){
+		$atts['classes'] = "button ".$atts['classes'];
+	}else{
+		$atts['classes'] = "button";
+	}
+    return theme_link_shortcode($atts, $content);
     //return "foo = {$a['foo']}";
 }
 add_shortcode( 'button', 'theme_button_shortcode' );
