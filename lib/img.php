@@ -209,6 +209,9 @@ function get_img_interchange_from_id($id,$size = 'large-12'){
 
     $interchange_array = get_img_interchange_array_from_id($id,$size);
     //$dataInterchange = 'data-interchange="';
+    if(empty($interchange_array)){
+	    return null;
+    }
     foreach($interchange_array as $k => $size){
         $interchange_array[$k] = '['.$size.', '.$k.']';
     }

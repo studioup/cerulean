@@ -166,6 +166,7 @@ function get_social_links(){
 	ob_start();
 	
 	$social = get_global_option('social');
+	if(!empty($social)){
 	?>
 	<div class="social-sharer">
 	    <ul class="">
@@ -178,7 +179,9 @@ function get_social_links(){
 	
 	    </ul>
 	</div>
+	
 	<?php
+	}
 	//var_dump($social);
 	$result = ob_get_clean();
 	return $result;
