@@ -148,13 +148,13 @@ if( ! function_exists( 'cerulean_scripts_and_styles ' ) ) {
 				//wp_register_script( 'base-js', get_template_directory_uri() . '/js/base.min.js' , array(  ), '', true );
 				//wp_register_script( 'foundation', get_template_directory_uri() . '/js/foundation.min.js' , array(  ), '', true );
 				//wp_register_script( 'scripts', get_template_directory_uri() . '/js/scripts.min.js' , array(  ), '', true );
-				wp_register_script( 'foundation', get_template_directory_uri() . '/js/combined.min.js' , array(  ), '', true );
+				wp_register_script( 'cerulean-base-js', get_template_directory_uri() . '/js/combined.min.js' , array(  ), '', true );
 			//}
 			
 		}else{
-			wp_register_script( 'base-js', get_template_directory_uri() . '/js/base.js' , array(  ), '', true );
-			wp_register_script( 'foundation', get_template_directory_uri() . '/js/foundation.js' , array(  ), '', true );
-			wp_register_script( 'scripts', get_template_directory_uri() . '/js/scripts.js' , array(  ), '', true );
+			wp_register_script( 'cerulean-base-js', get_template_directory_uri() . '/js/base.js' , array(  ), '', true );
+			wp_register_script( 'foundation', get_template_directory_uri() . '/js/foundation.js' , array( 'cerulean-base-js' ), '', true );
+			wp_register_script( 'scripts', get_template_directory_uri() . '/js/scripts.js' , array( 'cerulean-base-js', 'foundation' ), '', true );
 			
 		}
 	    // comment reply script for threaded comments
@@ -183,7 +183,7 @@ if( ! function_exists( 'cerulean_scripts_and_styles ' ) ) {
 		
 	    //wp_enqueue_script( 'cerulean-js' );
 	    wp_enqueue_script( 'html5shiv' );
-	    wp_enqueue_script( 'base-js' );
+	    wp_enqueue_script( 'cerulean-base-js' );
 	    wp_enqueue_script( 'foundation' );
 		wp_enqueue_script( 'scripts' );
 

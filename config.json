@@ -15,10 +15,11 @@
 	"jsBase": [
 		"bower_components/modernizr/modernizr.js",
 		"bower_components/jquery/dist/jquery.js",
+		"bower_components/jquery-cookie/jquery.cookie.js",
         "bower_components/object-fit/dist/polyfill.object-fit.js",
         "bower_components/cookies-enabler/cookies-enabler.js",
-        "bower_components/animsition/dist/js/animsition.js",
-        "bower_components/what-input/what-input.js"
+        "bower_components/animsition/dist/js/animsition.js"
+        
 	],
 	"jsFoundation": [	    
 	    "bower_components/foundation-sites/js/foundation.core.js",
@@ -44,11 +45,16 @@
 	    "bower_components/foundation-sites/js/foundation.toggler.js",
 	    //"bower_components/foundation-sites/js/foundation.tooltip.js",
 	    "bower_components/motion-ui/motion-ui.js"
+	    
 	],
 	"jsLibraries" : [
+				"bower_components/what-input/what-input.js",
                 "bower_components/wow/dist/wow.js",
                 "bower_components/outdated-browser/outdatedbrowser/outdatedbrowser.js",
-                "bower_components/slick-carousel/slick/slick.js"
+                "bower_components/slick-carousel/slick/slick.js",
+                "bower_components/gsap/src/uncompressed/TweenMax.js",
+                "bower_components/scrollmagic/scrollmagic/uncompressed/ScrollMagic.js",
+                "bower_components/scrollmagic/scrollmagic/uncompressed/plugins/animation.gsap.js"
                 //"bower_components/FlexSlider/jquery.flexslider.js"
 	],
 	"customJs" : [

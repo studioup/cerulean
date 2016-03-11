@@ -203,15 +203,15 @@ gulp.task('watch', function() {
   gulp.watch(['./scss/**/*.scss','./config_sass.json'], ['minify-styles']);
 
   // Watch site-js files
-  gulp.watch('./js/sources/*.js', ['site-js']);
+  //gulp.watch('./js/sources/*.js', ['site-js']);
   
   // Watch site-js files
   gulp.watch('./config.json', ['update-config']);
   
-  gulp.watch(['./js/foundation.js','./js/scripts.js'], ['app-js']);
+  //gulp.watch(['./js/foundation.js','./js/scripts.js'], ['app-js']);
   
   // Watch foundation-js files
-  gulp.watch('./bower_components/foundation-sites/js/*.js', ['foundation-js']);
+  //gulp.watch('./bower_components/foundation-sites/js/*.js', ['foundation-js']);
   
   
 

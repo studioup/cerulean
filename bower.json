@@ -16,7 +16,11 @@
     "cookies-enabler": "studioup/cookies-enabler",
     "animsition": "blivesta/animsition",
     "slick-carousel": "~1.5.9",
-    "modernizr" : "components/modernizr"
+    "modernizr" : "components/modernizr",
+    "gsap": "greensock/GreenSock-JS",
+    "ScrollMagic": "*",
+    "jquery-cookie" : "*",
+    "browser-redirect-geoip": "khromov/wp-wpml-geoip-browser-language-redirect"
   },
   "resolutions": {
     "jquery": "2.x"
