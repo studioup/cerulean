@@ -1,50 +1,57 @@
 <?php
 // Pagination
+
+
+
+
 if( ! function_exists( 'cerulean_pagination' ) ) {
 	function cerulean_pagination() {
-		global $wp_query;
+		
+		
+		global $wp_rewrite, $wp_query;
 	 
 		$big = 999999999; // This needs to be an unlikely integer
 	 
 		// For more options and info view the docs for paginate_links()
 		// http://codex.wordpress.org/Function_Reference/paginate_links
+		$wp_query->query_vars['paged'] > 1 ? $current = $wp_query->query_vars['paged'] : $current = 1;
 		$paginate_links = paginate_links( array(
 			'base' => str_replace( $big, '%#%', get_pagenum_link($big) ),
 			'current' => max( 1, get_query_var('paged') ),
 			'total' => $wp_query->max_num_pages,
-			'mid_size' => 5,
+			//'mid_size' => 5,
 			'prev_next' => True,
-		    'prev_text' => __('« Previous'),
-			'next_text' => __('Next »'),
+		    'prev_text' => 'previousContent',
+			'next_text' => 'nextContent',
+			'end_size' => 1,
+	        'mid_size' => 2,
+	        'show_all' => true,
 			'type' => 'array'
 		) );
+		$previousContent = '<span class="nuc nuc-s-chevron-left"></span>'; //__('« Previous')
+		$nextContent = '<span class="nuc nuc-s-chevron-right"></span>'; //__('Next »'),
 	 
-		// Display the pagination if more than one page is found
-		if ( $paginate_links ) {
-			//var_dump($paginate_links);
-			echo '<ul class="pagination text-center" role="navigation" aria-label="Pagination">';
-			foreach($paginate_links as $link){
-				$link = str_ireplace('<span ','<a href="#" ', $link);
-				$link = str_ireplace('span>','a>', $link);
-				echo '<li>';			
-				echo $link;
-				echo '</li>';
-			}
-			echo '</ul><!--// end .pagination -->';
-		}
-		/*
-		<ul class="pagination" role="navigation" aria-label="Pagination">
-		<li class="pagination-previous disabled">Previous <span class="show-for-sr">page</span></li>
-		<li class="current"><span class="show-for-sr">You're on page</span> 1</li>
-		<li><a href="#" aria-label="Page 2">2</a></li>
-		<li><a href="#" aria-label="Page 3">3</a></li>
-		<li><a href="#" aria-label="Page 4">4</a></li>
-		<li class="ellipsis" aria-hidden="true"></li>
-		<li><a href="#" aria-label="Page 12">12</a></li>
-		<li><a href="#" aria-label="Page 13">13</a></li>
-		<li class="pagination-next"><a href="#" aria-label="Next page">Next <span class="show-for-sr">page</span></a></li>
-		</ul>
-		*/
+		if ( $wp_rewrite->using_permalinks() )
+            $pagination['base'] = user_trailingslashit( trailingslashit( remove_query_arg( 's', get_pagenum_link( 1 ) ) ) . 'page/%#%/', 'paged' );
+	    if ( !empty( $wp_query->query_vars['s'] ) )
+	            $pagination['add_args'] = array( 's' => get_query_var( 's' ) );
+		//var_dump($wp_query->query_vars['paged']);
+	    echo '<ul class="pagination text-center" role="navigation" aria-label="Pagination">';
+	    if ( $current == 1) echo '<li><a href="#" data-disabled class="disabled prev page-numbers">'.$previousContent.'</a></li>';
+	    if ( $current == 1 && $wp_query->max_num_pages == 1 ) echo '<li><a href="#" data-disabled class="current page-numbers">1</a></li>';
+	    foreach ($paginate_links as $link) :
+	    	$link = str_ireplace('<span ','<a data-disabled href="#" ', $link);
+			$link = str_ireplace('span>','a>', $link);
+			$link = str_ireplace('previousContent','<span class="nuc nuc-s-chevron-left"></span>', $link);
+			$link = str_ireplace('nextContent','<span class="nuc nuc-s-chevron-right"></span>', $link);
+	        echo '<li>'.$link.'</li>';
+	    endforeach;
+	    if ( $current == $wp_query->max_num_pages ) echo '<li><a data-disabled href="#" class="disabled next page-numbers">'.$nextContent.'</a></li>';
+	    echo '</ul>';
+
+		
+		
+		
 	}
 }
 
