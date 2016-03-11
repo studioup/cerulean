@@ -145,10 +145,9 @@ if( ! function_exists( 'cerulean_scripts_and_styles ' ) ) {
 				wp_register_script( 'scripts', get_template_directory_uri() . '/js/combined.js' , array(  ), '', true );
 			}else{
 				*/
-				//wp_register_script( 'base-js', get_template_directory_uri() . '/js/base.min.js' , array(  ), '', true );
-				//wp_register_script( 'foundation', get_template_directory_uri() . '/js/foundation.min.js' , array(  ), '', true );
-				//wp_register_script( 'scripts', get_template_directory_uri() . '/js/scripts.min.js' , array(  ), '', true );
-				wp_register_script( 'cerulean-base-js', get_template_directory_uri() . '/js/combined.min.js' , array(  ), '', true );
+				wp_register_script( 'cerulean-base-js', get_template_directory_uri() . '/js/base.min.js' , array(  ), '', true );
+				wp_register_script( 'foundation', get_template_directory_uri() . '/js/foundation.min.js' , array(  ), '', true );
+				wp_register_script( 'scripts', get_template_directory_uri() . '/js/scripts.min.js' , array(  ), '', true );
 			//}
 			
 		}else{

@@ -163,7 +163,7 @@ gulp.task('app-js', function() {
     ])
     .pipe($.sourcemaps.init({loadMaps: true}))
     //.pipe($.babel())
-    .pipe(concat('combined.js'))
+    //.pipe(concat('combined.js'))
     .pipe(rename({suffix: '.min'}))
     .pipe(uglify)
     .pipe($.sourcemaps.write('./maps/'))
