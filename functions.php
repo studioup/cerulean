@@ -67,6 +67,7 @@ require_once('lib/shortcodes.php');
 //Array with structure MaxMind Code => WPML Code
 global $language_mappings;
 $language_mappings = array(
+
 	'IT' => 'it', //ITALIA
 	'GB' => 'en', //UK
 	'US' => 'en', //USA
