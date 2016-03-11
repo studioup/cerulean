@@ -1,0 +1,13 @@
+{
+  "name": "browser-redirect-geoip",
+  "homepage": "https://github.com/khromov/wp-wpml-geoip-browser-language-redirect",
+  "_release": "79ea06d20e",
+  "_resolution": {
+    "type": "branch",
+    "branch": "master",
+    "commit": "79ea06d20e27798b7f5e565de33a167190819e7c"
+  },
+  "_source": "git://github.com/khromov/wp-wpml-geoip-browser-language-redirect.git",
+  "_target": "*",
+  "_originalSource": "khromov/wp-wpml-geoip-browser-language-redirect"
+}

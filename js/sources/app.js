@@ -31,7 +31,7 @@
         wowGrid();
     });
 
-	$('[data-disabled]').on('click',function(e){e.preventDefault()});
+	$('[data-disabled]').on('click',function(e){e.preventDefault();});
 
     
     $('.ddl-full-width-row').addClass('expanded').addClass('collapse');

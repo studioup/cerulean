@@ -33,7 +33,7 @@ function theme_link_shortcode( $atts , $content) {
     
     $site_url = str_replace('https://', 'http://', get_site_url());
     global $sitepress;
-	if($sitepress->get_default_language() != ICL_LANGUAGE_CODE){
+	if( $sitepress !== null && $sitepress->get_default_language() != ICL_LANGUAGE_CODE){
 		$lang='lang='.ICL_LANGUAGE_CODE;
 	}else{
 		$lang='';

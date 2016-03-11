@@ -81,12 +81,11 @@ class cerulean_walker extends Walker_Nav_Menu {
 
 			} else if ( $this->nav_bar['in_top_bar'] == true ) {
 
-				$classes[] = 'has-dropdown';
+				//$classes[] = 'has-dropdown'; //data-dropdown-menu
 				$flyout_toggle = '';
 			}
 
 		}
-
 		$class_names = join( ' ', apply_filters( 'nav_menu_css_class', array_filter( $classes ), $item, $args ) );
 		$class_names = $class_names ? ' class="' . esc_attr( $class_names ) . '"' : '';
 
@@ -124,7 +123,7 @@ class cerulean_walker extends Walker_Nav_Menu {
 
 		if ( $depth == 0 && $this->nav_bar['item_type'] == 'li' ) {
 			$indent = str_repeat("\t", 1);
-    		$output .= $this->nav_bar['in_top_bar'] == true ? "\n$indent<ul class=\"dropdown\">\n" : "\n$indent<ul class=\"flyout\">\n";
+    		$output .= $this->nav_bar['in_top_bar'] == true ? "\n$indent<ul class=\"menu vertical\" >\n" : "\n$indent<ul class=\"flyout\">\n";
     	} else {
 			$indent = str_repeat("\t", $depth);
     		$output .= $this->nav_bar['in_top_bar'] == true ? "\n$indent<ul class=\"dropdown\">\n" : "\n$indent<ul class=\"level-$depth\">\n";
