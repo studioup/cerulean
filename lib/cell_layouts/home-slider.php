@@ -33,8 +33,10 @@ function home_slider_cell_template_callback() {
 function home_slider_cell_content_callback($cell_settings) {
     ob_start();
     $slides =  get_field('home_slider') ;
+    if (!empty($slides)){
     ?> 
     <div class="home-slider-wrapper u-bgsize-cover" data-slick='{"slidesToShow": 1, "autoplay": true, "autoplaySpeed": 5000, "fade": true, "dots": true }' data-equalizer data-equalize-on="medium">
+	    
 	    <?php foreach($slides as $k => $v){ ?>
 		    <div class="home-slide">
 			    <div class="row ">
@@ -67,5 +69,6 @@ function home_slider_cell_content_callback($cell_settings) {
     
  
     <?php
+	}
     return ob_get_clean();
 }

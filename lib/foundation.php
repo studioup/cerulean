@@ -1,13 +1,7 @@
 <?php
 // Pagination
-
-
-
-
 if( ! function_exists( 'cerulean_pagination' ) ) {
 	function cerulean_pagination() {
-		
-		
 		global $wp_rewrite, $wp_query;
 	 
 		$big = 999999999; // This needs to be an unlikely integer
@@ -28,8 +22,8 @@ if( ! function_exists( 'cerulean_pagination' ) ) {
 	        'show_all' => true,
 			'type' => 'array'
 		) );
-		$previousContent = '<span class="nuc nuc-s-chevron-left"></span>'; //__('« Previous')
-		$nextContent = '<span class="nuc nuc-s-chevron-right"></span>'; //__('Next »'),
+		$previousContent = '<span class="nuc nuc-s-chevron-left"></span>';
+		$nextContent = '<span class="nuc nuc-s-chevron-right"></span>';
 	 
 		if ( $wp_rewrite->using_permalinks() )
             $pagination['base'] = user_trailingslashit( trailingslashit( remove_query_arg( 's', get_pagenum_link( 1 ) ) ) . 'page/%#%/', 'paged' );
@@ -38,20 +32,50 @@ if( ! function_exists( 'cerulean_pagination' ) ) {
 		//var_dump($wp_query->query_vars['paged']);
 	    echo '<ul class="pagination text-center" role="navigation" aria-label="Pagination">';
 	    if ( $current == 1) echo '<li><a href="#" data-disabled class="disabled prev page-numbers">'.$previousContent.'</a></li>';
-	    if ( $current == 1 && $wp_query->max_num_pages == 1 ) echo '<li><a href="#" data-disabled class="current page-numbers">1</a></li>';
-	    foreach ($paginate_links as $link) :
-	    	$link = str_ireplace('<span ','<a data-disabled href="#" ', $link);
-			$link = str_ireplace('span>','a>', $link);
-			$link = str_ireplace('previousContent','<span class="nuc nuc-s-chevron-left"></span>', $link);
-			$link = str_ireplace('nextContent','<span class="nuc nuc-s-chevron-right"></span>', $link);
-	        echo '<li>'.$link.'</li>';
-	    endforeach;
-	    if ( $current == $wp_query->max_num_pages ) echo '<li><a data-disabled href="#" class="disabled next page-numbers">'.$nextContent.'</a></li>';
+	    
+	    if ( $current == 1 && ( $wp_query->max_num_pages == 1 || $wp_query->max_num_pages == 0)) echo '<li><a href="#" data-disabled class="current page-numbers">1</a></li>';
+	    if(!empty($paginate_links)){
+		    foreach ($paginate_links as $link) :
+		    	$link = str_ireplace('<span ','<a data-disabled href="#" ', $link);
+				$link = str_ireplace('span>','a>', $link);
+				$link = str_ireplace('previousContent','<span class="nuc nuc-s-chevron-left"></span>', $link);
+				$link = str_ireplace('nextContent','<span class="nuc nuc-s-chevron-right"></span>', $link);
+		        echo '<li>'.$link.'</li>';
+		    endforeach;
+	    }
+	    if ( $current == $wp_query->max_num_pages || ( $current == 1 &&  $wp_query->max_num_pages == 0) ) echo '<li><a data-disabled href="#" class="disabled next page-numbers">'.$nextContent.'</a></li>';
 	    echo '</ul>';
-
-		
-		
-		
+	 
+		/*
+		// Display the pagination if more than one page is found
+		if ( $paginate_links ) {
+			//var_dump($paginate_links);
+			echo '<ul class="pagination text-center" role="navigation" aria-label="Pagination">';
+			foreach($paginate_links as $link){
+				$link = str_ireplace('<span ','<a href="#" ', $link);
+				$link = str_ireplace('span>','a>', $link);
+				$link = str_ireplace('nuc-s-chevron-left','<span class="nuc nuc-s-chevron-left"></span>', $link);
+				$link = str_ireplace('nuc-s-chevron-right','<span class="nuc nuc-s-chevron-right"></span>', $link);
+				echo '<li>';			
+				echo $link;
+				echo '</li>';
+			}
+			echo '</ul><!--// end .pagination -->';
+		}
+		*/
+		/*
+		<ul class="pagination" role="navigation" aria-label="Pagination">
+		<li class="pagination-previous disabled">Previous <span class="show-for-sr">page</span></li>
+		<li class="current"><span class="show-for-sr">You're on page</span> 1</li>
+		<li><a href="#" aria-label="Page 2">2</a></li>
+		<li><a href="#" aria-label="Page 3">3</a></li>
+		<li><a href="#" aria-label="Page 4">4</a></li>
+		<li class="ellipsis" aria-hidden="true"></li>
+		<li><a href="#" aria-label="Page 12">12</a></li>
+		<li><a href="#" aria-label="Page 13">13</a></li>
+		<li class="pagination-next"><a href="#" aria-label="Next page">Next <span class="show-for-sr">page</span></a></li>
+		</ul>
+		*/
 	}
 }
 
