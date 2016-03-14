@@ -498,7 +498,9 @@ add_filter('acf/location/rule_match/page', 'acf_location_rules_match_page', 10, 
 
 
 function acf_location_rules_match_page( $match, $rule, $options ) {
-	
+	if( ! function_exists(icl_object_id)  ){
+		return $match;
+	}
 	global $sitepress;
 	//exit;
 	// bail early if not a post
