@@ -10616,6 +10616,124 @@ return jQuery;
 
 }));
 
+/*!
+ * jQuery Cookie Plugin v1.4.1
+ * https://github.com/carhartl/jquery-cookie
+ *
+ * Copyright 2013 Klaus Hartl
+ * Released under the MIT license
+ */
+(function (factory) {
+	if (typeof define === 'function' && define.amd) {
+		// AMD
+		define(['jquery'], factory);
+	} else if (typeof exports === 'object') {
+		// CommonJS
+		factory(require('jquery'));
+	} else {
+		// Browser globals
+		factory(jQuery);
+	}
+}(function ($) {
+
+	var pluses = /\+/g;
+
+	function encode(s) {
+		return config.raw ? s : encodeURIComponent(s);
+	}
+
+	function decode(s) {
+		return config.raw ? s : decodeURIComponent(s);
+	}
+
+	function stringifyCookieValue(value) {
+		return encode(config.json ? JSON.stringify(value) : String(value));
+	}
+
+	function parseCookieValue(s) {
+		if (s.indexOf('"') === 0) {
+			// This is a quoted cookie as according to RFC2068, unescape...
+			s = s.slice(1, -1).replace(/\\"/g, '"').replace(/\\\\/g, '\\');
+		}
+
+		try {
+			// Replace server-side written pluses with spaces.
+			// If we can't decode the cookie, ignore it, it's unusable.
+			// If we can't parse the cookie, ignore it, it's unusable.
+			s = decodeURIComponent(s.replace(pluses, ' '));
+			return config.json ? JSON.parse(s) : s;
+		} catch(e) {}
+	}
+
+	function read(s, converter) {
+		var value = config.raw ? s : parseCookieValue(s);
+		return $.isFunction(converter) ? converter(value) : value;
+	}
+
+	var config = $.cookie = function (key, value, options) {
+
+		// Write
+
+		if (value !== undefined && !$.isFunction(value)) {
+			options = $.extend({}, config.defaults, options);
+
+			if (typeof options.expires === 'number') {
+				var days = options.expires, t = options.expires = new Date();
+				t.setTime(+t + days * 864e+5);
+			}
+
+			return (document.cookie = [
+				encode(key), '=', stringifyCookieValue(value),
+				options.expires ? '; expires=' + options.expires.toUTCString() : '', // use expires attribute, max-age is not supported by IE
+				options.path    ? '; path=' + options.path : '',
+				options.domain  ? '; domain=' + options.domain : '',
+				options.secure  ? '; secure' : ''
+			].join(''));
+		}
+
+		// Read
+
+		var result = key ? undefined : {};
+
+		// To prevent the for loop in the first place assign an empty array
+		// in case there are no cookies at all. Also prevents odd result when
+		// calling $.cookie().
+		var cookies = document.cookie ? document.cookie.split('; ') : [];
+
+		for (var i = 0, l = cookies.length; i < l; i++) {
+			var parts = cookies[i].split('=');
+			var name = decode(parts.shift());
+			var cookie = parts.join('=');
+
+			if (key && key === name) {
+				// If second argument (value) is a function it's a converter...
+				result = read(cookie, value);
+				break;
+			}
+
+			// Prevent storing a cookie that we couldn't decode.
+			if (!key && (cookie = read(cookie)) !== undefined) {
+				result[name] = cookie;
+			}
+		}
+
+		return result;
+	};
+
+	config.defaults = {};
+
+	$.removeCookie = function (key, options) {
+		if ($.cookie(key) === undefined) {
+			return false;
+		}
+
+		// Must not alter options, thus extending a fresh object...
+		$.cookie(key, '', $.extend({}, options, { expires: -1 }));
+		return !$.cookie(key);
+	};
+
+}));
+
 (function (ELEMENT) {
 	ELEMENT.matches = ELEMENT.matches || ELEMENT.mozMatchesSelector || ELEMENT.msMatchesSelector || ELEMENT.oMatchesSelector || ELEMENT.webkitMatchesSelector || function matches(selector) {
 		var
@@ -12067,227 +12185,6 @@ if (!Array.prototype.indexOf)
     } else {
       $.error( 'Method ' +  method + ' does not exist on jQuery.'+namespace);
     }
-  };
-
-}));
-
-;(function(root, factory) {
-  if (typeof define === 'function' && define.amd) {
-    define([], function() {
-      return (factory());
-    });
-  } else if (typeof exports === 'object') {
-    module.exports = factory();
-  } else {
-    root.whatInput = factory();
-  }
-} (this, function() {
-  'use strict';
-
-
-  /*
-    ---------------
-    variables
-    ---------------
-  */
-
-  // array of actively pressed keys
-  var activeKeys = [];
-
-  // cache document.body
-  var body = document.body;
-
-  // boolean: true if touch buffer timer is running
-  var buffer = false;
-
-  // the last used input type
-  var currentInput = null;
-
-  // array of form elements that take keyboard input
-  var formInputs = [
-    'input',
-    'select',
-    'textarea'
-  ];
-
-  // user-set flag to allow typing in form fields to be recorded
-  var formTyping = body.hasAttribute('data-whatinput-formtyping');
-
-  // mapping of events to input types
-  var inputMap = {
-    'keydown': 'keyboard',
-    'mousedown': 'mouse',
-    'mouseenter': 'mouse',
-    'touchstart': 'touch',
-    'pointerdown': 'pointer',
-    'MSPointerDown': 'pointer'
-  };
-
-  // array of all used input types
-  var inputTypes = [];
-
-  // mapping of key codes to common name
-  var keyMap = {
-    9: 'tab',
-    13: 'enter',
-    16: 'shift',
-    27: 'esc',
-    32: 'space',
-    37: 'left',
-    38: 'up',
-    39: 'right',
-    40: 'down'
-  };
-
-  // map of IE 10 pointer events
-  var pointerMap = {
-    2: 'touch',
-    3: 'touch', // treat pen like touch
-    4: 'mouse'
-  };
-
-  // touch buffer timer
-  var timer;
-
-
-  /*
-    ---------------
-    functions
-    ---------------
-  */
-
-  function bufferInput(event) {
-    clearTimeout(timer);
-
-    setInput(event);
-
-    buffer = true;
-    timer = setTimeout(function() {
-      buffer = false;
-    }, 1000);
-  }
-
-  function immediateInput(event) {
-    if (!buffer) setInput(event);
-  }
-
-  function setInput(event) {
-    var eventKey = key(event);
-    var eventTarget = target(event);
-    var value = inputMap[event.type];
-    if (value === 'pointer') value = pointerType(event);
-
-    if (currentInput !== value) {
-      if (
-        // only if the user flag isn't set
-        !formTyping &&
-
-        // only if currentInput has a value
-        currentInput &&
-
-        // only if the input is `keyboard`
-        value === 'keyboard' &&
-
-        // not if the key is `TAB`
-        keyMap[eventKey] !== 'tab' &&
-
-        // only if the target is one of the elements in `formInputs`
-        formInputs.indexOf(eventTarget.nodeName.toLowerCase()) >= 0
-      ) {
-        // ignore keyboard typing on form elements
-      } else {
-        currentInput = value;
-        body.setAttribute('data-whatinput', currentInput);
-
-        if (inputTypes.indexOf(currentInput) === -1) inputTypes.push(currentInput);
-      }
-    }
-
-    if (value === 'keyboard') logKeys(eventKey);
-  }
-
-  function key(event) {
-    return (event.keyCode) ? event.keyCode : event.which;
-  }
-
-  function target(event) {
-    return event.target || event.srcElement;
-  }
-
-  function pointerType(event) {
-    return (typeof event.pointerType === 'number') ? pointerMap[event.pointerType] : event.pointerType;
-  }
-
-  // keyboard logging
-  function logKeys(eventKey) {
-    if (activeKeys.indexOf(keyMap[eventKey]) === -1 && keyMap[eventKey]) activeKeys.push(keyMap[eventKey]);
-  }
-
-  function unLogKeys(event) {
-    var eventKey = key(event);
-    var arrayPos = activeKeys.indexOf(keyMap[eventKey]);
-
-    if (arrayPos !== -1) activeKeys.splice(arrayPos, 1);
-  }
-
-  function bindEvents() {
-
-    // pointer/mouse
-    var mouseEvent = 'mousedown';
-
-    if (window.PointerEvent) {
-      mouseEvent = 'pointerdown';
-    } else if (window.MSPointerEvent) {
-      mouseEvent = 'MSPointerDown';
-    }
-
-    body.addEventListener(mouseEvent, immediateInput);
-    body.addEventListener('mouseenter', immediateInput);
-
-    // touch
-    if ('ontouchstart' in window) {
-      body.addEventListener('touchstart', bufferInput);
-    }
-
-    // keyboard
-    body.addEventListener('keydown', immediateInput);
-    document.addEventListener('keyup', unLogKeys);
-  }
-
-
-  /*
-    ---------------
-    init
-
-    don't start script unless browser cuts the mustard,
-    also passes if polyfills are used
-    ---------------
-  */
-
-  if ('addEventListener' in window && Array.prototype.indexOf) {
-    bindEvents();
-  }
-
-
-  /*
-    ---------------
-    api
-    ---------------
-  */
-
-  return {
-
-    // returns string: the current input type
-    ask: function() { return currentInput; },
-
-    // returns array: currently pressed keys
-    keys: function() { return activeKeys; },
-
-    // returns array: all the detected input types
-    types: function() { return inputTypes; },
-
-    // accepts string: manually set the input type
-    set: setInput
   };
 
 }));

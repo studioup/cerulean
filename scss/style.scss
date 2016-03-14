@@ -214,16 +214,17 @@ time {
 
 
 // add new pagination class for WordPress, Sass is amazingly fast
+/*
 .page-numbers {
     color: #999;
-      @include foundation-pagination;
+    @include foundation-pagination;
 }
-
+*/
 .pagination-centered ul.page-numbers li {
   float: none;
   display: inline-block;
 }
-
+/*
 .page-numbers li span.current {
   border-radius: 3px;
   //@include border-radius(3px);
@@ -232,8 +233,10 @@ time {
 .page-numbers li {
   margin-left: rem-calc(8);
 }
+*/
 
 // customizing pagination for WordPress using Foundation mixins, this is not beautiful I know
+/*
 .page-numbers li {
     span:hover a,
     span a:focus {
@@ -247,6 +250,62 @@ time {
         //cursor: $pagination-link-current-cursor;
     }
 }
+*/
+
+
+
+
+.pagination {
+	.page-numbers {
+		color: $pagination-item-color;
+		//@include foundation-pagination;
+	    background: $primary-color; //$pagination-item-background-current
+	    border-radius: 9999px;
+	    font-size: rem-calc(26);
+	    width: rem-calc(48);
+	    height: rem-calc(48);
+	    display: block;
+	    text-align: center;
+	    margin-left: rem-calc(10);
+	    margin-right: rem-calc(10);
+	    border: 2px solid;
+	    &.current, &.disabled{
+		    background: $pagination-item-background-current;
+		    color: $pagination-item-color-current;
+		}
+		&:not(.current):not(.disabled):hover{
+			    background: $pagination-item-background-hover;
+			    color: $pagination-item-color;
+		}
+
+		a.next.page-numbers {
+			@include breakpoint(medium up) { 
+				margin-left: 65px;
+			}
+			.nuc {
+		    	margin-left: 3px;
+		    }
+		    
+		}
+		a.prev.page-numbers{
+			@include breakpoint(medium up) { 
+				margin-right: 65px;
+			}
+			.nuc {
+		    	margin-left: -3px;
+		    }
+		}
+
+    }
+    
+
+}
+
+
+
+
+
+
 
 .avatar {
     border-radius: 50%;
@@ -401,41 +460,28 @@ body, html{
 }
 
 
-h1.huge{
-    font-size: rem-calc(69);
-    font-weight: 900;
-    @include breakpoint(small only) { 
-        font-size: rem-calc(36);
-    }
-}
-
-body{
-    //border: rem-calc(5) solid $black;
-}
-
-
-.archive-grid .panel{
-    a{
-        display: block;
-        transition: all 100ms linear;
-        &:hover{
-            background: $white;
-            box-shadow: 1px 15px 10px 0px rgba(0,0,0,0.10);
+body.menu-expanded{
+	#main-menu-mobile-bar .menu-icon-inner{
+		transform: rotate(45deg);
+		transform-origin: 0% 50%;
+		&:before{
+	        opacity: 0;
+	        trasition: all 10ms linear;
         }
-    }
+        &:after{
+	        transform: rotate(-90deg) translateX(25px);
+			transform-origin: 50% 50%;
+        }
+	}
 }
-
-.button{
-    font-weight: 700;
-    text-transform: uppercase;
-}
-
-//header menu
 
 #main-menu-mobile-bar{
-    position: relative;
+    //position: absolute !important;
     padding: 0 !important;
-    
+    //height: $topbar-height;
+    //height: 16.666666vh;
+    display: table;
+    width: 100%;
     .title-bar-title{
         //margin-left: -15px;
         a{
@@ -443,7 +489,7 @@ body{
 			display: block;
         }
         img{
-            height: 50px;
+            //height: 50px;
         }
         span{
             display: none;
@@ -451,125 +497,126 @@ body{
         }
     }
     .menu-icon{
-        width: 35px;
 	    height: 28px;
-	    position: absolute;
-	    top: 28px;
-	    right: 12px;
-        &:after{
+	    &:focus {
+			outline: none;
+			outline-color: transparent;
+			outline-style: none;
+		}
+    }
+    .menu-icon-inner{
+        width: 34px;
+	    height: 3px;
+	    //position: absolute;
+	    //margin-top: 53px;
+	    background: $primary-color;
+	    border-radius: 0 !important;
+	    position: relative;
+	    margin-bottom: 25px;
+	    transition: all 200ms linear;
+        &:after,&:before{
 	        background: $primary-color;
             height: 3px;
-            box-shadow: 0 12px 0 $primary-color,0 24px 0 $primary-color;
+            content: "";
+            display: block;
+            width: 100%;
+            //box-shadow: 0 12px 0 $primary-color,0 24px 0 $primary-color;
+            position: absolute;
+            transition: all 200ms linear;
+        }
+        &:after{
+	        top: 25px;
+        }
+        &:before{
+	        top: 12.5px;
+	        opacity: 1;
+        }
+        &:hover{
+	        background: $secondary-color;
+
+	        &:after,&:before {
+	            background: $secondary-color;
+	            //box-shadow: 0 12px 0 $color-black, 0 24px 0 $color-black;
+            }
             
         }
-        &:hover::after {
-            background: $color-black;
-            box-shadow: 0 12px 0 $color-black, 0 24px 0 $color-black;
-        }
     }
-}
-body #main-header{
-    width: 100%;
-    z-index: 1000;
-    position: absolute;
     
-}
-
-
-
-@include breakpoint(medium down) {
-    #main-header{
-        
-        &.expanded{
-	        height: 100%;
-            position: fixed;
-            top: 0;
-            left: 0;
-            background: $body-background;
-            border: rem-calc(5) solid $black;
-            z-index: 10000;
-            //display: table !important;
-            //vertical-align: middle;
-            #main-menu{
-	            position: absolute;
-			    top: 50%;
-			    width: 100%;
-			    transform: translateY(-50%);
-			    //padding: rem-calc(100) 0;
-	            //display: table-row !important;
-	            > div{
-		            //display: table-cell !important;
-	            }
+    &>.o-tbl__row{
+        display: table-row !important;
+        text-align: center;
+        .o-tbl__cell{
+            display: table-cell !important;
+            text-align: center;
+            vertical-align: middle;
+            &.vertical-align-top{
+	            vertical-align: top;
+            }
+            &.vertical-align-bottom{
+	            vertical-align: bottom;
+            }
+            &.text-align-left{
+	            text-align: left;
+            }
+            &.text-align-right{
+	            text-align: right;
+            }
+            .hide-for-small{
+                @include breakpoint(small only) {
+                    display: none !important;
+                }
+            }
+            .hide-for-medium{
+                @include breakpoint(medium only) {
+                    display: none !important;
+                }
+            }
+            .hide-for-large{
+                @include breakpoint(large up) {
+                    display: none !important;
+                }
             }
         }
     }
-    body.home #main-header.expanded{
-        background-image: linear-gradient(0deg, #0276F9 0%, #4DA0FF 100%);
-        //background-image: linear-gradient(0deg, #0276F9 0%, #3f9aff 100%);
-    } 
-      
-} 
 
-/*
-	"button" : {
-    	"padding": "rem-calc(16) rem-calc(45)",
-        "margin": "$global-margin/2 0",
-        "fill": "solid",
-        "background": "$color-black",
-        "background-hover": "$color-primary",
-        "color": "$color-white",
-        "color-alt": "$color-black",
-        "radius": "rem-calc(3)",
-        "sizes": "( tiny: 0.6rem, small: 0.75rem, default: 0.8rem, large: 1.25rem)",
-        "opacity-disabled": "0.25"
-    },
-	*/
-
-.private-area.button {
-    background: none;
-    > a{
-	    border: 2px solid $black;
-	    height: 50px !important;
-	    padding: 15px 25px;
-	    border-radius: $button-radius;
-	    &:hover{
-		    background: $black;
-		    //color: $white;
-	    }
-    }
-    @include breakpoint(large up) {
-	    display: block !important;
-	    position: absolute;
-	    right: 0;
-	    top: -15px;
-    }
     
 }
 
-.menu-container {
-    position: relative;
+@include breakpoint(large up) {
+	.menu-tbl{
+		display: table !important;
+		width: 100%;
+		table-layout: fixed;
+		.menu-tbl-row{
+			display: table-row !important;
+			> .menu-item{
+				padding: 0 rem-calc(10) !important;
+				display: table-cell !important;
+				vertical-align: middle;
+			}
+			> .divider{
+				display: none !important;
+			}
+		}
+	}
 }
 
+
+body{
+    //border: rem-calc(5) solid $black;
+}
+
+
+
+
+//header menu
+
+
+
+
+
 #main-menu {
-    font-weight: $global-weight-bold;
-    text-transform: uppercase;
-    @include breakpoint(medium down) {
-        //background: $body-background;
-    }
-    .menu.vertical > li {
-	    text-align: center;
-	    > a{
-			display: inline-block !important;
-		}
-    }
-    a{
-        
-        font-size: rem-calc(16);
-        letter-spacing: rem-calc(3);
-        &:hover,&.active{
-            color: $primary-color;
-        }
-    }
+
         
     ul.menu>li.menu-text.name {
         img{
@@ -583,53 +630,6 @@ body #main-header{
 
 }
 
-.archive-dropdown-wrapper{
-	
-	.archive-dropdown-title{
-		background: $color-primary;
-		color: $color-white;
-		border-radius: rem-calc(32);
-		margin-bottom: rem-calc(-32);
-	    z-index: 1000;
-	    position: relative;
-	    padding:     rem-calc(17) rem-calc(32);
-		//@extend .xxlittle-vertical-padding;
-		//@extend .xxlittle-horizontal-padding;
-		cursor: pointer;
-	}
-	.archive-dropdown-body{
-		
-		overflow: hidden;
-		ul{
-			background: $color-dark-gray;
-			list-style: none;
-			margin-left: 0;
-			padding-top: rem-calc(32);
-			li{
-				//padding: rem-calc(20);
-				padding: 0 rem-calc(32);
-				@extend .xxlittle-horizontal-padding;
-				a{
-					padding: rem-calc(20) 0;
-					display: block;
-					border-top: 1px solid $color-white;
-					color: $white;
-				}
-				&:first-child{
-					a{
-						border-top: none;
-					}
-				}
-			}
-		}
-	}
-}
-
-
-body.home{
-    //color: $white;
-    //background: $primary-color;
-}
 
 
 
@@ -707,66 +707,3 @@ footer.full-width {
 }
 
 
-// hack per foundation 6
-#main-menu{
-	padding-top: 0;
-	@include breakpoint(large up) {
-		.menu-tbl{
-			display: table !important;
-			width: 100%;
-			table-layout: fixed;
-			.menu-tbl-row{
-				display: table-row !important;
-				.menu-item{
-					padding: 0 rem-calc(10) !important;
-					display: table-cell !important;
-					vertical-align: middle;
-				}
-			}
-		}
-	}
-    .top-bar-left, .top-bar-right{
-        >ul.menu >li{
-	        background: $color-white;
-	        a{
-	        	color: $color-white;
-	        }
-	        &:hover, &:active{
-		        a{
-		        	color: $color-black;
-		        }
-	        }
-	        &:nth-child(3) {
-			    background: $color-warning;
-			}
-	        &:nth-child(5) {
-			    background: $color-primary;
-			}
-			&:nth-child(7) {
-			    background: $color-secondary;
-			}
-			&:nth-child(9) {
-			    background: $color-info;
-			}
-			&:nth-child(11) {
-			    background: $color-success;
-			}
-            @include breakpoint(large up) {
-                height: $topbar-height;
-                //width: 16.6666666666666%;
-                &.divider{
-	                display: none;
-                }
-                &.name{
-	                a{
-		                vertical-align: middle;
-	                }
-                }
-            }
-        }
-    }
-}
-
-.is-drilldown {
-    //height: auto !important;
-}

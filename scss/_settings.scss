@@ -440,13 +440,13 @@ $orbit-control-zindex: 10 !default;
 
 $pagination-font-size: rem-calc(14) !default;
 $pagination-margin-bottom: $global-margin !default;
-$pagination-item-color: $black !default;
+$pagination-item-color: $white !default;
 $pagination-item-padding: rem-calc(3 10) !default;
 $pagination-item-spacing: rem-calc(1) !default;
 $pagination-radius: $global-radius !default;
-$pagination-item-background-hover: $light-gray !default;
-$pagination-item-background-current: $primary-color !default;
-$pagination-item-color-current: foreground($pagination-item-background-current) !default;
+$pagination-item-background-hover: $color-secondary !default;
+$pagination-item-background-current: $pagination-item-color !default;
+$pagination-item-color-current: $primary-color !default;
 $pagination-item-color-disabled: $medium-gray !default;
 $pagination-ellipsis-color: $black !default;
 $pagination-mobile-items: false !default;

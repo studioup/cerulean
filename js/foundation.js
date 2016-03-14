@@ -1612,7 +1612,7 @@
   }
 
   function resizeListener(debounce) {
-    var timer = undefined,
+    var timer = void 0,
         $nodes = $('[data-resize]');
     if ($nodes.length) {
       $(window).off('resize.zf.trigger').on('resize.zf.trigger', function (e) {
@@ -1636,7 +1636,7 @@
   }
 
   function scrollListener(debounce) {
-    var timer = undefined,
+    var timer = void 0,
         $nodes = $('[data-scroll]');
     if ($nodes.length) {
       $(window).off('scroll.zf.trigger').on('scroll.zf.trigger', function (e) {

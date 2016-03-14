@@ -61,30 +61,37 @@
 <body id="main-body" <?php body_class('antialiased'); ?> data-toggler=".menu-expanded">
     <div class="animsition">
         <header id="main-header">
-            <div class="title-bar" id="main-menu-mobile-bar" data-responsive-toggle="main-menu" data-hide-for="large">
-                <div class="title-bar-right">
-                    <button class="menu-icon" type="button" data-toggle="main-body"></button>
-                </div>
-                <div class="title-bar-left">
-                    <div class="title-bar-title"><a href="<?php echo esc_url( home_url( '/' ) ); ?>" title="<?php echo esc_attr( get_bloginfo( 'name', 'display' ) ); ?>" rel="home">
-                        <?php if(get_global_option_img('logo')){ ?>
-                            <img src="<?php the_global_option_img('logo'); ?>">
-                            <span><?php bloginfo( 'name' ); ?></span>
-                        <?php } else if (get_global_option_img('logo_mobile')) { ?>
-                            <img src="<?php the_global_option_img('logo_mobile'); ?>">
-                            <span><?php bloginfo( 'name' ); ?></span>
-                        <?php }else{
-                            bloginfo( 'name' );
-                        } ?>
-                    </a></div>
-                </div>
+            <div class="title-bar " id="main-menu-mobile-bar" data-responsive-toggle="main-menu" data-hide-for="large">
+	            <div class=" o-tbl__row">
+	                
+	                <div class="o-tbl__cell text-align-left">
+	                    <div class="title-bar-title"><a href="<?php echo esc_url( home_url( '/' ) ); ?>" title="<?php echo esc_attr( get_bloginfo( 'name', 'display' ) ); ?>" rel="home">
+	                        <?php if(get_global_option_img('logo')){ ?>
+	                            <img src="<?php the_global_option_img('logo'); ?>">
+	                            <span><?php bloginfo( 'name' ); ?></span>
+	                        <?php } else if (get_global_option_img('logo_mobile')) { ?>
+	                            <img src="<?php the_global_option_img('logo_mobile'); ?>">
+	                            <span><?php bloginfo( 'name' ); ?></span>
+	                        <?php }else{
+	                            bloginfo( 'name' );
+	                        } ?>
+	                    </a></div>
+	                </div>
+	                <div class="o-tbl__cell text-align-right">
+	                    <button class="menu-icon" type="button" data-toggle="main-body">
+	                    	<div class="menu-icon-inner"></div>
+	                    </button>
+	                </div>
+	            </div>
             </div>
+            
             
             <div class="top-bar" id="main-menu">
                 <div class="column row " >
                     
                     <div class="top-bar-left menu-tbl" >
-                        <ul class="main-menu menu vertical large-horizontal menu-tbl-row" data-dropdown-menu>
+	                    
+                        <ul class="vertical large-horizontal menu main-menu menu-tbl-row" data-responsive-menu="drilldown large-dropdown">
                             <li class="menu-text name show-for-large menu-item" >
                                 <h2><a href="<?php echo esc_url( home_url( '/' ) ); ?>" title="<?php echo esc_attr( get_bloginfo( 'name', 'display' ) ); ?>" rel="home" >
                                     <?php if(get_global_option_img('logo')){ ?>
@@ -96,6 +103,8 @@
                                     </a>
                                 </h2>
                             </li>
+                            
+                            
                             <?php
                                 wp_nav_menu( array(
                                     'theme_location' => 'primary',
@@ -110,7 +119,9 @@
                                     ) ),
                                 ) );
                             ?>
+                            
                         </ul>
+                        
                     </div>
                     
                 </div>
