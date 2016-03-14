@@ -1,10 +1,11 @@
 <form role="search" method="get" id="searchform" action="<?php echo home_url('/'); ?>">
-	<div class="row collapse">
-		<div class="large-8 small-9 columns">
-			<input type="text" value="" name="s" id="s" placeholder="<?php esc_attr_e('Search', 'cerulean'); ?>">
-		</div>
-		<div class="large-4 small-3 columns">
-			<input type="submit" id="searchsubmit" value="<?php esc_attr_e('Search', 'cerulean'); ?>" class="button postfix">
-		</div>
+
+	<div class="input-group">
+	  <!--<span class="input-group-label">$</span>-->
+	  <input type="text" value="" name="s" id="s" class="input-group-field" placeholder="<?php esc_attr_e('Search', 'cerulean'); ?>">
+	  <div class="input-group-button">
+	    <button type="submit" id="searchsubmit" class="button" value="Submit"><i class="nuc nuc-o-search"></i></button>
+	  </div>
 	</div>
+	
 </form>
