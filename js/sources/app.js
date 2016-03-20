@@ -4,10 +4,10 @@
 (function($) {
 	
 	function wowGrid(){
-	    $('[data-wow-grid]').each(function(){
+	    $('[data-wow-grid], .data-wow-grid').each(function(){
 		    var columns;
-		    if( parseInt( $(this).attr('data-wow') ) > 0){
-			    columns = parseInt( $(this).attr('data-wow') );
+		    if( parseInt( $(this).attr('data-wow-columns') ) > 0){
+			    columns = parseInt( $(this).attr('data-wow-columns') );
 		    }else{
 		    	columns = Math.floor( $(this).innerWidth() / $(this).children().eq(1).outerWidth() );
 		    }
@@ -30,6 +30,21 @@
     $( window ).resize(function() {
         wowGrid();
     });
+    
+    function wowList(){
+	    $('[data-wow-list], .data-wow-list').each(function(){
+
+		    $(this).children().each(function(index){
+			    var delay = 0.2;
+
+			    $(this).addClass('wow fadeInUp');
+			    $(this).attr('data-wow-delay',delay+"s");
+			    
+			    
+		    });
+		});
+	}
+    wowList();
 
 	$('[data-disabled]').on('click',function(e){e.preventDefault();});
 
