@@ -18,8 +18,8 @@ if( ! function_exists( 'cerulean_pagination' ) ) {
 		    'prev_text' => 'previousContent',
 			'next_text' => 'nextContent',
 			'end_size' => 1,
-	        'mid_size' => 2,
-	        'show_all' => true,
+	        'mid_size' => 1,
+	        'show_all' => false,
 			'type' => 'array'
 		) );
 		$previousContent = '<span class="nuc nuc-s-chevron-left"></span>';
@@ -31,19 +31,67 @@ if( ! function_exists( 'cerulean_pagination' ) ) {
 	            $pagination['add_args'] = array( 's' => get_query_var( 's' ) );
 		//var_dump($wp_query->query_vars['paged']);
 	    echo '<ul class="pagination text-center" role="navigation" aria-label="Pagination">';
-	    if ( $current == 1) echo '<li><a href="#" data-disabled class="disabled prev page-numbers">'.$previousContent.'</a></li>';
+	    if ( $current == 1) $paginate_links2[] = '<a href="#" data-disabled class="disabled prev page-numbers">'.$previousContent.'</a>';
 	    
-	    if ( $current == 1 && ( $wp_query->max_num_pages == 1 || $wp_query->max_num_pages == 0)) echo '<li><a href="#" data-disabled class="current page-numbers">1</a></li>';
+	    if ( $current == 1 && ( $wp_query->max_num_pages == 1 || $wp_query->max_num_pages == 0)) $paginate_links2[] = '<li><a href="#" data-disabled class="current page-numbers">1</a></li>';
+	    
 	    if(!empty($paginate_links)){
-		    foreach ($paginate_links as $link) :
-		    	$link = str_ireplace('<span ','<a data-disabled href="#" ', $link);
-				$link = str_ireplace('span>','a>', $link);
-				$link = str_ireplace('previousContent','<span class="nuc nuc-s-chevron-left"></span>', $link);
-				$link = str_ireplace('nextContent','<span class="nuc nuc-s-chevron-right"></span>', $link);
-		        echo '<li>'.$link.'</li>';
+		    foreach ($paginate_links as $k => $link) :
+		    	if( $paginate_links[$k] != str_ireplace('<span ','<a data-disabled href="#" ', $paginate_links[$k]) && strpos($paginate_links[$k],'current' )){
+			    	$c = count($paginate_links2);
+		    	}else if( $paginate_links[$k] != str_ireplace('<span ','<a data-disabled href="#" ', $paginate_links[$k]) && strpos($paginate_links[$k],'dots' )){
+			    	$d[] = count($paginate_links2);
+			    	$paginate_links[$k] = str_ireplace('dots','dots disabled', $paginate_links[$k]);
+			    	
+		    	}
+		    	$paginate_links[$k] = str_ireplace('<span ','<a data-disabled href="#" ', $paginate_links[$k]);
+				$paginate_links[$k] = str_ireplace('span>','a>', $paginate_links[$k]);
+				$paginate_links[$k] = str_ireplace('previousContent','<span class="nuc nuc-s-chevron-left"></span>', $paginate_links[$k]);
+				$paginate_links2[] = str_ireplace('nextContent','<span class="nuc nuc-s-chevron-right"></span>', $paginate_links[$k]);
+		        
+		        
 		    endforeach;
+		    
 	    }
-	    if ( $current == $wp_query->max_num_pages || ( $current == 1 &&  $wp_query->max_num_pages == 0) ) echo '<li><a data-disabled href="#" class="disabled next page-numbers">'.$nextContent.'</a></li>';
+	    
+	    if ( $current == $wp_query->max_num_pages || ( $current == 1 &&  $wp_query->max_num_pages == 0) ) $paginate_links2[] = '<a data-disabled href="#" class="disabled next page-numbers">'.$nextContent.'</a>';
+	    
+	    foreach($paginate_links2 as $k => $link){
+		    echo '<li class="';
+		    if($k == $c){
+			    echo ' current';
+		    }
+		    if( in_array($k, $d) ){
+			    echo ' dots';
+		    }
+		    if($k == 1){
+			    echo ' first';
+		    }
+		    if($k == count($paginate_links2)-2){
+			    echo ' last';
+		    }
+		    /*
+		    if($c == 1 && count($paginate_links) >= 5 ){
+			    if($k == 2 || $k == 3){
+				    echo ' next-number';
+			    }
+		    }else if($c == count($paginate_links)-2 && count($paginate_links) >= 5 ){
+			    if($k == count($paginate_links)-3 || $k == count($paginate_links)-4){
+				    echo ' prev-number';
+			    }
+		    }else{
+			    if($k != 0 && $k == $c -1){
+				    echo ' prev-number';
+			    }else if($k != count($paginate_links)-2 && $k == $c +1){
+				    echo ' next-number';
+			    }
+		    }
+		    */
+		    echo '">';
+		    echo $link;
+		    echo '</li>';
+		    
+	    }
 	    echo '</ul>';
 	 
 		/*

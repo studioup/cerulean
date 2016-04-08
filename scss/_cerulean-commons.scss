@@ -449,3 +449,34 @@
         }
     }
 }
+
+
+.pagination {
+	li{
+		&.current {
+    		display: inline-block;
+    	}
+    	&.first, &.last {
+    		@include breakpoint( $pagination-breakpoint up) {
+	    	
+	    		display: inline-block;
+	    	}
+
+    	}
+    	&:first-child{
+		    float: left;
+		}
+		&:last-child{
+		    float: right;
+		}
+
+
+    }
+    &:after{
+	    display: inline-table;
+	    content: "";
+	    clear: both;
+	}
+
+}
+

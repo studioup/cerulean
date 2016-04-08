@@ -70,6 +70,9 @@
 		"sizes": "(  small: ( 'h1': 60, 'h2': 46, 'h3': 38, 'h4': 30, 'h5': 25, 'h6': 16, ), medium: ( 'h1': 85, 'h2': 70, 'h3': 54, 'h4': 40, 'h5': 30, 'h6': 18, ) )",
 		"font-weight" : "$global-weight-bold",
 		"color" : "$color-primary"
+	},
+	"pagination": {
+		"breakpoint" : "400px"
 	}
 	
 }
