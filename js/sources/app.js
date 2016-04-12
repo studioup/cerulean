@@ -6,12 +6,21 @@
 	function wowGrid(){
 	    $('[data-wow-grid], .data-wow-grid').each(function(){
 		    var columns;
-		    if( parseInt( $(this).attr('data-wow-columns') ) > 0){
-			    columns = parseInt( $(this).attr('data-wow-columns') );
+		    var $childrens;
+		    var $el = $(this);
+		    if( typeof( $el.attr('data-wow-selector') ) != 'undefined' ){
+			    $childrens = $el.find( $el.attr('data-wow-selector') );
 		    }else{
-		    	columns = Math.floor( $(this).innerWidth() / $(this).children().eq(1).outerWidth() );
+			    $childrens = $el.children();
 		    }
-		    $(this).children().each(function(index){
+		    
+		    if( parseInt( $el.attr('data-wow') ) > 0){
+			    columns = parseInt( $el.attr('data-wow') );
+		    }else{
+		    	columns = Math.floor( $el.innerWidth() / $childrens.eq(1).outerWidth() );
+		    }
+		    
+		    $childrens.each(function(index){
 			    var delay = (index % columns *0.2) + ( Math.floor(index/columns) * 0.1);
 			    if( !$(this).hasClass('wow') ){
 				    if(columns === 1){
