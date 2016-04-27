@@ -37,6 +37,172 @@ if( ! function_exists( 'cerulean_startup ' ) ) {
 
 
 /**********************
+Clean up and mask links
+
+**********************/
+
+
+/*
+function relative_url($url) {
+	
+	$parsed_url = parse_url($url);
+	
+	$url = $parsed_url['path'];
+	
+	if (isset($parsed_url['query']) && $parsed_url['query'] != '') {
+		$url .= '?'.$parsed_url['query'];
+	}
+	
+	return $url;
+}
+*/
+function cerulean_template_directory_uri($template_dir_uri, $template, $theme_root_uri){
+	//$template_dir_uri = preg_replace('/\/[a-zA-Z0-9\-\_]+\/themes\/[a-zA-Z0-9\-\_]+/i', '/template', $template_dir_uri);
+	/*
+	if(defined('RELATIVE_PATHS') && RELATIVE_PATHS == true ){
+		$template_dir_uri = '/template';
+	}else{
+		$template_dir_uri = home_url( '/template', $_SERVER['SERVER_PROTOCOL'] ); 
+	}
+	*/
+	$template_dir_uri = home_url( '/template', $_SERVER['SERVER_PROTOCOL'] ); 
+	return $template_dir_uri;
+}
+function cerulean_stylesheet_uri($stylesheet_uri, $stylesheet_dir_uri){
+	/*
+	if(defined('RELATIVE_PATHS') && RELATIVE_PATHS == true ){
+		$stylesheet_uri = '/template';
+	}else{
+		$stylesheet_uri = home_url( '/template', $_SERVER['SERVER_PROTOCOL'] ); 
+	}
+	*/
+	$stylesheet_uri = home_url( '/template', $_SERVER['SERVER_PROTOCOL'] );
+	return $stylesheet_uri;
+}
+function cerulean_stylesheet_directory_uri($stylesheet_dir_uri, $stylesheet, $theme_root_uri){
+	/*
+	if(defined('RELATIVE_PATHS') && RELATIVE_PATHS == true ){
+		$stylesheet_dir_uri = '/template';
+	}else{
+		$stylesheet_dir_uri = home_url( '/template', $_SERVER['SERVER_PROTOCOL'] ); 
+	}
+	*/
+	$stylesheet_dir_uri = home_url( '/template', $_SERVER['SERVER_PROTOCOL'] ); 
+	return $stylesheet_dir_uri;
+}
+function cerulean_style_loader_src($src, $handle){
+	$src = str_replace(WPINC ,trim(trim('includes'),'/')
+												,$src);
+	//if(defined('RELATIVE_PATHS') && RELATIVE_PATHS == true ){
+	//	$src = relative_url($src);
+	//}
+	//var_dump($src);
+	return  $src;
+}
+function cerulean_upload_dir($src){
+	/*
+	if(defined('RELATIVE_PATHS') && RELATIVE_PATHS == true ){
+		$src['url'] = relative_url( $src['url']);
+		$src['baseurl'] = relative_url( $src['baseurl']);
+	}
+	*/
+	return $src;
+}
+if (defined('MASK_THEME_URL') && MASK_THEME_URL == true && !is_admin()) {
+	
+		add_filter('template_directory_uri','cerulean_template_directory_uri' , 100000, 3);
+		add_filter('stylesheet_uri','cerulean_stylesheet_uri', 10, 2);
+		add_filter('stylesheet_directory_uri','cerulean_stylesheet_directory_uri', 10, 3);
+		//add_filter('script_loader_src',array( $this, 'script_loader_src' ), 10, 2);
+		add_filter('style_loader_src','cerulean_style_loader_src' , 10, 2);
+}
+add_filter('upload_dir', 'cerulean_upload_dir' );
+
+
+//add_action( 'template_redirect', 'relative_url' );
+
+
+$filters = array(
+    'bloginfo_url',
+    'the_permalink',
+    'wp_list_pages',
+    'wp_list_categories',
+    'the_content_more_link',
+    'the_tags',
+    'the_author_posts_link',
+    'post_link',       // Normal post link
+    'post_type_link',  // Custom post type link
+    'page_link',       // Page link
+    'attachment_link', // Attachment link
+    'get_shortlink',   // Shortlink
+    'post_type_archive_link',    // Post type archive link
+    'get_pagenum_link',          // Paginated link
+    'get_comments_pagenum_link', // Paginated comment link
+    'term_link',   // Term link, including category, tag
+    'search_link', // Search link
+    'day_link',   // Date archive link
+    'month_link',
+    'year_link',
+
+    // site location
+    'option_siteurl',
+    'blog_option_siteurl',
+    'option_home',
+    'admin_url',
+    'get_admin_url',
+    'get_site_url',
+    'network_admin_url',
+    'home_url',
+    'includes_url',
+    'site_url',
+    'site_option_siteurl',
+    'network_home_url',
+    'network_site_url',
+
+    // debug only filters
+    'get_the_author_url',
+    'get_comment_link',
+    'wp_get_attachment_image_src',
+    'wp_get_attachment_thumb_url',
+    'wp_get_attachment_url',
+    'wp_login_url',
+    'wp_logout_url',
+    'wp_lostpassword_url',
+    'get_stylesheet_uri',
+    // 'get_stylesheet_directory_uri',
+    // 'plugins_url',
+    // 'plugin_dir_url',
+    // 'stylesheet_directory_uri',
+    // 'get_template_directory_uri',
+    // 'template_directory_uri',
+    'get_locale_stylesheet_uri',
+    'script_loader_src', // plugin scripts url
+    'style_loader_src', // plugin styles url
+    'get_theme_root_uri'
+    // 'home_url'
+  );
+
+  // Thanks to https://wordpress.org/support/topic/request-only-replace-local-urls
+$home_url = home_url();
+$filter_fn = function( $link ) use ( $home_url ) {
+    if ( !is_array($link) && strpos( $link, $home_url ) === 0 ) {
+	    if(defined('RELATIVE_PATHS') && RELATIVE_PATHS == true ){
+			return wp_make_link_relative( $link );
+      	}else{
+	      	return $link;
+      	}
+    } else {
+      return $link;
+    }
+};
+
+foreach ( $filters as $filter ) {
+    add_filter( $filter, $filter_fn );
+}
+
+
+
+/**********************
 WP_HEAD GOODNESS
 The default WordPress head is
 a mess. Let's clean it up.

@@ -289,6 +289,12 @@ add_filter('upload_mimes', 'cc_mime_types');
 remove_action( 'wp_head', 'print_emoji_detection_script', 7 );
 remove_action( 'wp_print_styles', 'print_emoji_styles' );
 
+remove_action( 'wp_head', array( $sitepress, 'meta_generator_tag', 20 ) );
+if (defined('WPSEO_VERSION')){
+  add_action('get_header',function (){ ob_start(function ($o){
+  return preg_replace('/\n?<.*?yoast.*?>/mi','',$o); }); });
+  add_action('wp_head',function (){ ob_end_flush(); }, 999);
+}
 
 //excerpt counting chars instead of words
 function get_excerpt_chars($count){
