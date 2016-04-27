@@ -1,0 +1,85 @@
+.slider-for{
+	margin-bottom: 0;
+	.slick-slide{
+		display: block;
+		position: relative;
+		
+		&:after{
+			/* Rectangle 125: */
+			content: "";
+			position: absolute;
+			top: 0;
+			left: 0;
+			width: 100%;
+			height: 100%;
+			background-image: linear-gradient(-180deg, rgba($black,0.00) 50%, rgba($black,1.00) 100%);
+		}
+		a.article-link{
+			&:after{
+				content: "";
+				position: absolute;
+				bottom: 0;
+				left: 0;
+				height: rem-calc(5);
+				//transition: all 0ms linear;
+				//width: 0%;
+				background: $color-primary;
+				//animation-play-state: running;
+				animation-timing-function: linear;
+			}
+			
+		}
+		&.slick-timer:hover a.article-link:after {
+			//animation-play-state: initial;
+		}
+		&.slick-timer:not(:hover) a.article-link:after{
+			animation-name: progressbar;
+			animation-duration: 5s;
+			
+			//width: 100%;
+			//transition: all 5000ms linear;
+		}
+	}
+	a.article-link{
+		display: block;
+		width: 100%;
+		height: 100%;
+		top : 0;
+		bottom: 0;
+		position: absolute;
+		z-index: 10;
+		.article-content{
+			position: absolute;
+			width: 100%;
+			bottom: 0;
+			time{
+				color: $color-white;
+			}
+		}
+		
+	}
+}
+
+.slider-nav{
+	background: $color-white;
+	.slick-slide{
+		cursor: pointer;
+	}
+	.slick-slide:focus{
+	    outline: none;
+	    
+	}
+	.slick-highlight{
+		background: $color-altgreen;
+	}
+	.article-card-img{
+		width: rem-calc(77);
+		float: left;
+	}
+	.article-wrapper{
+		padding: rem-calc(10);
+	}
+	.article-content{
+		padding-left: 87px;
+	}
+}

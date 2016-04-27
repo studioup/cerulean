@@ -131,6 +131,46 @@
 
     $('[data-slick]').slick();
     
+    
+    
+    /* featured posts slider */
+    $('.slider-for').slick({
+	  slidesToShow: 1,
+	  slidesToScroll: 1,
+	  arrows: false,
+	  fade: true,
+	  asNavFor: '.slider-nav',
+	  autoplay: true,
+	  autoplaySpeed: 5000,
+
+	});
+	$('.slider-for').on('init', function(){
+	});
+	
+	$('.slider-for').on('afterChange', function(event, slick, currentSlide){
+		$('.slider-for article').removeClass('slick-timer');
+		$('.slider-for article').eq(currentSlide).addClass('slick-timer');
+		$('.slider-nav .article-wrapper').removeClass('slick-highlight');
+		$('.slider-nav .article-wrapper').eq(currentSlide).addClass('slick-highlight');
+	});
+
+	
+	$('.slider-nav').slick({
+	  slidesToShow: 3,
+	  slidesToScroll: 3,
+	  asNavFor: '.slider-for',
+	  dots: true,
+	  centerMode: false,
+	  focusOnSelect: true,
+	});
+	$('.slider-nav').on('setPosition',function(){
+		$('.slider-nav [data-equalizer-watch]').trigger( 'resizeme.zf.trigger');
+	})
+	$('.slider-nav [data-equalizer-watch]').trigger( 'resizeme.zf.trigger');
+	$('.slider-for article').eq(0).addClass('slick-timer');
+	$('.slider-nav .article-wrapper').eq(0).addClass('slick-highlight');
+	
+    /* end of featured posts slider */
 
     if($(".animsition").length){
         $('.wow').css('visibility', 'hidden').css('animation-name', 'none');
@@ -139,8 +179,8 @@
             outClass: 'animsition-fade-out',
             inDuration: 1500,
             outDuration: 800,
-            linkElement: ':not(.flex-control-nav li) > a:not([target="_blank"]):not([href^=#]):not(.no-animation):not([data-scroll-target])',
-            // e.g. linkElement: 'a:not([target="_blank"]):not([href^=#])'
+            linkElement: ':not(.flex-control-nav li) > a:not([target="_blank"]):not([href^="#"]):not(.no-animation):not([data-scroll-target])',
+            // e.g. linkElement: 'a:not([target="_blank"]):not([href^="#"])'
             loading: true,
             loadingParentElement: 'body', //animsition wrapper element
             loadingClass: 'animsition-loading',
