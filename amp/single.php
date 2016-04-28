@@ -3,6 +3,7 @@
 <head>
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no">
+	<!-- <script async custom-element="amp-analytics" src="https://cdn.ampproject.org/v0/amp-analytics-0.1.js"></script> -->
 	<?php do_action( 'amp_post_template_head', $this ); ?>
 
 	<style amp-custom>
@@ -11,6 +12,21 @@
 	</style>
 </head>
 <body>
+<!--<amp-analytics type="googleanalytics" id="analytics1">
+<script type="application/json">
+{
+  "vars": {
+    "account": "UA-xxxxxxx-xx" 
+  },
+  "triggers": {
+    "trackPageview": {  
+      "on": "visible",
+      "request": "pageview"
+    }
+  }
+}
+</script>
+</amp-analytics>-->
 <nav class="amp-wp-title-bar">
 	<div>
 		<a href="<?php echo esc_url( $this->get( 'home_url' ) ); ?>">

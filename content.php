@@ -29,7 +29,7 @@
 
 								<a href="<?php the_permalink(); ?>" >
 									<?php cerulean_entry_meta(); ?>
-									<h2 class="like-h3 color-black"><?php the_title(); ?></h2>
+									<h2 class="like-h3 color-black entry-title"><?php the_title(); ?></h2>
 									<div class="color-text like-h6 entry-content"><?php echo get_excerpt_chars(100); ?></div>
 								</a>
 							</header>
