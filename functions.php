@@ -647,7 +647,7 @@ function xyz_amp_my_additional_css_styles( $amp_template ) {
 	//exit;
     // only CSS here please...
     ?>
-    .amp-wp-title-bar .amp-wp-site-icon{
+    body nav.amp-wp-title-bar .amp-wp-site-icon{
 	    border-radius: 0; 
     }
     .amp-wp-byline amp-img, . {
@@ -670,25 +670,11 @@ function xyz_amp_my_additional_css_styles( $amp_template ) {
 		?>
 	    color: <?php echo $bodycolor;?>;
     }
-    
-    body .amp-wp-content{
-	    <?php  
-			$bodycolor = $config_sass["body"]["font-color"];
-			if(substr ($bodycolor,0,1 ) != '#'){
-				if(isset($config_sass["color"][str_ireplace('$color-', '', $bodycolor)])){
-					$bodycolor = $config_sass["color"][str_ireplace('$color-', '', $bodycolor)];
-				}else{
-					$bodycolor = $config_sass["color"]['black'];
-				}
-			}
-		?>
-	    color: <?php echo $bodycolor;?>;
-    }
 
     body .amp-wp-title, body h1, body h2, body h3, body h4, body h5, body h6{
 	    <?php  
 			$headercolor = $config_sass["header"]["color"];
-			if(substr ($bodycolor,0,1 ) != '#'){
+			if(substr ($headercolor,0,1 ) != '#'){
 				if(isset($config_sass["color"][str_ireplace('$color-', '', $bodycolor)])){
 					$headercolor = $config_sass["color"][str_ireplace('$color-', '', $bodycolor)];
 				}else{
@@ -696,7 +682,7 @@ function xyz_amp_my_additional_css_styles( $amp_template ) {
 				}
 			}
 		?>
-	    color: <?php echo $bodycolor;?>;
+	    color: <?php echo $headercolor;?>;
     }
     <?php
 	    
