@@ -9,6 +9,7 @@ function theme_link_shortcode( $atts , $content) {
         'classes' => '',
         'global' => false,
         'prepend' => "",
+        'target' => null,
         'append' => ""
     ), $atts );
     
@@ -50,6 +51,10 @@ function theme_link_shortcode( $atts , $content) {
 			    $link .= '?';
 		    }
 		    $link .= $lang;
+	    }
+	    if(!empty($a['target'])){
+		    $classes .= ' no-animation';
+		    $modifier = ' target="'.$a['target'].'" ';
 	    }
     }else{
 	    $modifier = ' target="_blank" rel="nofollow" ';
