@@ -684,9 +684,54 @@ function xyz_amp_my_additional_css_styles( $amp_template ) {
 		?>
 	    color: <?php echo $headercolor;?>;
     }
+    body a.amp-title-link{
+	    text-decoration: none;
+    }
     <?php
 	    
 }
+
+//remove_filter( 'amp_post_template_metadata', 'fix_amp_post_metadata',  11, 2 );
+remove_action( 'amp_post_template_css', 'additional_css',11  );
+add_filter( 'amp_post_template_metadata', 'fix_amp_post_metadata_image',  11, 2 );
+
+function fix_amp_post_metadata_image($metadata, $post){
+	global $post;
+     
+    if ( has_post_thumbnail( $post->ID ) ) {
+ 
+        $thumb_id = get_post_thumbnail_id( $post->ID );
+    }else{
+	    $thumb_id = get_global_option('default_article_image');
+    }
+    $img = wp_get_attachment_image_src( $thumb_id, $size );
+	$metadata['image'] = array(
+		"@type" => "ImageObject",
+		"url" => $img[0],
+		"width" =>  $img[1],
+		"height" =>  $img[2]
+	); 
+	$thumb_id = get_global_option('logo');
+	if(!empty($thumb_id) && 1==0 ){
+		$metadata["publisher"]["logo"] = array(
+			"@type" => "ImageObject",
+			"url" => $img[0],
+			//"width" =>  $img[1],
+			//"height" =>  $img[2]
+		); 
+	}else{
+		$metadata["publisher"]["logo"] = array(
+			"@type" => "ImageObject",
+			"url" => get_stylesheet_directory_uri() . '/img/favicons/favicon-96x96.png',
+			//"width" =>  128,
+			//"height" =>  128
+		);
+		
+	}
+	return $metadata;
+		
+}
+
 /**
  * Template tag to show featured image on AMP
  * @param string $size the post thumbnail size

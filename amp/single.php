@@ -23,12 +23,19 @@
 	</div>
 </nav>
 <div class="amp-wp-content">
-	<?php isa_amp_featured_img(); ?>
-	<h1 class="amp-wp-title"><?php echo wp_kses_data( $this->get( 'post_title' ) ); ?></h1>
+	
+	<?php 
+	global $wp_query;
+	$post = $wp_query->post;
+
+	?>
+	<a href="<?php echo esc_url( get_permalink( $post->ID ) ); ?>"><?php isa_amp_featured_img(); ?></a>
+	<a class="amp-title-link" href="<?php echo esc_url( get_permalink( $post->ID ) ); ?>"><h1 class="amp-wp-title"><?php echo wp_kses_data( $this->get( 'post_title' ) ); ?></h1></a>
 	<ul class="amp-wp-meta">
 		<?php $this->load_parts( apply_filters( 'amp_post_template_meta_parts', array( 'meta-author', 'meta-time', 'meta-taxonomy' ) ) ); ?>
 	</ul>
 	<?php echo $this->get( 'post_amp_content' ); // amphtml content; no kses ?>
+	
 </div>
 <?php do_action( 'amp_post_template_footer', $this ); ?>
 </body>
