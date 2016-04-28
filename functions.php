@@ -297,7 +297,7 @@ function get_excerpt_chars($count,$id = null){
 	  $id = $post_id;
   }
   $permalink = get_permalink($id);
-  $excerpt = get_the_content();
+  $excerpt = apply_filters('the_content', get_post_field('post_content', $id));
   $excerpt = strip_tags($excerpt);
   $excerpt = substr($excerpt, 0, $count);
   $excerpt = $excerpt.'...'; // <a href="'.$permalink.'">more</a>';
