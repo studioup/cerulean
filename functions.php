@@ -675,8 +675,8 @@ function xyz_amp_my_additional_css_styles( $amp_template ) {
 	    <?php  
 			$headercolor = $config_sass["header"]["color"];
 			if(substr ($headercolor,0,1 ) != '#'){
-				if(isset($config_sass["color"][str_ireplace('$color-', '', $bodycolor)])){
-					$headercolor = $config_sass["color"][str_ireplace('$color-', '', $bodycolor)];
+				if(isset($config_sass["color"][str_ireplace('$color-', '', $headercolor)])){
+					$headercolor = $config_sass["color"][str_ireplace('$color-', '', $headercolor)];
 				}else{
 					$headercolor = $config_sass["color"]['black'];
 				}
