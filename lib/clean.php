@@ -122,6 +122,16 @@ add_filter('upload_dir', 'cerulean_upload_dir' );
 //add_action( 'template_redirect', 'relative_url' );
 
 
+remove_action( 'wp_head', array( $sitepress, 'meta_generator_tag', 20 ) );
+if (defined('WPSEO_VERSION')){
+  add_action('get_header',function (){ ob_start(function ($o){
+  return preg_replace('/\n?<.*?yoast.*?>/mi','',$o); }); });
+  add_action('wp_head',function (){ ob_end_flush(); }, 999);
+}
+
+
+
+
 $filters = array(
     'bloginfo_url',
     'the_permalink',
