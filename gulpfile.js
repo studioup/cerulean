@@ -7,8 +7,8 @@ var $      = require('gulp-load-plugins')(),
     config =  JSON.parse(stripJsonComments( fs.readFileSync('./config.json', 'utf8'))),
     gutil = require('gulp-util'),
     sass = require('gulp-sass'),
-    autoprefixer = require('gulp-autoprefixer'),
-    minifycss = require('gulp-minify-css'),
+    //autoprefixer = require('gulp-autoprefixer'),
+    //minifycss = require('gulp-minify-css'),
     jshint = require('gulp-jshint'),
     stylish = require('jshint-stylish'),
     uglify = require('gulp-uglify'),
@@ -18,8 +18,11 @@ var $      = require('gulp-load-plugins')(),
     bower = require('gulp-bower'),
     remoteSrc = require('gulp-remote-src'),
     babel = require('gulp-babel'),
+    cssnano = require('gulp-cssnano'),
+    notify = require('gulp-notify'),
+    postcss = require('gulp-postcss'),
     //closureCompiler = require('gulp-closure-compiler'),
-    jsonWrapper = require('gulp-json-wrapper')
+    jsonWrapper = require('gulp-json-wrapper'),
     isProduction = false;
     
 
@@ -37,10 +40,12 @@ gulp.task('scss-settings', function() {
 gulp.task('minify-styles',['generate-styles'], function() {
  
     return gulp.src(['./css/style.css'])
-        //.pipe($.sourcemaps.init({}))
-        .pipe($.minifyCss( {keepSpecialComments:0 }))
+        .pipe($.sourcemaps.init({}))
+        //.pipe($.minifyCss( {keepSpecialComments:0 }))
+        //.pipe(cssnano())
+        .pipe(postcss([ require('cssnano')]))
         .pipe(rename({suffix: '.min'}))
-        //.pipe( $.sourcemaps.write('./maps/'))
+        .pipe( $.sourcemaps.write('./maps/'))
         .pipe(gulp.dest('./css/'));
         
 });
@@ -67,19 +72,25 @@ gulp.task('generate-styles',['scss-settings'], function() {
     //var minifycss = $.if(isProduction, $.minifyCss());
 
     return gulp.src(['./scss/style.scss'])
-        .pipe($.sourcemaps.init())
+        .pipe($.sourcemaps.init({loadMaps: true}))
+        //.on('error', notify.onError(function(error) {
+        //    return "Error: " + error.message;
+        //}))
         .pipe($.sass({
             //includePaths: PATHS.sass
             includePaths: config.scssPaths
         })
         .on('error', $.sass.logError))
-        .pipe($.autoprefixer(config.autoPrefixer))     
+        
+        //.pipe($.autoprefixer(config.autoPrefixer))     
         .pipe(uncss)
+        .pipe(postcss([ require('postcss-object-fit-images'),require('autoprefixer')(config.autoPrefixer),require('cssnano')() ]))
         //.pipe($.minifyCss())
-        .pipe($.if(!isProduction, $.sourcemaps.write()))
+        
         .pipe($.if(isProduction, rename({suffix: '.clean'})))
+        //.pipe(rename({ extname: '.min.css' }))
+        .pipe($.if(!isProduction, $.sourcemaps.write('./maps')))
         .pipe(gulp.dest('./css/'));
-                
     
 });
 
@@ -163,15 +174,16 @@ gulp.task('app-js', function() {
     ])
     .pipe($.sourcemaps.init({loadMaps: true}))
     //.pipe($.babel())
+    //.pipe(uglify)
     //.pipe(concat('combined.js'))
     .pipe(rename({suffix: '.min'}))
-    .pipe(uglify)
+    //.pipe(uglify)
     .pipe($.sourcemaps.write('./maps/'))
     .pipe(gulp.dest('./js'))
 });
 
 gulp.task('app-js-sync', ['base-js','foundation-js','site-js'], function() {
-    gulp.start('minify-styles', 'app-js');
+    gulp.start('generate-styles', 'app-js');
 });
 
 
@@ -183,11 +195,11 @@ gulp.task('bower', function() {
 
 // Create a default task 
 gulp.task('default', function() {
-  gulp.start('minify-styles', 'app-js-sync');
+  gulp.start('generate-styles', 'app-js-sync');
 });
 
 gulp.task('diet', ['set-production'] ,function() {
-  gulp.start('minify-styles', 'app-js-sync');
+  gulp.start('generate-styles', 'app-js-sync');
 });
 
 gulp.task('update-config',function() {
@@ -200,7 +212,7 @@ gulp.task('watch', function() {
     
   gulp.start('default');
   // Watch .scss files
-  gulp.watch(['./scss/**/*.scss','./config_sass.json'], ['minify-styles']);
+  gulp.watch(['./scss/**/*.scss','./config_sass.json'], ['generate-styles']);
 
   // Watch site-js files
   //gulp.watch('./js/sources/*.js', ['site-js']);

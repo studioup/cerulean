@@ -83,3 +83,8 @@
 		padding-left: 87px;
 	}
 }
+
+@keyframes progressbar {
+    from { width: 0%; }
+    to { width: 100%; }
+}

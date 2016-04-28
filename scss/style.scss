@@ -20,7 +20,6 @@
 // Load some Compass magic, note you will need to install Compass first
 //@import "compass/css3/shared";
 @import "app";
-@import "polyfill.object-fit";
 @import "animate";
 @import "icon-font";
 @import "outdatedbrowser";
@@ -31,7 +30,6 @@
 //@import "featured-post-slider";
 @import "forms";
 @import "cookies-enabler";
-
 
 @import "animsition";
 //@import "ghost-buttons";
@@ -201,8 +199,8 @@ time {
 
 .entry-tags {
     color: $black;
-    font-size: rem-calc(12);
-    text-transform: uppercase;
+    font-size: rem-calc(14);
+    //text-transform: uppercase;
     font-weight: $global-weight-bold;
     a {
         color: $black;
@@ -212,7 +210,72 @@ time {
     }
 }
 
-
+.social-sharer{
+	display: table;
+	margin: 0 auto;
+	> ul {
+		display: table-row;
+		> li{
+			//display: table-cell;
+			display: inline-table;
+			//height: 47px;
+			a{	
+				@include breakpoint(smallplus down) {
+					width: 50px;
+				}
+				padding: 10px;
+				margin: 2px;
+				color: $white;
+				display: block;
+				span{
+					@include breakpoint(smallplus down) {
+						display: none;
+					}
+				}
+				&.share-facebook{
+					background:  #35569c;
+					border: 2px solid  #35569c;
+					&:hover{
+						color: #35569c;
+						background: $white;
+					}
+				}
+				&.share-twitter{
+					background:  #46aaf3;
+					border: 2px solid  #46aaf3;
+					&:hover{
+						color: #46aaf3;
+						background: $white;
+					}
+				}
+				&.share-google{
+					background:  #e14d35;
+					border: 2px solid  #e14d35;
+					&:hover{
+						color: #e14d35;
+						background: $white;
+					}
+				}
+				&.share-linkedin{
+					background:  #0075b9;
+					border: 2px solid  #0075b9;
+					&:hover{
+						color: #0075b9;
+						background: $white;
+					}
+				}
+				&.share-mail{
+					background:  #ff6c3e;
+					border: 2px solid  #ff6c3e;
+					&:hover{
+						color: #ff6c3e;
+						background: $white;
+					}
+				}
+			}
+		}
+	}
+}
 
 
 // add new pagination class for WordPress, Sass is amazingly fast
@@ -258,6 +321,9 @@ time {
 
 
 .pagination {
+	li.current{
+		background: none;
+	}
 	.page-numbers {
 		color: $pagination-item-color;
 		//@include foundation-pagination;
@@ -310,15 +376,37 @@ time {
 
 
 .avatar {
-    border-radius: 50%;
+    //border-radius: 50%;
     //@include border-radius(50%);
     float: left;
+}
+
+
+#respond{
+	.page-banner {
+	    border-radius: $global-radius $global-radius 0 0;
+	    
+	}
+	.respond-inner{
+		padding-left: map-get($grid-column-gutter, medium);
+		padding-right: map-get($grid-column-gutter, medium);
+		border: 2px solid $primary-color;
+		border-radius: 0 0 $global-radius $global-radius;
+		@include breakpoint(small only) {
+			padding-left: map-get($grid-column-gutter, small);
+			padding-right: map-get($grid-column-gutter, small);
+		}
+	}
+	textarea{
+		height: rem-calc(200);
+	}
 }
 
 // add some basic comment styles
 ol.commentlist {
     margin-left: 0;
     margin-top: 2em;
+
     p {
         font-size: rem-calc(15);
         line-height: 1.5;
@@ -326,9 +414,19 @@ ol.commentlist {
     ul.children {
         margin-left: rem-calc(64);
     }
-    li {
+    > li {
         list-style: none;
         margin-bottom: 2em;
+        padding-left: map-get($grid-column-gutter, medium);
+		padding-right: map-get($grid-column-gutter, medium);
+		border: 2px solid $primary-color;
+		border-radius: $global-radius;
+		background: $color-white;
+		@extend .xxlittle-top-padding;
+		@include breakpoint(small only) {
+			padding-left: map-get($grid-column-gutter, small);
+			padding-right: map-get($grid-column-gutter, small);
+		}
 
         .comment-author img {
             float: left;

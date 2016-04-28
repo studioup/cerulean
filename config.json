@@ -2,12 +2,12 @@
 	"url": "http://cerulean.studioup.it",
 	"scssPaths" : [
 		"./bower_components/foundation-sites/scss/", 
-                "./bower_components/motion-ui/src/",
+        "./bower_components/motion-ui/src/",
 		"./bower_components/font-awesome/scss/",
 		"./bower_components/animate-sass/",
-                "./bower_components/slick-carousel/slick/"
+        "./bower_components/slick-carousel/slick/"
 	],
-        "foundationUtils" : "./bower_components/foundation-sites/scss/util/_util.scss",
+    "foundationUtils" : "./bower_components/foundation-sites/scss/util/_util.scss",
 	"autoPrefixer": {
 		"browsers": ["last 2 versions", "ie >= 9"],
                 "cascade": false
@@ -18,7 +18,8 @@
 		"bower_components/jquery-cookie/jquery.cookie.js",
         "bower_components/object-fit/dist/polyfill.object-fit.js",
         "bower_components/cookies-enabler/cookies-enabler.js",
-        "bower_components/animsition/dist/js/animsition.js"
+        "bower_components/animsition/dist/js/animsition.js",
+        "bower_components/object-fit-images/dist/ofi.browser.js"
         
 	],
 	"jsFoundation": [	    

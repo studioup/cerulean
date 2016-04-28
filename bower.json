@@ -11,7 +11,7 @@
     "animate.css": "*",
     "outdated-browser": "*",
     "jquery": "2.x",
-    "object-fit": "anselmh/object-fit",
+    "object-fit-images": "bfred-it/object-fit-images#gh-pages",
     "animate-sass": "tgdev/animate-sass",
     "cookies-enabler": "studioup/cookies-enabler",
     "animsition": "blivesta/animsition",
