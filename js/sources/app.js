@@ -165,7 +165,7 @@
 	});
 	$('.slider-nav').on('setPosition',function(){
 		$('.slider-nav [data-equalizer-watch]').trigger( 'resizeme.zf.trigger');
-	})
+	});
 	$('.slider-nav [data-equalizer-watch]').trigger( 'resizeme.zf.trigger');
 	$('.slider-for article').eq(0).addClass('slick-timer');
 	$('.slider-nav .article-wrapper').eq(0).addClass('slick-highlight');
