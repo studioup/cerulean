@@ -1,9 +1,16 @@
+        <?php /* abilitare per fullpage con footer incluso 
+        <?php if( !is_home() && !is_page_template ( 'page.php' ) ){?>
+        </div><!-- end #fullpage / .page-wrapper -->
+        <?php } ?>
+        */ ?>
+        
+        <?php /* rimuovere per fullpage con footer incluso */ ?>
         </div><!-- end .page-wrapper -->
         
         
         
 
-        <footer id="main-footer" class="full-width" role="contentinfo">
+        <footer id="main-footer" class="full-width section fp-auto-height" role="contentinfo">
             <!--
             <div class="full-width footer-widget">
                 <div class="row">
@@ -77,7 +84,7 @@
 	                    <div class="o-tbl xlittle-bottom-padding" data-equalizer-watch>
 		                    <div class="o-tbl__row">
 			                    <div class="o-tbl__cell ">
-									<a href="http://www.studioup.it/" title="Studio Up - Agenzie Web Milano"><strong>Studio Up - Agenzia Web Milano</strong></a>
+									<a href="http://www.studioup.it/" title="Studio Up - Siti Web Milano"><strong>Studio Up - Realizzazione Siti Web Milano</strong></a>
 			                    </div>
 		                    </div>
 	                    </div>
@@ -97,6 +104,13 @@
                 </div>
             </div>
         </footer>
+        
+        <?php /* abilitare per fullpage con footer incluso 
+        <?php if( is_home() || is_page_template ( 'page.php' ) ){?>
+        </div><!-- end #fullpage / .page-wrapper -->
+        <?php } ?>
+        */ ?>
+        
         <div id="outdated">
              <h6><?php _e('Your browser is out-of-date!','cerulean'); ?></h6>
              <p><?php _e('Update your browser to view this website correctly.','cerulean'); ?>, <a id="btnUpdateBrowser" href="http://outdatedbrowser.com/"><?php _e('Update my browser now','cerulean'); ?> </a></p>

@@ -75,4 +75,11 @@
     <div class="animsition">
 	    <?php get_template_part( 'parts-nav/menu', 'centered-float-logo-float-search' ); ?>
         
+        <?php /* abilitare per fullpage con footer incluso 
+        <?php if( !is_home() && !is_page_template ( 'page.php' ) ){?>
+        <div <?php echo ( is_home() || is_page_template ( 'page.php' ) ) ? 'id="fullpage"' : '';?> class="page-wrapper">
+        <?php } ?>
+        */ ?>
+        
+        <?php /* rimuovere per fullpage con footer incluso */ ?>
         <div class="page-wrapper">

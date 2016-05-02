@@ -20,7 +20,9 @@
     "gsap": "greensock/GreenSock-JS",
     "ScrollMagic": "*",
     "jquery-cookie" : "*",
-    "browser-redirect-geoip": "khromov/wp-wpml-geoip-browser-language-redirect"
+    "browser-redirect-geoip": "khromov/wp-wpml-geoip-browser-language-redirect",
+    "fullpage-js" : "alvarotrigo/fullPage.js",
+    "jquery-slimscroll" : "*"
   },
   "resolutions": {
     "jquery": "2.x"
