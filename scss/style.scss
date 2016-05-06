@@ -604,35 +604,7 @@ body.menu-expanded{
 			outline-color: transparent;
 			outline-style: none;
 		}
-    }
-    .menu-icon-inner{
-        width: 34px;
-	    height: 3px;
-	    //position: absolute;
-	    //margin-top: 53px;
-	    background: $primary-color;
-	    border-radius: 0 !important;
-	    position: relative;
-	    margin-bottom: 25px;
-	    transition: all 200ms linear;
-        &:after,&:before{
-	        background: $primary-color;
-            height: 3px;
-            content: "";
-            display: block;
-            width: 100%;
-            //box-shadow: 0 12px 0 $primary-color,0 24px 0 $primary-color;
-            position: absolute;
-            transition: all 200ms linear;
-        }
-        &:after{
-	        top: 25px;
-        }
-        &:before{
-	        top: 12.5px;
-	        opacity: 1;
-        }
-        &:hover{
+		&:hover .menu-icon-inner{
 	        background: $secondary-color;
 
 	        &:after,&:before {
@@ -641,7 +613,36 @@ body.menu-expanded{
             }
             
         }
+        .menu-icon-inner{
+	        width: 34px;
+		    height: 3px;
+		    //position: absolute;
+		    //margin-top: 53px;
+		    background: $primary-color;
+		    border-radius: 0 !important;
+		    position: relative;
+		    margin-bottom: 25px;
+		    transition: all 200ms linear;
+	        &:after,&:before{
+		        background: $primary-color;
+	            height: 3px;
+	            content: "";
+	            display: block;
+	            width: 100%;
+	            //box-shadow: 0 12px 0 $primary-color,0 24px 0 $primary-color;
+	            position: absolute;
+	            transition: all 200ms linear;
+	        }
+	        &:after{
+		        top: 25px;
+	        }
+	        &:before{
+		        top: 12.5px;
+		        opacity: 1;
+	        }
+	    }
     }
+    
     
     &>.o-tbl__row{
         display: table-row !important;
@@ -807,6 +808,9 @@ footer.full-width {
     width:100%;
     background: $primary-color;
     color: $white;
+    > .fp-tableCell {
+	    display: block;
+	}
     .credits{
         padding-top: rem-calc(25);
         padding-bottom: rem-calc(25);

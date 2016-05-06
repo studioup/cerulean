@@ -22,7 +22,10 @@
     "jquery-cookie" : "*",
     "browser-redirect-geoip": "khromov/wp-wpml-geoip-browser-language-redirect",
     "fullpage-js" : "alvarotrigo/fullPage.js",
-    "jquery-slimscroll" : "*"
+    "jquery-slimscroll" : "*",
+    "jquery-visible" : "*",
+    "jquery-color" : "*",
+    "bodymovin" : "bodymovin/bodymovin"
   },
   "resolutions": {
     "jquery": "2.x"

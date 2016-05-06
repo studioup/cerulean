@@ -363,6 +363,40 @@
     text-transform: uppercase;
 }
 
+
+.bg-white{
+    background: $color-white;
+}
+
+.bg-black{
+    background: $color-black;
+}
+
+.bg-primary{
+    background: $color-primary;
+}
+
+.bg-alert{
+    background: $color-alert;
+}
+
+.bg-warning{
+    background: $color-warning;
+}
+
+.bg-secondary{
+    background: $color-secondary;
+}
+
+.bg-success{
+    background: $color-success;
+}
+
+.bg-info{
+    background: $color-info;
+}
+
+
 .color-white{
     color: $color-white;
 }
@@ -373,6 +407,26 @@
 
 .color-primary{
     color: $color-primary;
+}
+
+.color-alert{
+    color: $color-alert;
+}
+
+.color-warning{
+    color: $color-warning;
+}
+
+.color-secondary{
+    color: $color-secondary;
+}
+
+.color-success{
+    color: $color-success;
+}
+
+.color-info{
+    color: $color-info;
 }
 
 .color-text{

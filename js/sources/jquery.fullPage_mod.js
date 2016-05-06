@@ -157,7 +157,6 @@
             slideSelector: SLIDE_DEFAULT_SEL,
             "should_scroll_section": true,
 
-
             //events
             afterLoad: null,
             onLeave: null,
@@ -173,12 +172,11 @@
         //easeInOutCubic animation included in the plugin
         $.extend($.easing,{ easeInOutCubic: function (x, t, b, c, d) {if ((t/=d/2) < 1) return c/2*t*t*t + b;return c/2*((t-=2)*t*t + 2) + b;}});
 
-		var has_bounce = false;
-    	var should_bounce = false;
-    	var is_animating = false;
-    	var should_scroll_section = options.should_scroll_section;
-    	console.log("jquery fullpage init 2");
-
+	var has_bounce = false;
+	var should_bounce = false;
+	var is_animating = false;
+	var should_scroll_section = options.should_scroll_section;
+		
         /**
         * Sets the autoScroll option.
         * It changes the scroll bar visibility and the history of the site as a result.
@@ -271,11 +269,46 @@
             }
         };
 
-		$.fn.fullpage.customScrollToAnchor =
-    		function() {
-        	scrollToAnchor()
-    	};
+		
+	function custom_bounce(check_str) {
+            if (is_animating == false) {
+                is_animating =
+                    true;
+                var target_element = $(".fp-section.active");
+                TweenMax.killTweensOf(target_element);
+                if (check_str == "top") {
+                    TweenMax.to(target_element, .2, {
+                        top: -10,
+                        ease: Sine.easeOut
+                    });
+                    TweenMax.to(target_element, .1, {
+                        top: 0,
+                        ease: Sine.easeIn,
+                        delay: .2,
+                        onComplete: custom_bounce_complete
+                    })
+                } else {
+                    TweenMax.to(target_element, .2, {
+                        top: 10,
+                        ease: Sine.easeOut
+                    });
+                    TweenMax.to(target_element, .1, {
+                        top: 0,
+                        ease: Sine.easeIn,
+                        delay: .2,
+                        onComplete: custom_bounce_complete
+                    })
+                }
+            }
+        }
 
+        function custom_bounce_complete() {
+            should_bounce = false;
+            is_animating = false
+        }
+		
+		
+		
         /**
         * Adds or remove the possiblity of scrolling through sections by using the mouse wheel/trackpad or touch gestures.
         * Optionally a second parameter can be used to specify the direction for which the action will be applied.
@@ -652,14 +685,11 @@
             }
 
             if(options.scrollOverflow){
-	            
                 if(document.readyState === 'complete'){
                     createSlimScrollingHandler();
                 }
-                
                 //after DOM and images are loaded
                 $window.on('load', createSlimScrollingHandler);
-                
             }else{
                 afterRenderActions();
             }
@@ -982,78 +1012,40 @@
         * by 'automatically' scrolling a section or by using the default and normal scrolling.
         */
         function scrolling(type, scrollable){
-	        if (should_scroll_section) {
-	            if (!isScrollAllowed.m[type]){
-	                return;
-	            }
-	            var check, scrollSection;
-	
-	            if(type == 'down'){
-	                check = 'bottom';
-	                scrollSection = FP.moveSectionDown;
-	            }else{
-	                check = 'top';
-	                scrollSection = FP.moveSectionUp;
-	            }
-	
-	            if(scrollable.length > 0 ){
-	                //is the scrollbar at the start/end of the scroll?
-	                if(options.scrollOverflowHandler.isScrolled(check, scrollable)){
-	                    if (should_bounce) {
-							custom_bounce(check);
-					    } else {
-							scrollSection();
-					    }
-	                }else{
-		                if (has_bounce) {
-			    			should_bounce = true;
-			    	    }
-	                    return true;
-	                }
-	            }else{
-	                // moved up/down
-	                scrollSection();
-	            }
+	if (should_scroll_section) {
+            if (!isScrollAllowed.m[type]){
+                return;
             }
-        }
-        
-        function custom_bounce(check_str) {
-            if (is_animating == false) {
-                is_animating =
-                    true;
-                var target_element = $(".fp-section.active");
-                TweenMax.killTweensOf(target_element);
-                if (check_str == "top") {
-                    TweenMax.to(target_element, .3, {
-                        top: -10,
-                        ease: Sine.easeOut
-                    });
-                    TweenMax.to(target_element, .2, {
-                        top: 0,
-                        ease: Sine.easeIn,
-                        delay: .3,
-                        onComplete: custom_bounce_complete
-                    })
-                } else {
-                    TweenMax.to(target_element, .3, {
-                        top: 10,
-                        ease: Sine.easeOut
-                    });
-                    TweenMax.to(target_element, .2, {
-                        top: 0,
-                        ease: Sine.easeIn,
-                        delay: .3,
-                        onComplete: custom_bounce_complete
-                    })
+            var check, scrollSection;
+
+            if(type == 'down'){
+                check = 'bottom';
+                scrollSection = FP.moveSectionDown;
+            }else{
+                check = 'top';
+                scrollSection = FP.moveSectionUp;
+            }
+
+            if(scrollable.length > 0 ){
+                //is the scrollbar at the start/end of the scroll?
+                if(options.scrollOverflowHandler.isScrolled(check, scrollable)){
+                    if (should_bounce) {
+			custom_bounce(check);
+		    } else {
+                    scrollSection();
+		    }
+                }else{
+            	    if (has_bounce) {
+	    		should_bounce = true;
+	    	    }
+                    return true;
                 }
+            }else{
+                // moved up/down
+                scrollSection();
             }
         }
-
-        function custom_bounce_complete() {
-            should_bounce = false;
-            is_animating = false
-        }
-
+	}
 
         var touchStartY = 0;
         var touchStartX = 0;
@@ -1398,18 +1390,6 @@
             stopMedia(v.activeSection);
 
             element.addClass(ACTIVE).siblings().removeClass(ACTIVE);
-            var scrollable_custom = options.scrollOverflowHandler.scrollable(element);
-            if (scrollable_custom.length > 0){
-                if (element.hasClass("has-bounce")) {
-                    has_bounce = true;
-                    should_bounce = true
-                } else {
-                    has_bounce = false;
-                    should_bounce = false
-                }
-            } else {
-		    	should_bounce = false
-		    }
             lazyLoad(element);
 
             //preventing from activating the MouseWheelHandler event
@@ -1553,30 +1533,27 @@
 
             //callback (afterLoad) if the site is not just resizing and readjusting the slides
             $.isFunction(options.afterLoad) && !v.localIsResizing && options.afterLoad.call(v.element, v.anchorLink, (v.sectionIndex + 1));
-			var scrollable_custom =  options.scrollOverflowHandler.scrollable(v.element); //isScrollable(v.element);
-			
-            if (scrollable_custom.length > 0) {
-                if (v.element.hasClass("has-bounce") || v.activeSlide.hasClass("has-bounce")) {
-                    has_bounce = true;
-                    should_bounce = true
-                } else {
-                    has_bounce = false;
-                    should_bounce = false
-                }
-                scrollable_custom[0].focus();
-                if(typeof (scrollable_custom.data("slimScroll")) != 'undefined'){
-                    console.log(scrollable_custom.data("slimScroll"));
-                	scrollable_custom.data("slimScroll").isOverPanel = true;
-                }
-                //scrollable_custom.data("slimScroll").isOverPanel = true
-            } else {
-	    	    should_bounce = false;
-	        }
-			
+
             playMedia(v.element);
             v.element.addClass(COMPLETELY).siblings().removeClass(COMPLETELY);
 
             canScroll = true;
+	    var scrollable_custom = options.scrollOverflowHandler.scrollable(v.element);
+	    if (scrollable_custom.length > 0) {
+		    if (v.element.hasClass("has-bounce") || v.activeSlide.hasClass("has-bounce")) {
+		        has_bounce = true;
+		        should_bounce = true
+		    } else {
+		        has_bounce = false;
+		        should_bounce = false
+		    }
+		    scrollable_custom[0].focus();
+            	    scrollable_custom.find(SCROLLABLE_SEL).trigger('mouseenter');
+		    //scrollable_custom[0].focus();
+		    //scrollable_custom.data("slimScroll").isOverPanel = true;
+	    } else {
+		    should_bounce = false;
+	    }
 
             $.isFunction(v.callback) && v.callback.call(this);
         }
@@ -1655,10 +1632,21 @@
                     scrollPageAndSlide(section, slide);
                 }else{
                     FP.silentMoveTo(section, slide);
+		    var scrollable_custom = options.scrollOverflowHandler.scrollable(section);
+		    if (scrollable_custom.length > 0){
+	                if (section.hasClass("has-bounce")) {
+	                    has_bounce = true;
+	                    should_bounce = true
+	                } else {
+	                    has_bounce = false;
+	                    should_bounce = false
+	                }
+		    } else {
+		    	should_bounce = false
+		    }
                 }
             }
         }
-
         /**
         * Detecting any change on the URL to scroll to the given anchor link
         * (a way to detect back history button as we play with the hashes on the URL)
@@ -1912,25 +1900,22 @@
                 //if the site is not just resizing and readjusting the slides
                 if(!localIsResizing){
                     $.isFunction( options.afterSlideLoad ) && options.afterSlideLoad.call( destiny, anchorLink, (sectionIndex + 1), slideAnchor, slideIndex);
-					var custom_target_slide = $(".fp-section.active").find(".fp-slide.active");
-		                    var scrollable_custom = options.scrollOverflowHandler.scrollable(custom_target_slide); //isScrollable(custom_target_slide);
-		                    if (scrollable_custom.length > 0) {
-		                        if (custom_target_slide.hasClass("has-bounce")) {
-		                            has_bounce =
-		                                true;
-		                            should_bounce = true
-		                        } else {
-		                            has_bounce = false;
-		                            should_bounce = false
-		                        }
-		                        scrollable_custom[0].focus();
-		                        if(typeof (scrollable_custom.data("slimScroll")) != 'undefined'){
-			                        console.log(scrollable_custom.data("slimScroll"));
-		                        	scrollable_custom.data("slimScroll").isOverPanel = true;
-		                        }
-		                    } else {
-		                    	should_bounce = false;
-		                    }
+                    var custom_target_slide = $(".fp-section.active").find(".fp-slide.active");
+                    var scrollable_custom = options.scrollOverflowHandler.scrollable(custom_target_slide);
+                    if (scrollable_custom.length > 0) {
+                        if (custom_target_slide.hasClass("has-bounce")) {
+                            has_bounce =
+                                true;
+                            should_bounce = true
+                        } else {
+                            has_bounce = false;
+                            should_bounce = false
+                        }
+                        scrollable_custom[0].focus();
+                        scrollable_custom.find(SCROLLABLE_SEL).trigger('mouseenter');
+                    } else {
+		    	should_bounce = false;
+		    }
                 }
                 playMedia(destiny);
 
@@ -2767,7 +2752,7 @@
                 });
 
                 var idAttr = $document.find('[id]').filter(function() {
-                    return $(this).attr('id') && $(this).attr('id').toLowerCase() == name.toLowerCase();
+                    return this.id && this.id.toLowerCase() == name.toLowerCase();
                 });
 
                 if(idAttr.length || nameAttr.length ){
