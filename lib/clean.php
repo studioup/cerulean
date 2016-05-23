@@ -65,7 +65,7 @@ function cerulean_template_directory_uri($template_dir_uri, $template, $theme_ro
 		$template_dir_uri = home_url( '/template', $_SERVER['SERVER_PROTOCOL'] ); 
 	}
 	*/
-	$template_dir_uri = home_url( '/template', $_SERVER['SERVER_PROTOCOL'] ); 
+	$template_dir_uri = site_url( '/template', $_SERVER['SERVER_PROTOCOL'] ); 
 	return $template_dir_uri;
 }
 function cerulean_stylesheet_uri($stylesheet_uri, $stylesheet_dir_uri){
@@ -76,7 +76,7 @@ function cerulean_stylesheet_uri($stylesheet_uri, $stylesheet_dir_uri){
 		$stylesheet_uri = home_url( '/template', $_SERVER['SERVER_PROTOCOL'] ); 
 	}
 	*/
-	$stylesheet_uri = home_url( '/template', $_SERVER['SERVER_PROTOCOL'] );
+	$stylesheet_uri = site_url( '/template', $_SERVER['SERVER_PROTOCOL'] );
 	return $stylesheet_uri;
 }
 function cerulean_stylesheet_directory_uri($stylesheet_dir_uri, $stylesheet, $theme_root_uri){
@@ -87,7 +87,7 @@ function cerulean_stylesheet_directory_uri($stylesheet_dir_uri, $stylesheet, $th
 		$stylesheet_dir_uri = home_url( '/template', $_SERVER['SERVER_PROTOCOL'] ); 
 	}
 	*/
-	$stylesheet_dir_uri = home_url( '/template', $_SERVER['SERVER_PROTOCOL'] ); 
+	$stylesheet_dir_uri = site_url( '/template', $_SERVER['SERVER_PROTOCOL'] ); 
 	return $stylesheet_dir_uri;
 }
 function cerulean_style_loader_src($src, $handle){
