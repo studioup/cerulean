@@ -293,14 +293,27 @@ remove_action( 'wp_print_styles', 'print_emoji_styles' );
 //excerpt counting chars instead of words
 function get_excerpt_chars($count,$id = null){
   global $post;
-  if($id == null){
-	  $id = $post_id;
+  $original_post = $post;
+  if($id != null){
+      $post = get_post( $id );
   }
-  $permalink = get_permalink($id);
-  $excerpt = apply_filters('the_content', get_post_field('post_content', $id));
+  setup_postdata($post);
+  
+  $permalink = get_permalink();
+  if( !empty( $post->post_excerpt )) {
+    $excerpt = get_the_excerpt();
+  }else{
+    $excerpt = apply_filters('the_content', get_post_field('post_content'));
+    
+  }
   $excerpt = strip_tags($excerpt);
-  $excerpt = substr($excerpt, 0, $count);
-  $excerpt = $excerpt.'...'; // <a href="'.$permalink.'">more</a>';
+  if( strlen($excerpt) > $count ){
+    $excerpt = substr($excerpt, 0, $count);
+    
+    $excerpt = $excerpt.'...'; // <a href="'.$permalink.'">more</a>';
+  }
+  wp_reset_postdata();
+  $post = $original_post;
   return $excerpt;
 }
 
