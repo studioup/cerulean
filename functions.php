@@ -86,11 +86,11 @@ define('ICL_DONT_LOAD_LANGUAGE_SELECTOR_CSS', true);
 
 //disabilitare dimensioni di default di wordpress
 function sgr_filter_image_sizes( $sizes) {
-		
+
 	unset( $sizes['thumbnail']);
 	//unset( $sizes['medium']);
 	//unset( $sizes['large']);
-	
+
 	return $sizes;
 }
 add_filter('intermediate_image_sizes_advanced', 'sgr_filter_image_sizes');
@@ -114,7 +114,7 @@ if( ! function_exists( 'cerulean_theme_support' ) ) {
         add_image_size('fd-lg', 1200, 99999);
         add_image_size('fd-xl', 1440, 99999);
         add_image_size('fd-xxl', 2048, 99999);
-        
+
 
         // rss thingy
         add_theme_support('automatic-feed-links');
@@ -208,7 +208,7 @@ if( function_exists('acf_add_options_sub_page') )
         'menu_slug' => 'global-options',
         'capability' => 'manage_options'
     ));
-    
+
     if ( function_exists('icl_object_id') ) {
         acf_add_options_page(array(
             //'title' => __('General options','cerulean'), // this seems to create an options page for every language
@@ -217,27 +217,27 @@ if( function_exists('acf_add_options_sub_page') )
             'capability' => 'manage_options'
         ));
     }
-    
-    
+
+
     function cl_set_global_options_pages($current_screen) {
         //var_dump($current_screen);
       // IDs of admin options pages that should be "global"
       $page_ids = array(
         "toplevel_page_global-options"
       );
-    
+
       if (in_array($current_screen->id, $page_ids)) {
         add_filter('acf/settings/current_language', 'cl_acf_set_language', 100);
       }
     }
     add_action( 'current_screen', 'cl_set_global_options_pages' );
-    
-    
-    
+
+
+
     function cl_acf_set_language() {
       return acf_get_setting('default_language');
     }
-    
+
     /**
      * Wrapper around get_field() to get the "global" option values.
      * This is the function you'll want to use in your templates instead of get_field() for "global" options.
@@ -285,7 +285,7 @@ function cc_mime_types($mimes) {
 add_filter('upload_mimes', 'cc_mime_types');
 
 
-// remove emoji js 
+// remove emoji js
 remove_action( 'wp_head', 'print_emoji_detection_script', 7 );
 remove_action( 'wp_print_styles', 'print_emoji_styles' );
 
@@ -298,18 +298,18 @@ function get_excerpt_chars($count,$id = null){
       $post = get_post( $id );
   }
   setup_postdata($post);
-  
+
   $permalink = get_permalink();
   if( !empty( $post->post_excerpt )) {
     $excerpt = get_the_excerpt();
   }else{
     $excerpt = apply_filters('the_content', get_post_field('post_content'));
-    
+
   }
   $excerpt = strip_tags($excerpt);
   if( strlen($excerpt) > $count ){
     $excerpt = substr($excerpt, 0, $count);
-    
+
     $excerpt = $excerpt.'...'; // <a href="'.$permalink.'">more</a>';
   }
   wp_reset_postdata();
@@ -347,7 +347,7 @@ function show_sitemap() {
 
 function grid_queries( $query ) {
     if ( is_admin() || ! $query->is_main_query() ) return;
-    
+
     if ( ! is_admin() && in_array ( $query->get('post_type'), array('place-here-an-array-of-grid-post-type-slugs') ) ) {
         $query->set('posts_per_page', 9);
     }
@@ -377,8 +377,8 @@ function change_sticky_class($classes) {
 add_filter('post_class','change_sticky_class');
 
 
-// Attach callback to 'tiny_mce_before_init' 
-//add_filter( 'tiny_mce_before_init', 'my_mce_before_init_insert_formats' ); 
+// Attach callback to 'tiny_mce_before_init'
+//add_filter( 'tiny_mce_before_init', 'my_mce_before_init_insert_formats' );
 
 function my_theme_add_editor_styles() {
     if (defined('PRODUCTION') && PRODUCTION == true && defined('UNCSS') && UNCSS == true) {
@@ -403,7 +403,7 @@ add_action( 'init', 'my_theme_add_editor_styles' );
 
 function mytheme_change_tinymce_colors( $init ) {
 	$config_sass = json_decode( file_get_contents(get_template_directory()."/config_sass.json"), true );
-	
+
     $default_colours = '
         "000000", "Black",
         "993300", "Burnt orange",
@@ -483,18 +483,18 @@ add_filter('tiny_mce_before_init', 'mytheme_change_tinymce_colors');
 
 
 function acf_set_featured_image( $value, $post_id, $field  ){
-    
+
     if($value != ''){
 	    //Add the value which is the image ID to the _thumbnail_id meta data for the current post
 	    update_post_meta($post_id, '_thumbnail_id', $value);
     }
- 
+
     return $value;
 }
 
 // acf/update_value/name={$field_name} - filter for a specific field based on it's name
 add_filter('acf/update_value/name=featured_image', 'acf_set_featured_image', 10, 3);
- 
+
 /*
 add_filter('acf/location/rule_types', 'acf_location_rules_types');
 function acf_location_rules_types( $choices )
@@ -521,34 +521,34 @@ function acf_location_rules_match_page( $match, $rule, $options ) {
 	//exit;
 	// bail early if not a post
 	if( !$options['post_id'] ) return false;
-	
-	
+
+
 	// translate $rule['value']
 	// - this variable will hold the original post_id, but $options['post_id'] will hold the translated version
 	//if( function_exists('icl_object_id') )
 	//{
 	//	$rule['value'] = icl_object_id( $rule['value'], $options['post_type'], true );
 	//}
-	
-	
+
+
 	// compare
     if( $rule['operator'] == "==") {
-    	
+
     	$match = ( icl_object_id($options['post_id'], 'page', $sitepress->get_default_language()) == icl_object_id($rule['value'], 'page', $sitepress->get_default_language()) );
-    
+
     } elseif( $rule['operator'] == "!=") {
-    	
+
     	$match = ( icl_object_id($options['post_id'], 'page', $sitepress->get_default_language()) != icl_object_id($rule['value'], 'page', $sitepress->get_default_language()) );
-    
+
     }
-    
-    
+
+
     // return
     return $match;
 
 }
-	
-	
+
+
 
 
 // layouts support for foundation
@@ -556,49 +556,49 @@ function acf_location_rules_match_page( $match, $rule, $options ) {
 add_filter('ddl-set_framework', function( $slug ){
     return 'foundation';
 });
- 
- 
+
+
 // Define the list of supported frameworks
 add_filter('ddl-set_up_frameworks', function( $array ){
     $array['foundation'] = (object) array('label' => 'Foundation by ZURB');
     return $array;
 });
- 
+
 // Define the CSS class that will be added to the container element
 add_filter('ddl-get_container_class', function( $el ){
     return 'container';
 });
- 
+
 // Define the CSS class that will be added to fluid container element
 add_filter('ddl-get_container_fluid_class', function( $el ){
     return 'container-fluid';
 });
- 
+
 // Define the CSS class that will be added to the row element in the grid
 add_filter('ddl-get_row_class', function( $el ){
     return 'row';
 });
- 
+
 // Define the offset prefix CSS class that will be added to the element in the grid
 add_filter('ddl-get_offset_prefix', function( $el ){
     return 'offset-';
 });
- 
+
 // Define the prefix CSS classes that will be added to the columns in the grid
 add_filter('ddl-get-column-prefix', function( $el ){
     return array( 'large-');
 });
- 
+
 // Define any additional CSS classes that need to be added to the columns in the grid
 add_filter('ddl-get_additional_column_class', function( $el ){
     return 'columns';
 });
- 
+
 // Define if framework supports native support for Layouts Image Box cell responsive images
 add_filter('ddl-framework_supports_responsive_images', function( $bool ){
     return false;
 });
- 
+
 // Define the CSS class for the thumbnail image
 add_filter('ddl-get_thumbnail_class', function( $bool ){
     return 'th';
@@ -630,8 +630,8 @@ include_files_by_folder('/lib/widgets/');
 
 if( class_exists( 'WPDD_Layouts' ) && !function_exists( 'include_ddl_layouts' ) )
 {
-    
- 
+
+
     include_files_by_folder('/lib/cell_layouts/');
 }
 
@@ -643,7 +643,7 @@ function xyz_amp_set_site_icon_url( $data ) {
     // Ideally a 32x32 image
     /*
     $image =  wp_get_attachment_image_src( get_field('logo','options') , 'fd-sm' );
-    
+
     if(!empty($image) && !empty($image[0])){
         $data[ 'site_icon_url' ] = $image[0];
     }
@@ -661,17 +661,17 @@ function xyz_amp_my_additional_css_styles( $amp_template ) {
     // only CSS here please...
     ?>
     body nav.amp-wp-title-bar .amp-wp-site-icon{
-	    border-radius: 0; 
+	    border-radius: 0;
     }
     .amp-wp-byline amp-img, . {
         /* border-radius: 0; */ /* we don't want round avatars! */
     }
     body nav.amp-wp-title-bar {
-	    
+
 		background: <?php echo $config_sass["color"]["primary"];?>;
     }
     body .amp-wp-content{
-	    <?php  
+	    <?php
 			$bodycolor = $config_sass["body"]["font-color"];
 			if(substr ($bodycolor,0,1 ) != '#'){
 				if(isset($config_sass["color"][str_ireplace('$color-', '', $bodycolor)])){
@@ -685,7 +685,7 @@ function xyz_amp_my_additional_css_styles( $amp_template ) {
     }
 
     body .amp-wp-title, body h1, body h2, body h3, body h4, body h5, body h6{
-	    <?php  
+	    <?php
 			$headercolor = $config_sass["header"]["color"];
 			if(substr ($headercolor,0,1 ) != '#'){
 				if(isset($config_sass["color"][str_ireplace('$color-', '', $headercolor)])){
@@ -701,7 +701,7 @@ function xyz_amp_my_additional_css_styles( $amp_template ) {
 	    text-decoration: none;
     }
     <?php
-	    
+
 }
 
 //remove_filter( 'amp_post_template_metadata', 'fix_amp_post_metadata',  11, 2 );
@@ -710,9 +710,9 @@ add_filter( 'amp_post_template_metadata', 'fix_amp_post_metadata_image',  11, 2 
 
 function fix_amp_post_metadata_image($metadata, $post){
 	global $post;
-     
+
     if ( has_post_thumbnail( $post->ID ) ) {
- 
+
         $thumb_id = get_post_thumbnail_id( $post->ID );
     }else{
 	    $thumb_id = get_global_option('default_article_image');
@@ -723,7 +723,7 @@ function fix_amp_post_metadata_image($metadata, $post){
 		"url" => $img[0],
 		"width" =>  $img[1],
 		"height" =>  $img[2]
-	); 
+	);
 	$thumb_id = get_global_option('logo');
 	if(!empty($thumb_id) && 1==0 ){
 		$metadata["publisher"]["logo"] = array(
@@ -731,7 +731,7 @@ function fix_amp_post_metadata_image($metadata, $post){
 			"url" => $img[0],
 			//"width" =>  $img[1],
 			//"height" =>  $img[2]
-		); 
+		);
 	}else{
 		$metadata["publisher"]["logo"] = array(
 			"@type" => "ImageObject",
@@ -739,10 +739,10 @@ function fix_amp_post_metadata_image($metadata, $post){
 			//"width" =>  128,
 			//"height" =>  128
 		);
-		
+
 	}
 	return $metadata;
-		
+
 }
 
 /**
@@ -750,26 +750,26 @@ function fix_amp_post_metadata_image($metadata, $post){
  * @param string $size the post thumbnail size
  */
 function isa_amp_featured_img( $size = 'medium' ) {
- 
+
     global $post;
-     
+
     if ( has_post_thumbnail( $post->ID ) ) {
- 
+
         $thumb_id = get_post_thumbnail_id( $post->ID );
     }else{
 	    $thumb_id = get_global_option('default_article_image');
     }
-    
+
     $img = wp_get_attachment_image_src( $thumb_id, $size );
     $img_src = $img[0];
     $w = $img[1];
     $h = $img[2];
 
     $alt = get_post_meta($post->ID, '_wp_attachment_image_alt', true);
-     
+
     if(empty($alt)) {
         $attachment = get_post( $thumb_id );
-        $alt = trim(strip_tags( $attachment->post_title ) ); 
+        $alt = trim(strip_tags( $attachment->post_title ) );
     } ?>
     <amp-img id="feat-img" src="<?php echo esc_url( $img_src ); ?>" <?php
         if ( $img_srcset = wp_get_attachment_image_srcset( $thumb_id, $size ) ) {
@@ -780,7 +780,7 @@ function isa_amp_featured_img( $size = 'medium' ) {
     <?php
 
 }
- 
+
 /**
  * Make AMP use your custom single.php.
  */
@@ -795,15 +795,20 @@ add_filter( 'amp_post_template_file', 'my_amp_set_custom_template', 10, 3 );
 
 
 add_filter('getarchives_join', 'my_custom_post_type_archive_join', 10, 2);
-function my_custom_post_type_archive_join($join,$args){  
-	$post_type = isset($args['post_type']) ? $args['post_type'] : 'post'; 
+function my_custom_post_type_archive_join($join,$args){
+	$post_type = isset($args['post_type']) ? $args['post_type'] : 'post';
 	$join = str_ireplace("t.element_type='post_post'", "t.element_type='post_$post_type'", $join);
 	return  $join;
-	
+
 }
 
 
+function my_acf_init() {
 
+	acf_update_setting('google_api_key', 'AIzaSyA_UoMmY_BWURW02-kqnDB5_gJrO0uVJx8');
+}
+
+add_action('acf/init', 'my_acf_init');
 
 
 
