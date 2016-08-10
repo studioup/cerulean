@@ -812,4 +812,150 @@ add_action('acf/init', 'my_acf_init');
 
 
 
+/* post correlati con transient */
+function get_pew_related_data($args, $post_id) {
+    global $post, $wpdb;
+    $post_id = intval( $post_id );
+    if( !$post_id && $post->ID ) {
+        $post_id = $post->ID;
+    }
+
+    if( !$post_id ) {
+        return false;
+    }
+
+    $defaults = array(
+        'taxonomy' => 'category',
+        'post_type' => array('post'),
+        'max' => 5
+    );
+    $options = wp_parse_args( $args, $defaults );
+
+    $transient_name = 'pew-related-' . $options['taxonomy'] . '-' . $post_id . '-' . $options['max'];
+
+    if( isset($_GET['flush-related-links']) && is_user_logged_in() ) {
+        echo '<p>Related links flushed! (' . $transient_name . ')</p>';
+        delete_transient( $transient_name );
+    }
+
+    $output = get_transient( $transient_name );
+    if( $output !== false && !is_preview() ) {
+        //echo $transient_name . ' read!';
+        return $output;
+    } 
+
+    $args = array(
+        'fields' => 'ids',
+        'orderby' => 'count',
+        'order' => 'ASC'
+    );
+    $orig_terms_set = wp_get_object_terms( $post_id, $options['taxonomy'], $args );
+
+    //Make sure each returned term id to be an integer.
+    $orig_terms_set = array_map('intval', $orig_terms_set);
+
+    //Store a copy that we'll be reducing by one item for each iteration. 
+    $terms_to_iterate = $orig_terms_set;
+
+    $post_args = array(
+        'fields' => 'ids',
+        'post_type' => $options['post_type'],
+        'post__not_in' => array($post_id),
+        'posts_per_page' => 50
+    );
+    $output = array();
+    while( count( $terms_to_iterate ) > 1 ) {
+
+        $post_args['tax_query'] = array(
+            array(
+                'taxonomy' => $options['taxonomy'],
+                'field' => 'id',
+                'terms' => $terms_to_iterate,
+                'operator' => 'AND'
+            )
+        );
+
+        $posts = get_posts( $post_args );
+
+        /*
+        echo '<br>';
+        echo '<br>';
+        echo $wpdb->last_query;
+        echo '<br>';
+        echo 'Terms: ' . implode(', ', $terms_to_iterate);
+        echo '<br>';
+        echo 'Posts: ';
+        echo '<br>';
+        print_r( $posts );
+        echo '<br>';
+        echo '<br>';
+        echo '<br>';
+        */
+
+        foreach( $posts as $id ) {
+            $id = intval( $id );
+            if( !in_array( $id, $output) ) {
+                $output[] = $id;
+            }
+        }
+        array_pop( $terms_to_iterate );
+    }
+
+    $post_args['posts_per_page'] = 10;
+    $post_args['tax_query'] = array(
+        array(
+            'taxonomy' => $options['taxonomy'],
+            'field' => 'id',
+            'terms' => $orig_terms_set
+        )
+    );
+
+    $posts = get_posts( $post_args );
+
+    foreach( $posts as $count => $id ) {
+        $id = intval( $id );
+        if( !in_array( $id, $output) ) {
+            $output[] = $id;
+        }
+        if( count($output) >= $options['max'] ) {
+            //We have enough related post IDs now, stop the loop.
+            break;
+        }
+    }
+
+    if( !is_preview() ) {
+        //echo $transient_name . ' set!';
+        set_transient( $transient_name, $output, 24 * HOUR_IN_SECONDS );
+    }
+
+    return $output;
+}
+
+
+
+/* select formidable con selezione da  categorie */
+add_filter('frm_setup_new_fields_vars', 'frm_set_checked', 20, 2);
+function frm_set_checked($values, $field){
+	
+	if($field->field_key == "lhf0f"){//Replace with the ID of your field
+		//echo '<pre>';
+		//var_dump($values);
+		//echo '</pre>';
+		$cats = get_categories( );
+		//var_dump($cats);
+
+		//var_dump($values['options']);
+		foreach($cats as $cat){
+			//var_dump($cat->name);
+			if($cat->slug != 'uncategorized'){
+				$values['options'][] = $cat->name;
+			}
+		}
+		//var_dump($values['options']);
+		
+	}
+	return $values;
+}
+
+
 ?>

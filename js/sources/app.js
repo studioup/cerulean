@@ -3,7 +3,53 @@
 var anim;
 (function($) {
 	
+	function detectIE() {
+	  var ua = window.navigator.userAgent;
 	
+	
+	  var msie = ua.indexOf('MSIE ');
+	  if (msie > 0) {
+	    // IE 10 or older => return version number
+	    return parseInt(ua.substring(msie + 5, ua.indexOf('.', msie)), 10);
+	  }
+	
+	  var trident = ua.indexOf('Trident/');
+	  if (trident > 0) {
+	    // IE 11 => return version number
+	    var rv = ua.indexOf('rv:');
+	    return parseInt(ua.substring(rv + 3, ua.indexOf('.', rv)), 10);
+	  }
+	
+	  var edge = ua.indexOf('Edge/');
+	  if (edge > 0) {
+	    // Edge (IE 12+) => return version number
+	    //return parseInt(ua.substring(edge + 5, ua.indexOf('.', edge)), 10);
+	  }
+	
+	  // other browser
+	  return false;
+	}
+	function detectEdge() {
+	  var ua = window.navigator.userAgent;
+	
+	
+	  
+	
+	  var edge = ua.indexOf('Edge/');
+	  if (edge > 0) {
+	    // Edge (IE 12+) => return version number
+	    return parseInt(ua.substring(edge + 5, ua.indexOf('.', edge)), 10);
+	  }
+	
+	  // other browser
+	  return false;
+	}
+	if( detectIE() ){
+		$('body').addClass('is-ie');
+	}
+	if( detectEdge() ){
+		$('body').addClass('is-edge');
+	}
 	
 	var is_firefox = navigator.userAgent.toLowerCase().indexOf('firefox') > -1;
 	
@@ -39,6 +85,22 @@ var anim;
 		    });
 		});
 	}
+	
+	function rowExpandedPadding(){
+		var row = $('.row:not(.row .row):not(.expanded)').eq(0);
+		if( typeof(row) != 'undefined' && row.outerWidth() <= $(window).width() ){
+			var offset = ( $(window).width() - row.outerWidth() ) /2;
+			if(Foundation.MediaQuery.atLeast('medium') ){
+				offset += 15;
+			}else{
+				offset += 10;
+			}
+			$('.row.expanded.autopadding > .columns:first-child').css('padding-left',  offset);
+			$('.row.expanded.autopadding > .columns:last-child').css('padding-right',  offset);
+		}
+	}
+	
+	
     wowGrid();
     $( window ).resize(function() {
         wowGrid();
@@ -90,6 +152,23 @@ var anim;
     
     
     $(document).foundation();
+    
+    
+    
+    rowExpandedPadding();
+    
+	$(window).on('resize', Foundation.util.throttle(function(e){
+		rowExpandedPadding();
+	}, 300));
+
+	if( typeof(map) != 'undefined' && typeof(google) != 'undefined' ){
+		$(document).ready(function() {
+			$(window).resize(function() {
+				google.maps.event.trigger(map, 'resize');
+			});
+			google.maps.event.trigger(map, 'resize');
+		});
+	}
     
     //make interchange work with equalizer
     $(document).on('replaced.zf.interchange', 'img', function(e) {    
