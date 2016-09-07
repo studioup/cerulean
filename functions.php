@@ -243,9 +243,19 @@ if( function_exists('acf_add_options_sub_page') )
      * This is the function you'll want to use in your templates instead of get_field() for "global" options.
      */
     function get_global_option($name) {
-        add_filter('acf/settings/current_language', 'cl_acf_set_language', 100);
+        global $sitepress;
+	    
+	    if(!empty($sitepress)){
+		    $current_language = $sitepress->get_current_language();
+			$default_language = $sitepress->get_default_language();
+			$sitepress->switch_lang($default_language,true);
+		}
+		add_filter('acf/settings/current_language', 'cl_acf_set_language', 100);
         $option = get_field($name, 'option');
         remove_filter('acf/settings/current_language', 'cl_acf_set_language', 100);
+        if(!empty($sitepress)){
+			$sitepress->switch_lang($current_language,true);
+		}
         return $option;
     }
 
