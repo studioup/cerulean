@@ -20,6 +20,7 @@
     "gulp-json-wrapper" : "*",
     "gulp-notify" : "*",
     "gulp-json-sass" : "*",
+    "gulp-livereload" : "*",
     
     "autoprefixer": "*",
     "gulp-postcss" : "*",
