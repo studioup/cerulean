@@ -18,7 +18,7 @@
         "text-direction": "ltr"
     },
 	"color":{
-		"primary" : "#FF0048",
+		"primary" : "#F7CA00",
 		"secondary": "#AA00FF",
 		"success": "#4BE274",
 		"warning": "#FFAA00",
@@ -71,7 +71,7 @@
 		"font-family" : "join(\"cooper-black-std\",$body-font-family)",
 		
 		"lineheight" : "1.2",
-		"sizes": "(  small: ( 'h1': 60, 'h2': 46, 'h3': 38, 'h4': 30, 'h5': 25, 'h6': 16, ), medium: ( 'h1': 85, 'h2': 70, 'h3': 54, 'h4': 40, 'h5': 30, 'h6': 18, ) )",
+		"styles": "(  small: ( 'h1': ('font-size': 60), 'h2': ('font-size': 46), 'h3': ('font-size': 38), 'h4': ('font-size': 30), 'h5': ('font-size': 25), 'h6': ('font-size': 16), ), medium: ( 'h1': ('font-size': 85), 'h2': ('font-size': 70), 'h3': ('font-size': 54), 'h4': ('font-size': 40), 'h5': ('font-size': 30), 'h6': ('font-size': 18), ) )",
 		"font-weight" : "$global-weight-bold",
 		"color" : "$color-primary"
 	},

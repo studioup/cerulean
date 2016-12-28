@@ -347,14 +347,20 @@
 }
 */
 
-.like-h1,.like-h2,.like-h3,.like-h4,.like-h5,.like-h6{
-    @extend h1,h2,h3,h4,h5,h6;
-}
 
-@each $size, $headers in $header-sizes {
+
+@each $size, $headers in $header-styles {
     @include breakpoint($size) {
-        @each $header, $font-size in $headers {
-            .like-#{$header} { font-size: rem-calc($font-size); }
+        @each $header, $properties in $headers {
+            .like-#{$header} { 
+                @each $property, $value in $properties {
+                    @if $property == font-size {
+                        #{$property}: rem-calc($value);
+                    }@else {
+                        #{$property}: $value; 
+                    }
+                }
+            }
         }
     }
 }
